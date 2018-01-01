@@ -1,0 +1,53 @@
+baseurl = "/"
+title = "m.evans"
+theme = "ghostwriter"
+languageCode = "en-us"
+copyright = "Michelle Evans"
+disqusShortname = " "
+googleAnalytics = ""
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+
+[Author]
+    name = "Michelle Evans"
+    profile = "https://mvevans89.github.io/"
+
+[Taxonomies]
+    tag = "tags"
+
+[Params]
+    intro = true
+    headline = "m.evans blog"
+    description = ""
+    github = "https://github.com/mvevans89"
+    twitter = "https://twitter.com/mv_evans"
+    stackoverflow = "https://stackoverflow.com/users/5688284/michelle-evans"
+    email = "mvevans@uga.edu"
+    opengraph = true
+    shareTwitter = true
+    shareFacebook = false
+    shareGooglePlus = false
+    shareLinkedIn = false
+    dateFormat = "Mon, Jan 2, 2006"
+    highlightJsUrl = ""
+    highlightJsLocalUrl = ""
+
+[Permalinks]
+    post = "/:year/:month/:day/:slug/"
+
+[[menu.main]]
+    name = "Latest Post"
+    url = "/"
+    weight = 1
+    
+[[menu.main]]
+    name = "Browse Posts"
+    url = "/post"
+    weight = 2
+    
+[[menu.main]]
+    name = "About"
+    url = "/page/about/"
+    weight = 3
+
+
+
