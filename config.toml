@@ -12,11 +12,11 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     profile = "https://mvevans89.github.io/"
 
 [Taxonomies]
-    tag = "tags"
+    tag = "tag"
 
 [Params]
     intro = true
-    headline = "What's the matter with data?"
+    headline = "Dithering Data"
     description = ""
     github = "https://github.com/mvevans89"
     twitter = "https://twitter.com/mv_evans"
@@ -41,7 +41,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     
 [[menu.main]]
     name = "Topics"
-    url = "/page/tags/"
+    url = "/tags/"
     weight = 2
     
 [[menu.main]]
