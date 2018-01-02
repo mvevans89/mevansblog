@@ -3,11 +3,6 @@ title: Animating Maps with gganimate
 author: Michelle Evans
 date: '2018-01-01'
 slug: gganimate
-categories: 
-  - animation
-  - ggplot
-  - spatial
-  - R
 tags:
   - animation
   - ggplot
@@ -58,7 +53,7 @@ elections <- df_president_ts %>%
 
 Now I will set up a base map to start editing before we animate it all. 
 
-```{r, fig.width = 5, message = F, warning = F}
+```{r, fig.width = 3, message = F, warning = F}
 ggplot() +
   # polygons
   geom_polygon(data = elections, aes(x = long, 
@@ -93,7 +88,7 @@ theme_map <- function(...) {
 }
 ```
 
-```{r, fig.width = 5, message = F, warning = F}
+```{r, fig.width = 3, message = F, warning = F}
 ggplot() +
   # polygons
   geom_polygon(data = elections, aes(x = long, 
