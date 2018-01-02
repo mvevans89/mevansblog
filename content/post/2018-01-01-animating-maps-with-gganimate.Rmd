@@ -16,7 +16,7 @@ There are many ways to create animated plots in R, including interactive tools s
 
 To illustrate this, let's look at the presidential election results from the 20th century, taking advantage of a dataset in the `choroplethr` package. This package also has it's own function to animate maps (choroplethr_animate), but I prefer using gganimate as it is more customizable and saves the resulting image as a gif, rather than an html file. 
 
-```{r}
+```{r, echo = F}
 #load packages
 library(choroplethr)
 library(tidyverse)
@@ -30,13 +30,13 @@ data("df_president_ts")
 
 For the actual spatial data, I use the data that comes with `ggplot` which means I don't need to fortify any SpatialDataFrames into ggplot-readable objects.
 
-```{r}
+```{r, echo = F}
 us <- map_data("state")
 ```
 
 I'll focus only on election outcomes post-1900 to reduce the number of political parties we'll need to map. The easiest way to do this is via `dplyr` after transforming the dataframe into a long dataframe. I will also sort any candidates that aren't Democrat or Republican into a new category, Third Party.
 
-```{r}
+```{r, echo = F}
 elections <- df_president_ts %>%
   #gather into long data
   gather(year, winner, `1789`:`2012`) %>%
@@ -53,7 +53,7 @@ elections <- df_president_ts %>%
 
 Now I will set up a base map to start editing before we animate it all. 
 
-```{r}
+```{r, fig.width = 5}
 ggplot() +
   # polygons
   geom_polygon(data = elections, aes(x = long, 
@@ -66,7 +66,7 @@ ggplot() +
 
 This map looks pretty horrible, so I'll edit the format and colors. Much of this is borrowed from [Timo Grossenbacher's blog post on creating beautiful maps in ggplot](https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only). I like to create this as a seperate theme object which I can then add to the ggplot object.
 
-```{r}
+```{r, echo = F}
 theme_map <- function(...) {
   theme_minimal() +
   theme(
@@ -88,7 +88,7 @@ theme_map <- function(...) {
 }
 ```
 
-```{r}
+```{r, fig.width = 5}
 ggplot() +
   # polygons
   geom_polygon(data = elections, aes(x = long, 
@@ -111,7 +111,7 @@ When using `gganimate`, the variable that you set as the frame aesthetic will be
 
 Unlike before, where I was calling data in the `geom_polygon` call, gganimate requires the data and frame aesthetic to be called in the original ggplot call.
 
-```{r}
+```{r, fig.width = 5}
 p1 <- ggplot(data = elections, aes(frame = year)) +
   # polygons
   geom_polygon(aes(x = long, y = lat, group = group, fill = party),
@@ -126,7 +126,7 @@ p1 <- ggplot(data = elections, aes(frame = year)) +
 
 Now I just call this plot `p1` in the `gganimate` function, setting the `interval` to 1.5 seconds.
 
-```{r}
+```{r, eval = F}
 gganimate(p1, interval = 1.5)
 ```
 
