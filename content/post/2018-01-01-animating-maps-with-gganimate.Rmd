@@ -16,7 +16,7 @@ There are many ways to create animated plots in R, including interactive tools s
 
 To illustrate this, let's look at the presidential election results from the 20th century, taking advantage of a dataset in the `choroplethr` package. This package also has it's own function to animate maps (choroplethr_animate), but I prefer using gganimate as it is more customizable and saves the resulting image as a gif, rather than an html file. 
 
-```{r, echo = F}
+```{r, echo = F, message= F}
 #load packages
 library(choroplethr)
 library(tidyverse)
@@ -30,13 +30,13 @@ data("df_president_ts")
 
 For the actual spatial data, I use the data that comes with `ggplot` which means I don't need to fortify any SpatialDataFrames into ggplot-readable objects.
 
-```{r, echo = F}
+```{r, echo = F, message = F}
 us <- map_data("state")
 ```
 
 I'll focus only on election outcomes post-1900 to reduce the number of political parties we'll need to map. The easiest way to do this is via `dplyr` after transforming the dataframe into a long dataframe. I will also sort any candidates that aren't Democrat or Republican into a new category, Third Party.
 
-```{r, echo = F}
+```{r, echo = F, message = F}
 elections <- df_president_ts %>%
   #gather into long data
   gather(year, winner, `1789`:`2012`) %>%
@@ -53,7 +53,7 @@ elections <- df_president_ts %>%
 
 Now I will set up a base map to start editing before we animate it all. 
 
-```{r, fig.width = 5}
+```{r, fig.width = 5, message = F}
 ggplot() +
   # polygons
   geom_polygon(data = elections, aes(x = long, 
@@ -88,7 +88,7 @@ theme_map <- function(...) {
 }
 ```
 
-```{r, fig.width = 5}
+```{r, fig.width = 5, message = F}
 ggplot() +
   # polygons
   geom_polygon(data = elections, aes(x = long, 
@@ -111,7 +111,7 @@ When using `gganimate`, the variable that you set as the frame aesthetic will be
 
 Unlike before, where I was calling data in the `geom_polygon` call, gganimate requires the data and frame aesthetic to be called in the original ggplot call.
 
-```{r, fig.width = 5}
+```{r, echo = F, message = F}
 p1 <- ggplot(data = elections, aes(frame = year)) +
   # polygons
   geom_polygon(aes(x = long, y = lat, group = group, fill = party),
