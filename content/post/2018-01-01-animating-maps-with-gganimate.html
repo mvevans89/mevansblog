@@ -99,3 +99,17 @@ data(&quot;df_president_ts&quot;)</code></pre>
 <p>Now I just call this plot <code>p1</code> in the <code>gganimate</code> function, setting the <code>interval</code> to 1.5 seconds.</p>
 <pre class="r"><code>gganimate(p1, interval = 1.5)</code></pre>
 <p>Essentially, what this function is doing is creating these plots, saving them in virtual memory, and then combining them using Image Magick (which can also be accessed via the command line). The ease of being able to combine this within one R script, rather than having to run shell scripts from within R, makes this an efficient, and reproducible, way to animate plots.</p>
+<p>The code above will open the image in your Image Viewer. If you want to save the image, simply include the filename in the call.</p>
+<pre><code>## Executing: 
+## convert -loop 0 -delay 150 Rplot1.png Rplot2.png Rplot3.png
+##     Rplot4.png Rplot5.png Rplot6.png Rplot7.png Rplot8.png
+##     Rplot9.png Rplot10.png Rplot11.png Rplot12.png Rplot13.png
+##     Rplot14.png Rplot15.png Rplot16.png Rplot17.png Rplot18.png
+##     Rplot19.png Rplot20.png Rplot21.png Rplot22.png Rplot23.png
+##     Rplot24.png Rplot25.png Rplot26.png Rplot27.png Rplot28.png
+##     Rplot29.png &#39;animationmap.gif&#39;</code></pre>
+<pre><code>## Output at: animationmap.gif</code></pre>
+<div class="figure">
+<img src="/post/animationmap.gif" />
+
+</div>
