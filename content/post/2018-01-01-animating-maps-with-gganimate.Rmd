@@ -53,7 +53,7 @@ elections <- df_president_ts %>%
 
 Now I will set up a base map to start editing before we animate it all. 
 
-```{r, fig.width = '80%', message = F, warning = F}
+```{r, message = F, warning = F}
 ggplot() +
   # polygons
   geom_polygon(data = elections, aes(x = long, 
@@ -88,7 +88,7 @@ theme_map <- function(...) {
 }
 ```
 
-```{r, fig.width = '80%', message = F, warning = F}
+```{r, message = F, warning = F}
 ggplot() +
   # polygons
   geom_polygon(data = elections, aes(x = long, 
@@ -126,7 +126,7 @@ p1 <- ggplot(data = elections, aes(frame = year)) +
 
 Now I just call this plot `p1` in the `gganimate` function, setting the `interval` to 1.5 seconds.
 
-```{r, fig.width = '80%', eval = F}
+```{r, eval = F}
 gganimate(p1, interval = 1.5)
 ```
 

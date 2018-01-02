@@ -5,14 +5,14 @@ languageCode = "en-us"
 copyright = "Michelle Evans"
 disqusShortname = ""
 googleAnalytics = ""
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$","_cache$"]
 
 [Author]
     name = "Michelle Evans"
     profile = "https://mvevans89.github.io/"
 
 [Taxonomies]
-    tag = "tag"
+    tag = "tags"
 
 [Params]
     intro = true

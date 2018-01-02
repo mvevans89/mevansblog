@@ -46,7 +46,7 @@ data(&quot;df_president_ts&quot;)</code></pre>
                                      group = group, 
                                      fill = party),
                 color = &quot;gray20&quot;)</code></pre>
-<p><img src="/post/2018-01-01-animating-maps-with-gganimate_files/figure-html/unnamed-chunk-4-1.png" width="288" /></p>
+<p><img src="/post/2018-01-01-animating-maps-with-gganimate_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>This map looks pretty horrible, so I’ll edit the format and colors. Much of this is borrowed from <a href="https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only">Timo Grossenbacher’s blog post on creating beautiful maps in ggplot</a>. I like to create this as a seperate theme object which I can then add to the ggplot object.</p>
 <pre class="r"><code>theme_map &lt;- function(...) {
   theme_minimal() +
@@ -83,7 +83,7 @@ data(&quot;df_president_ts&quot;)</code></pre>
        y = NULL, 
        title = &quot;US Presidential Election Results: 1900&quot; 
        )</code></pre>
-<p><img src="/post/2018-01-01-animating-maps-with-gganimate_files/figure-html/unnamed-chunk-6-1.png" width="288" /></p>
+<p><img src="/post/2018-01-01-animating-maps-with-gganimate_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>When using <code>gganimate</code>, the variable that you set as the frame aesthetic will be added to the title. This means I can then just set the title as “US Presidential Election Results:”, and the year number (i.e. 1900) will be appended onto the end.</p>
 <p>Unlike before, where I was calling data in the <code>geom_polygon</code> call, gganimate requires the data and frame aesthetic to be called in the original ggplot call.</p>
 <pre class="r"><code>p1 &lt;- ggplot(data = elections, aes(frame = year)) +
