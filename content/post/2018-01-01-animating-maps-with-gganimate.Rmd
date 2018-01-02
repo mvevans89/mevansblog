@@ -126,8 +126,16 @@ p1 <- ggplot(data = elections, aes(frame = year)) +
 
 Now I just call this plot `p1` in the `gganimate` function, setting the `interval` to 1.5 seconds.
 
-```{r, eval = T}
+```{r, eval = F}
 gganimate(p1, interval = 1.5)
 ```
 
 Essentially, what this function is doing is creating these plots, saving them in virtual memory, and then combining them using Image Magick (which can also be accessed via the command line). The ease of being able to combine this within one R script, rather than having to run shell scripts from within R, makes this an efficient, and reproducible, way to animate plots.
+
+The code above will open the image in your Image Viewer. If you want to save the image, simply include the filename in the call.
+
+```{r, echo = F}
+gganimate(p1, interval = 1.5, filename = "animationmap.gif")
+```
+
+![](/post/animationmap.gif)
