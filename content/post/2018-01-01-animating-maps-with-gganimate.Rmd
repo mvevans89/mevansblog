@@ -21,6 +21,7 @@ To illustrate this, let's look at the presidential election results from the 20t
 library(choroplethr)
 library(tidyverse)
 library(gganimate)
+library(maps)
 
 #download president data
 data("df_president_ts")
@@ -42,7 +43,7 @@ elections <- df_president_ts %>%
   #filter only elections after 1900
   filter(year >= 1900) %>%
   #join with state polygons
-  right_join(states, by = "region") %>%
+  right_join(us, by = "region") %>%
   mutate(party = case_when(
     winner %in% c("SR", "I", "AI", "PR") ~ "Third Party",
     winner == "D" ~ "Democrat",
@@ -106,7 +107,7 @@ ggplot() +
        )
 ```
 
-When using gganimate, the variable that you set as the frame aesthetic will be added to the title. This means I can then just set the title as "US Presidential Election Results: ", and the year number (i.e. 1900) will be appended onto the end.
+When using `gganimate`, the variable that you set as the frame aesthetic will be added to the title. This means I can then just set the title as "US Presidential Election Results: ", and the year number (i.e. 1900) will be appended onto the end.
 
 Unlike before, where I was calling data in the `geom_polygon` call, gganimate requires the data and frame aesthetic to be called in the original ggplot call.
 
@@ -121,7 +122,6 @@ p1 <- ggplot(data = elections, aes(frame = year)) +
                     na.value = "gray70",
                     name = "Winning Party") +
   ggtitle("US Presidential Election Results: ")
-p1
 ```
 
 Now I just call this plot `p1` in the `gganimate` function, setting the `interval` to 1.5 seconds.
