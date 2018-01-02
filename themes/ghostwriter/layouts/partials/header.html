@@ -35,7 +35,11 @@
                                 <a title="{{ .Site.Title }}" href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
                             </h1>
                         {{ end }}
-                        <a class="button-square" href="{{ .Site.BaseURL }}index.xml"><i class="fa fa-rss"></i></a>
+                        {{ with .Site.Params.email }}
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:{{ . }}">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        {{ end }}
                         {{ with .Site.Params.twitter }}
                             <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="{{ . }}">
                                 <i class="fa fa-twitter"></i>
@@ -66,11 +70,7 @@
                                 <i class="fa fa-google-plus"></i>
                             </a>
                         {{ end }}
-                        {{ with .Site.Params.email }}
-                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:{{ . }}">
-                                <i class="fa fa-envelope"></i>
-                            </a>
-                        {{ end }}
+
                     </div>
 
                     <ul class="site-nav">

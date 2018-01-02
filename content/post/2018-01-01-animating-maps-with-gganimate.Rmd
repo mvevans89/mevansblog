@@ -3,11 +3,16 @@ title: Animating Maps with gganimate
 author: Michelle Evans
 date: '2018-01-01'
 slug: gganimate
-categories: []
+categories: 
+  - animation
+  - ggplot
+  - spatial
+  - R
 tags:
   - animation
   - ggplot
   - spatial
+  - R
 ---
 
 I've recently been working on a monthly yellow fever dataset from Brazil that spans fourteen years. Overall, there are over 5600 spatial units and 168 months (that's nearly 1,000,000 rows of data for those of you keeping track). It is great to have access to so much data, but sometimes visualizing it can be a bit of a pain, especially when we are trying to look at patterns across time and space. Static maps can show the spatial patterns, time series plots can show seasonal patterns and can even be broken down to regions, but visualizing thousands of lines becomes basically uninterpretable. Luckily, in the age of computers, we are not limited to a static map, and can instead loop together maps over time using animation.
