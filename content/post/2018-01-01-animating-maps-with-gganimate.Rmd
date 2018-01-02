@@ -126,7 +126,7 @@ p1 <- ggplot(data = elections, aes(frame = year)) +
 
 Now I just call this plot `p1` in the `gganimate` function, setting the `interval` to 1.5 seconds.
 
-```{r, eval = F}
+```{r, eval = T}
 gganimate(p1, interval = 1.5)
 ```
 
