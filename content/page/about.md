@@ -1,7 +1,7 @@
----
++++
 title = "About"
 author = "Michelle Evans"
----
++++
 
 
 ![](/img/bbg8.png)
