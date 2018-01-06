@@ -140,5 +140,5 @@ gganimate(p1, interval = 1.5, filename = "animationmap.gif")
 ```
 
 <p align="center">
-<img src="/img/animationmap.gif" width="600px" >
+<img src="/img/animationmap.gif" width="800px" >
 </p>
