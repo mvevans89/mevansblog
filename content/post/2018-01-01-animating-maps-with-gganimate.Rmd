@@ -22,6 +22,7 @@ library(choroplethr)
 library(tidyverse)
 library(gganimate)
 library(maps)
+library(htmltools)
 
 #download president data
 data("df_president_ts")
@@ -134,8 +135,10 @@ Essentially, what this function is doing is creating these plots, saving them in
 
 The code above will open the image in your Image Viewer. If you want to save the image, simply include the filename in the call.
 
-```{r, echo = F}
+```{r, echo = T, eval = F}
 gganimate(p1, interval = 1.5, filename = "animationmap.gif")
 ```
 
-![](/post/animationmap.gif)
+<p align="center">
+<img src="/img/animationmap.gif" width="600px" >
+</p>
