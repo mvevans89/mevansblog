@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Mon, 01 Jan 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 28 Jan 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Battle Royal: sf vs. sp</title>
+      <link>/2018/01/28/sf-vs-sp/</link>
+      <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/01/28/sf-vs-sp/</guid>
+      <description>I’ve recently made the jump from sp to sf for a lot of my simple spatial work. I’ll go into this into more detail below, but this was mostly because it plays so nicely with my tidy workflow. But I’ve also been wondering if I gain anything else from making the switch, or worse, if I’m losing out? My two main questions:
+ Which is faster? Which one is better on my poor ol’ MacBook’s memory?</description>
+    </item>
     
     <item>
       <title>Animating Maps with gganimate</title>
