@@ -2,7 +2,6 @@
 title: 'Battle Royal: sf vs. sp'
 author: "Michelle Evans"
 date: '2018-01-28'
-draft: false
 slug: sf-vs-sp
 tags:
 - R
@@ -10,31 +9,39 @@ tags:
 categories: []
 ---
 
-```{r page setup, echo = F, message = F, warning = F}
+
+```{r, echo = F, warnings = F, message=F}
+
+knitr::opts_chunk$set(eval = F)
+
+```
+
+I've recently made the jump from `sp` to `sf` for a lot of my simple spatial work. I'll go into why in more detail below, but this was mostly because it plays **so** nicely with my `tidy` workflow. But I've also been wondering if I gain anything else from making the switch, or worse, if I'm losing out? My two main questions:
+
+- Which is faster?
+- Which one is better on my poor ol' MacBook's memory?
+
+For these analyses. you'll need the following packages:
+
+```{r, eval = T, warning = F, message = F}
 library(sp)
 library(raster)
 library(sf)
 library(pryr)
 library(dplyr)
-
-#devtools::install_github("tidyverse/ggplot2", force = T)
 library(ggplot2)
 ```
 
-I've recently made the jump from `sp` to `sf` for a lot of my simple spatial work. I'll go into this into more detail below, but this was mostly because it plays **so** nicely with my `tidy` workflow. But I've also been wondering if I gain anything else from making the switch, or worse, if I'm losing out? My two main questions:
-
-- Which is faster?
-- Which one is better on my poor ol' MacBook's memory?
     
 # Qualitative Differences
 
 As I mentioned, I mostly made the switch from `sp` to `sf` because it really cut down on the time and code length of my workflow plotting maps. There's plenty of other resources on the internet about this (start with the [simple features for R page](https://r-spatial.github.io/sf/index.html)), but here's a quick overview.
 
-Previously, I used `sp` for all of my spatial vector data (that's shapefiles or features for all your ESRI folks). It talks well with [GEOS](https://trac.osgeo.org/geos) and [GDAL](http://www.gdal.org/) through `rgeos` and `rgdal`, respectively, and generally just got the job done.  You can even put your data into a spatial dataframe object to attach any metadata to spatial features, such as the population of a census block. However, as I started to try and implement more and more of my workflow in the `tidyverse`, using packages like `dplyr` and `ggplot2`, I found myself wasting time translating between my spatial data workflow and my data wrangling and visualizing workflow. With large datastes, I also found that fortifying my data to plot (see [fortify reference page](http://ggplot2.tidyverse.org/reference/fortify.sp.html) for more info) was slooooooooooow and resulting in some huge objects memory wise.
+Previously, I used `sp` for all of my spatial vector data. It talks to [GEOS](https://trac.osgeo.org/geos) and [GDAL](http://www.gdal.org/) through `rgeos` and `rgdal`, respectively, and generally just got the job done.  You can even put your data into a spatial dataframe object to attach any metadata to spatial features, such as the population of a census block. However, as I started to try and implement more and more of my workflow in the `tidyverse`, using packages like `dplyr` and `ggplot2`, I found myself wasting time translating between my spatial data workflow and my data wrangling and visualizing workflow. With large datastes, I also found that fortifying my data to plot (see [fortify reference page](http://ggplot2.tidyverse.org/reference/fortify.sp.html) for more info) was slooooooooooow and resulting in some huge objects memory wise.
 
 And so I started the switch to `sf`. Even aesthetically, I find `sf` easier to deal with. Check out how the data for US counties looks like as a fortified `SpatialPolygonDataFrame`:
 
-```{r}
+```{r, eval = T, message = F}
 US.sp <- getData(name = "GADM", country = "USA", level = 2)
 US.fort <- ggplot2::fortify(US.sp)
 head(US.fort)
@@ -42,24 +49,24 @@ head(US.fort)
 
 versus as a `sf` object.
 
-```{r}
+```{r, eval = T, message = F}
 US.sf <- st_as_sf(US.sp)
-head(US.sf)
+head(US.sf[,c(1:5, ncol(US.sf))])
 ```
 
-Rather than splitting each polygon into multiple pieces per id, an `sf` object simply has a geometry column in the data.frame that specifies what type of spatial object it is (in this case a MULTIPOLYGON) and the spatial coordinates and info needed to analyze and plot the data spatially. For me, storing all that spatial info in one column really cleans things up and makes manipulating the dataset easier. It also keeps you from 'losing' metadata as you switch from SpatialDataFrames to Spatial objects.
+Rather than splitting each polygon into multiple pieces per id, an `sf` object simply has a geometry column in the data.frame that specifies what type of spatial object it is (in this case a MULTIPOLYGON) and the spatial coordinates and info needed to analyze and plot the data spatially. For me, storing all that spatial info in one column really cleans things up and makes manipulating the dataset easier. It also keeps you from misplacing metadata as you switch from SpatialDataFrames to Spatial objects (which is completely missing from the fortified object).
 
 In addition to my own personal preferences, simple features are meant to be faster because they call C and C++ code directly. 
 
 # But is it really faster? 
 
-For a play dataset, let's use the [NYC citibike data](https://www.citibikenyc.com/system-data) from May 2014 ([link to zip](https://s3.amazonaws.com/tripdata/201405-citibike-tripdata.zip). It's a pretty big dataset, nearly a million rows, and so is suitable for testing the speed and memory use of the different packages.
+For a play dataset, let's use the [NYC citibike data](https://www.citibikenyc.com/system-data) from May 2014 ([link to zip](https://s3.amazonaws.com/tripdata/201405-citibike-tripdata.zip)). It's a pretty big dataset, nearly a million rows, and so is suitable for testing the speed and memory use of the different packages.
 
 I use the `pryr` package to test memory usage and object size.
 
 If you aren't interested in the nitty gritty of what I'm comparing, [skip to the end](#endanchor) for a table and plot comparing the two.
 
-```{r, eval = T}
+```{r}
 #read in bike data from zip
 temp <- tempfile()
 download.file("https://s3.amazonaws.com/tripdata/201405-citibike-tripdata.zip", temp)
@@ -68,14 +75,15 @@ unlink(temp)
 rm(temp)
 ```
 
-```{r, echo = F, eval = F}
-bike <- read.csv("data/2014-05 - Citi Bike trip data.csv")
-```
-
 
 ```{r}
 #create dataframe to save results in
 results <- data.frame(method = rep(c("sp", "sf"), 4), test = rep(c("create", "transform", "reproject", "plot"), each = 2), speed = numeric(length = 8), size = numeric(length = 8), memoryUsage = numeric(length = 8))
+```
+
+
+```{r, eval = T, include = F}
+results <- readRDS("../../static/data/spsfresults.rds")
 ```
 
 ## Round one: creating spatial objects from lat/lon data
@@ -85,9 +93,9 @@ How do the two methods stack up when it comes to creating spatial data from coor
 ```{r}
 #get time
 results[1,3] <- system.time(SpatialPointsDataFrame(coords = bike[,c('start.station.longitude','start.station.latitude')], 
-                                                   data = bike))[2]
+                                                   data = bike))[3]
 results[2,3] <- system.time(st_as_sf(bike, 
-                                     coords = c('start.station.longitude','start.station.latitude')))[2]
+                                     coords = c('start.station.longitude','start.station.latitude')))[3]
 #get memory
 results[1,5] <- mem_change(bike.sp <- SpatialPointsDataFrame(coords = bike[,c('start.station.longitude','start.station.latitude')], 
                                                              data = bike))
@@ -145,7 +153,7 @@ LineFunction <- function(begin.coord, end.coord, method){
 
 ```{r}
 #get a subset of the data
-subsetSize <- 10000
+subsetSize <- 100000
 begin.coord <- bike %>%
   select(lon = start.station.longitude, lat = start.station.latitude) %>%
   slice(1:subsetSize)
@@ -159,10 +167,10 @@ end.coord <- bike %>%
 #get time
 results[3,3] <- system.time(LineFunction(begin.coord = begin.coord, 
                                          end.coor = end.coord, 
-                                         method = "sp"))[2]
+                                         method = "sp"))[3]
 results[4,3] <- system.time(LineFunction(begin.coord = begin.coord, 
                                          end.coor = end.coord, 
-                                         method = "sf"))[2]
+                                         method = "sf"))[3]
 
 #get memory
 results[3,5] <- mem_change(route.sp <- LineFunction(begin.coord = begin.coord,
@@ -182,7 +190,7 @@ results[4,4] <- object_size(route.sf)/1000000
 
 How did the two compare on turning our starting and end points into lines? `sp` took `r round(results[3,3], 3)` seconds to create a `r round(results[3,4], 3)` MB object, compared to `sf`'s time of `r round(results[4,3], 3)` seconds for a `r round(results[4,4], 3)` MB object.
 
-For this round, the winner is `sp`.
+For this round, the winner is `sf`.
 
 ## Round three: Spatial projections
 
@@ -192,8 +200,8 @@ I will reproject the 100,000 bicycle routes created in the last test.
 
 ```{r}
 #get time
-results[5,3] <- system.time(spTransform(route.sp, CRS("+init=epsg:2263")))[2]
-results[6,3] <- system.time(st_transform(route.sf, "+init=epsg:2263"))[2]
+results[5,3] <- system.time(spTransform(route.sp, CRS("+init=epsg:2263")))[3]
+results[6,3] <- system.time(st_transform(route.sf, "+init=epsg:2263"))[3]
 
 #get memory
 results[5,5] <- mem_change(route.sp.NYCproj <- spTransform(route.sp, CRS("+init=epsg:2263")))
@@ -242,8 +250,8 @@ sfPlot <- function(sfData){
 
 ```{r}
 #get time
-results[7,3] <- system.time(spPlot(spData = route.sp.NYCproj))[2]
-results[8,3] <- system.time(sfPlot(sfData = route.sf.NYCproj))[2]
+results[7,3] <- system.time(spPlot(spData = route.sp.NYCproj))[3]
+results[8,3] <- system.time(sfPlot(sfData = route.sf.NYCproj))[3]
 
 #get memory
 results[7,5] <- mem_change(plot.sp <- spPlot(spData = route.sp.NYCproj))
@@ -256,18 +264,22 @@ results[7,4] <- object_size(plot.sp)/1000000
 results[8,4] <- object_size(plot.sf)/1000000
 ```
 
-In visualizing the data, `sp` is the clear loser. Admittedly, this is not completely fair, as `sf` has its own ggplot `geom`. It may be that `sp` is faster when using base R to plot, but it is over 1000x slower using ggplot. Another plus is that ggplot automatically knows that the sf object is a map, and adjusts the axes accordingly.
+In mapping the data, `sp` is the clear loser. Admittedly, this is not completely fair, as `sf` has its own ggplot `geom`. It may be that `sp` is faster when using base R to plot, but it is over 1000x slower using ggplot. Another plus is that ggplot automatically knows that the sf object is a map, and adjusts the axes accordingly.
+
+```{r, echo = F, eval = F, include = F}
+saveRDS(results, "static/data/spsfresults.rds")
+```
 
 # Overall Winner {#endanchor}
 
 And the results...
 
-```{r, results = 'asis', echo = F}
+```{r, results = 'asis', echo = F, eval = T}
 knitr::kable(results, digits = 3)
 ```
 
 
-```{r, echo = F, warning = F, message=F}
+```{r, echo = F, warning = F, message=F, eval = T}
 library(tidyr)
 results.plot <- results %>%
   gather(variable, value, speed:memoryUsage) 
@@ -280,13 +292,15 @@ ggplot(data = results.plot, aes(x=test, y = value, group = method))+
   scale_fill_tableau()
 ```
 
-While it takes longer to create a simple feature from a csv, and the original object is larger, if you are going to be doing anything with that object, it's worth it. All the other tests (transforming, reproject, and plotting) were much faster when using `sf` methods than `sp`. They also used less memory overall.
+While it takes longer to create a simple feature from a csv, and the original object is larger, if you are going to be doing anything with that object, it's worth it. In the time of cheap memory, I don't foresee the size of objects limiting my use of `sf`. Plus the additional time up-front is more than made up for when taking into the account the time for other calculations. All the other tests (transforming, reproject, and plotting) were much faster when using `sf` methods than `sp`.
 
-# **Winner**: `sp`
+For me, at least, there is a pretty clear choice, across ease of integration into a `tidy` workflow, speed, and memory use.
+
+# **Winner**: `sf`
 
 *System Info*
 
-```{r, echo = F}
+```{r, echo = F, eval = T}
 version
 ```
 

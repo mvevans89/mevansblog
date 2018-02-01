@@ -1,8 +1,7 @@
 ---
 title: 'Battle Royal: sf vs. sp'
-author: "Michell Evans"
+author: "Michelle Evans"
 date: '2018-01-28'
-draft: true
 slug: sf-vs-sp
 tags:
 - R
@@ -12,20 +11,26 @@ categories: []
 
 
 
-<p>I’ve recently made the jump from <code>sp</code> to <code>sf</code> for a lot of my simple spatial work. I’ll go into this into more detail below, but this was mostly because it plays <strong>so</strong> nicely with my <code>tidy</code> workflow. But I’ve also been wondering if I gain anything else from making the switch, or worse, if I’m losing out? My two main questions:</p>
+<p>I’ve recently made the jump from <code>sp</code> to <code>sf</code> for a lot of my simple spatial work. I’ll go into why in more detail below, but this was mostly because it plays <strong>so</strong> nicely with my <code>tidy</code> workflow. But I’ve also been wondering if I gain anything else from making the switch, or worse, if I’m losing out? My two main questions:</p>
 <ul>
 <li>Which is faster?</li>
 <li>Which one is better on my poor ol’ MacBook’s memory?</li>
 </ul>
+<p>For these analyses. you’ll need the following packages:</p>
+<pre class="r"><code>library(sp)
+library(raster)
+library(sf)
+library(pryr)
+library(dplyr)
+library(ggplot2)</code></pre>
 <div id="qualitative-differences" class="section level1">
 <h1>Qualitative Differences</h1>
 <p>As I mentioned, I mostly made the switch from <code>sp</code> to <code>sf</code> because it really cut down on the time and code length of my workflow plotting maps. There’s plenty of other resources on the internet about this (start with the <a href="https://r-spatial.github.io/sf/index.html">simple features for R page</a>), but here’s a quick overview.</p>
-<p>Previously, I used <code>sp</code> for all of my spatial vector data (that’s shapefiles or features for all your ESRI folks). It talks well with <a href="https://trac.osgeo.org/geos">GEOS</a> and <a href="http://www.gdal.org/">GDAL</a> through <code>rgeos</code> and <code>rgdal</code>, respectively, and generally just got the job done. You can even put your data into a spatial dataframe object to attach any metadata to spatial features, such as the population of a census block. However, as I started to try and implement more and more of my workflow in the <code>tidyverse</code>, using packages like <code>dplyr</code> and <code>ggplot2</code>, I found myself wasting time translating between my spatial data workflow and my data wrangling and visualizing workflow. With large datastes, I also found that fortifying my data to plot (see <a href="http://ggplot2.tidyverse.org/reference/fortify.sp.html">fortify reference page</a> for more info) was slooooooooooow and resulting in some huge objects memory wise.</p>
+<p>Previously, I used <code>sp</code> for all of my spatial vector data. It talks to <a href="https://trac.osgeo.org/geos">GEOS</a> and <a href="http://www.gdal.org/">GDAL</a> through <code>rgeos</code> and <code>rgdal</code>, respectively, and generally just got the job done. You can even put your data into a spatial dataframe object to attach any metadata to spatial features, such as the population of a census block. However, as I started to try and implement more and more of my workflow in the <code>tidyverse</code>, using packages like <code>dplyr</code> and <code>ggplot2</code>, I found myself wasting time translating between my spatial data workflow and my data wrangling and visualizing workflow. With large datastes, I also found that fortifying my data to plot (see <a href="http://ggplot2.tidyverse.org/reference/fortify.sp.html">fortify reference page</a> for more info) was slooooooooooow and resulting in some huge objects memory wise.</p>
 <p>And so I started the switch to <code>sf</code>. Even aesthetically, I find <code>sf</code> easier to deal with. Check out how the data for US counties looks like as a fortified <code>SpatialPolygonDataFrame</code>:</p>
 <pre class="r"><code>US.sp &lt;- getData(name = &quot;GADM&quot;, country = &quot;USA&quot;, level = 2)
-US.fort &lt;- ggplot2::fortify(US.sp)</code></pre>
-<pre><code>## Regions defined for each Polygons</code></pre>
-<pre class="r"><code>head(US.fort)</code></pre>
+US.fort &lt;- ggplot2::fortify(US.sp)
+head(US.fort)</code></pre>
 <pre><code>##        long      lat order  hole piece id group
 ## 1 -86.91668 32.66431     1 FALSE     1  1   1.1
 ## 2 -86.82678 32.66050     2 FALSE     1  1   1.1
@@ -35,40 +40,26 @@ US.fort &lt;- ggplot2::fortify(US.sp)</code></pre>
 ## 6 -86.48526 32.70788     6 FALSE     1  1   1.1</code></pre>
 <p>versus as a <code>sf</code> object.</p>
 <pre class="r"><code>US.sf &lt;- st_as_sf(US.sp)
-head(US.sf)</code></pre>
-<pre><code>## Simple feature collection with 6 features and 15 fields
+head(US.sf[,c(1:5, ncol(US.sf))])</code></pre>
+<pre><code>## Simple feature collection with 6 features and 5 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
 ## bbox:           xmin: -88.02935 ymin: 30.223 xmax: -85.0595 ymax: 34.26085
 ## epsg (SRID):    4326
 ## proj4string:    +proj=longlat +datum=WGS84 +no_defs
-##   OBJECTID ID_0 ISO        NAME_0 ID_1  NAME_1 ID_2  NAME_2   HASC_2 CCN_2
-## 1        1  244 USA United States    1 Alabama    1 Autauga US.AL.AU    NA
-## 2        2  244 USA United States    1 Alabama    2 Baldwin US.AL.BD    NA
-## 3        3  244 USA United States    1 Alabama    3 Barbour US.AL.BR    NA
-## 4        4  244 USA United States    1 Alabama    4    Bibb US.AL.BI    NA
-## 5        5  244 USA United States    1 Alabama    5  Blount US.AL.BU    NA
-## 6        6  244 USA United States    1 Alabama    6 Bullock US.AL.BL    NA
-##   CCA_2 TYPE_2 ENGTYPE_2 NL_NAME_2 VARNAME_2
-## 1       County    County                    
-## 2       County    County                    
-## 3       County    County                    
-## 4       County    County                    
-## 5       County    County                    
-## 6       County    County                    
-##                         geometry
-## 1 MULTIPOLYGON (((-86.9166793...
-## 2 MULTIPOLYGON (((-87.5105590...
-## 3 MULTIPOLYGON (((-85.1302566...
-## 4 MULTIPOLYGON (((-87.4207839...
-## 5 MULTIPOLYGON (((-86.9532165...
-## 6 MULTIPOLYGON (((-85.4100189...</code></pre>
-<p>Rather than splitting each polygon into multiple pieces per id, an <code>sf</code> object simply has a geometry column in the data.frame that specifies what type of spatial object it is (in this case a MULTIPOLYGON) and the spatial coordinates and info needed to analyze and plot the data spatially. For me, storing all that spatial info in one column really cleans things up and makes manipulating the dataset easier. It also keeps you from ‘losing’ metadata as you switch from SpatialDataFrames to Spatial objects.</p>
+##   OBJECTID ID_0 ISO        NAME_0 ID_1                       geometry
+## 1        1  244 USA United States    1 MULTIPOLYGON (((-86.9166793...
+## 2        2  244 USA United States    1 MULTIPOLYGON (((-87.5105590...
+## 3        3  244 USA United States    1 MULTIPOLYGON (((-85.1302566...
+## 4        4  244 USA United States    1 MULTIPOLYGON (((-87.4207839...
+## 5        5  244 USA United States    1 MULTIPOLYGON (((-86.9532165...
+## 6        6  244 USA United States    1 MULTIPOLYGON (((-85.4100189...</code></pre>
+<p>Rather than splitting each polygon into multiple pieces per id, an <code>sf</code> object simply has a geometry column in the data.frame that specifies what type of spatial object it is (in this case a MULTIPOLYGON) and the spatial coordinates and info needed to analyze and plot the data spatially. For me, storing all that spatial info in one column really cleans things up and makes manipulating the dataset easier. It also keeps you from misplacing metadata as you switch from SpatialDataFrames to Spatial objects (which is completely missing from the fortified object).</p>
 <p>In addition to my own personal preferences, simple features are meant to be faster because they call C and C++ code directly.</p>
 </div>
 <div id="but-is-it-really-faster" class="section level1">
 <h1>But is it really faster?</h1>
-<p>For a play dataset, let’s use the <a href="https://www.citibikenyc.com/system-data">NYC citibike data</a> from May 2014 (<a href="https://s3.amazonaws.com/tripdata/201405-citibike-tripdata.zip">link to zip</a>. It’s a pretty big dataset, nearly a million rows, and so is suitable for testing the speed and memory use of the different packages.</p>
+<p>For a play dataset, let’s use the <a href="https://www.citibikenyc.com/system-data">NYC citibike data</a> from May 2014 (<a href="https://s3.amazonaws.com/tripdata/201405-citibike-tripdata.zip">link to zip</a>). It’s a pretty big dataset, nearly a million rows, and so is suitable for testing the speed and memory use of the different packages.</p>
 <p>I use the <code>pryr</code> package to test memory usage and object size.</p>
 <p>If you aren’t interested in the nitty gritty of what I’m comparing, <a href="#endanchor">skip to the end</a> for a table and plot comparing the two.</p>
 <pre class="r"><code>#read in bike data from zip
@@ -84,9 +75,9 @@ results &lt;- data.frame(method = rep(c(&quot;sp&quot;, &quot;sf&quot;), 4), tes
 <p>How do the two methods stack up when it comes to creating spatial data from coordinates? In this case, I want to keep the metadata attached to the spatial data, so will convert to a SpatialPointsDataFrame. For now, let’s just use the bike pick-up locations.</p>
 <pre class="r"><code>#get time
 results[1,3] &lt;- system.time(SpatialPointsDataFrame(coords = bike[,c(&#39;start.station.longitude&#39;,&#39;start.station.latitude&#39;)], 
-                                                   data = bike))[2]
+                                                   data = bike))[3]
 results[2,3] &lt;- system.time(st_as_sf(bike, 
-                                     coords = c(&#39;start.station.longitude&#39;,&#39;start.station.latitude&#39;)))[2]
+                                     coords = c(&#39;start.station.longitude&#39;,&#39;start.station.latitude&#39;)))[3]
 #get memory
 results[1,5] &lt;- mem_change(bike.sp &lt;- SpatialPointsDataFrame(coords = bike[,c(&#39;start.station.longitude&#39;,&#39;start.station.latitude&#39;)], 
                                                              data = bike))
@@ -100,8 +91,8 @@ bike.sf &lt;- st_as_sf(bike, coords = c(&#39;start.station.longitude&#39;,&#39;s
 #size of objects
 results[1,4] &lt;- object_size(bike.sp)/1000000
 results[2,4] &lt;- object_size(bike.sf)/1000000</code></pre>
-<p>So far, it looks like <code>sp</code> is outperforming <code>sf</code>. The SpatialDataFrame is about 0.575 the size of the simple feature, and only took 0.076 the amount of time as it did to create the simple feature.</p>
-<p>Looks like <code>sp</code> is the faster, lighter option for this step. However, even for this large dataset, <code>sf</code> only took 0.642 seconds, so it may not matter much in the scheme of things.</p>
+<p>So far, it looks like <code>sp</code> is outperforming <code>sf</code>. The SpatialDataFrame is about 0.575 the size of the simple feature, and only took 0.008 the amount of time as it did to create the simple feature.</p>
+<p>Looks like <code>sp</code> is the faster, lighter option for this step. However, even for this large dataset, <code>sf</code> only took 32.906 seconds, so it may not matter much in the scheme of things.</p>
 </div>
 <div id="round-two-spatial-transformations" class="section level2">
 <h2>Round two: spatial transformations</h2>
@@ -131,7 +122,7 @@ LineFunction &lt;- function(begin.coord, end.coord, method){
   else return(print(&quot;Choose a method, sp or sf.&quot;))
 }</code></pre>
 <pre class="r"><code>#get a subset of the data
-subsetSize &lt;- 10000
+subsetSize &lt;- 100000
 begin.coord &lt;- bike %&gt;%
   select(lon = start.station.longitude, lat = start.station.latitude) %&gt;%
   slice(1:subsetSize)
@@ -142,10 +133,10 @@ end.coord &lt;- bike %&gt;%
 <pre class="r"><code>#get time
 results[3,3] &lt;- system.time(LineFunction(begin.coord = begin.coord, 
                                          end.coor = end.coord, 
-                                         method = &quot;sp&quot;))[2]
+                                         method = &quot;sp&quot;))[3]
 results[4,3] &lt;- system.time(LineFunction(begin.coord = begin.coord, 
                                          end.coor = end.coord, 
-                                         method = &quot;sf&quot;))[2]
+                                         method = &quot;sf&quot;))[3]
 
 #get memory
 results[3,5] &lt;- mem_change(route.sp &lt;- LineFunction(begin.coord = begin.coord,
@@ -161,16 +152,16 @@ route.sf &lt;- LineFunction(begin.coord = begin.coord, end.coor = end.coord, met
 
 results[3,4] &lt;- object_size(route.sp)/1000000
 results[4,4] &lt;- object_size(route.sf)/1000000</code></pre>
-<p>How did the two compare on turning our starting and end points into lines? <code>sp</code> took 0.104 seconds to create a 8.883 MB object, compared to <code>sf</code>’s time of 0.014 seconds for a 4.844 MB object.</p>
-<p>For this round, the winner is <code>sp</code>.</p>
+<p>How did the two compare on turning our starting and end points into lines? <code>sp</code> took 244.318 seconds to create a 88.803 MB object, compared to <code>sf</code>’s time of 195.87 seconds for a 48.404 MB object.</p>
+<p>For this round, the winner is <code>sf</code>.</p>
 </div>
 <div id="round-three-spatial-projections" class="section level2">
 <h2>Round three: Spatial projections</h2>
 <p>How about some more explicit GIS operations? For this, I’m looking at simple spatial reprojections, in this case from a WGS84, lat/long projection (EPSG 4326) to a more appropriate NY State Plane Long Island Zone (EPSG 2263) projection.</p>
 <p>I will reproject the 100,000 bicycle routes created in the last test.</p>
 <pre class="r"><code>#get time
-results[5,3] &lt;- system.time(spTransform(route.sp, CRS(&quot;+init=epsg:2263&quot;)))[2]
-results[6,3] &lt;- system.time(st_transform(route.sf, &quot;+init=epsg:2263&quot;))[2]
+results[5,3] &lt;- system.time(spTransform(route.sp, CRS(&quot;+init=epsg:2263&quot;)))[3]
+results[6,3] &lt;- system.time(st_transform(route.sf, &quot;+init=epsg:2263&quot;))[3]
 
 #get memory
 results[5,5] &lt;- mem_change(route.sp.NYCproj &lt;- spTransform(route.sp, CRS(&quot;+init=epsg:2263&quot;)))
@@ -207,8 +198,8 @@ sfPlot &lt;- function(sfData){
   return(p)
 }</code></pre>
 <pre class="r"><code>#get time
-results[7,3] &lt;- system.time(spPlot(spData = route.sp.NYCproj))[2]
-results[8,3] &lt;- system.time(sfPlot(sfData = route.sf.NYCproj))[2]
+results[7,3] &lt;- system.time(spPlot(spData = route.sp.NYCproj))[3]
+results[8,3] &lt;- system.time(sfPlot(sfData = route.sf.NYCproj))[3]
 
 #get memory
 results[7,5] &lt;- mem_change(plot.sp &lt;- spPlot(spData = route.sp.NYCproj))
@@ -219,12 +210,12 @@ plot.sp &lt;- spPlot(spData = route.sp.NYCproj)
 plot.sf &lt;- sfPlot(sfData = route.sf.NYCproj)
 results[7,4] &lt;- object_size(plot.sp)/1000000
 results[8,4] &lt;- object_size(plot.sf)/1000000</code></pre>
-<p>In visualizing the data, <code>sp</code> is the clear loser. Admittedly, this is not completely fair, as <code>sf</code> has its own ggplot <code>geom</code>. It may be that <code>sp</code> is faster when using base R to plot, but it is over 1000x slower using ggplot. Another plus is that ggplot automatically knows that the sf object is a map, and adjusts the axes accordingly.</p>
+<p>In mapping the data, <code>sp</code> is the clear loser. Admittedly, this is not completely fair, as <code>sf</code> has its own ggplot <code>geom</code>. It may be that <code>sp</code> is faster when using base R to plot, but it is over 1000x slower using ggplot. Another plus is that ggplot automatically knows that the sf object is a map, and adjusts the axes accordingly.</p>
 </div>
 </div>
 <div id="endanchor" class="section level1">
 <h1>Overall Winner</h1>
-<p>And the over all results…</p>
+<p>And the results…</p>
 <table>
 <thead>
 <tr class="header">
@@ -239,70 +230,73 @@ results[8,4] &lt;- object_size(plot.sf)/1000000</code></pre>
 <tr class="odd">
 <td align="left">sp</td>
 <td align="left">create</td>
-<td align="right">0.049</td>
+<td align="right">0.274</td>
 <td align="right">168.690</td>
-<td align="right">13901104</td>
+<td align="right">13889560</td>
 </tr>
 <tr class="even">
 <td align="left">sf</td>
 <td align="left">create</td>
-<td align="right">0.642</td>
+<td align="right">32.906</td>
 <td align="right">293.407</td>
-<td align="right">179953728</td>
+<td align="right">180198200</td>
 </tr>
 <tr class="odd">
 <td align="left">sp</td>
 <td align="left">transform</td>
-<td align="right">0.104</td>
-<td align="right">8.883</td>
-<td align="right">9381240</td>
+<td align="right">244.318</td>
+<td align="right">88.803</td>
+<td align="right">93621384</td>
 </tr>
 <tr class="even">
 <td align="left">sf</td>
 <td align="left">transform</td>
-<td align="right">0.014</td>
-<td align="right">4.844</td>
-<td align="right">5642896</td>
+<td align="right">195.870</td>
+<td align="right">48.404</td>
+<td align="right">56403160</td>
 </tr>
 <tr class="odd">
 <td align="left">sp</td>
 <td align="left">reproject</td>
-<td align="right">0.231</td>
-<td align="right">16.642</td>
-<td align="right">6735232</td>
+<td align="right">65.969</td>
+<td align="right">166.402</td>
+<td align="right">67215376</td>
 </tr>
 <tr class="even">
 <td align="left">sf</td>
 <td align="left">reproject</td>
-<td align="right">0.000</td>
-<td align="right">5.804</td>
-<td align="right">3615504</td>
+<td align="right">1.167</td>
+<td align="right">58.004</td>
+<td align="right">36015648</td>
 </tr>
 <tr class="odd">
 <td align="left">sp</td>
 <td align="left">plot</td>
-<td align="right">0.909</td>
-<td align="right">8.993</td>
-<td align="right">1273376</td>
+<td align="right">944.403</td>
+<td align="right">85.313</td>
+<td align="right">14432280</td>
 </tr>
 <tr class="even">
 <td align="left">sf</td>
 <td align="left">plot</td>
-<td align="right">0.002</td>
-<td align="right">3.753</td>
-<td align="right">50520</td>
+<td align="right">0.008</td>
+<td align="right">32.192</td>
+<td align="right">50552</td>
 </tr>
 </tbody>
 </table>
-<p><img src="/post/2018-01-27-battle-royal-sf-vs-sp_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-<p>While it takes longer to create a simple feature from a csv, and the original object is larger, if you are going to be doing anything with that object, it’s worth it. All the other tests (transforming, reproject, and plotting) were much faster when using <code>sf</code> methods than <code>sp</code>. They also used less memory overall.</p>
-<p><strong>Winner</strong>: <code>sp</code></p>
+<p><img src="/post/2018-01-27-battle-royal-sf-vs-sp_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>While it takes longer to create a simple feature from a csv, and the original object is larger, if you are going to be doing anything with that object, it’s worth it. In the time of cheap memory, I don’t foresee the size of objects limiting my use of <code>sf</code>. Plus the additional time up-front is more than made up for when taking into the account the time for other calculations. All the other tests (transforming, reproject, and plotting) were much faster when using <code>sf</code> methods than <code>sp</code>.</p>
+<p>For me, at least, there is a pretty clear choice, across ease of integration into a <code>tidy</code> workflow, speed, and memory use.</p>
+</div>
+<div id="winner-sf" class="section level1">
+<h1><strong>Winner</strong>: <code>sf</code></h1>
 <p><em>System Info</em></p>
 <pre><code>##                _                           
-## platform       x86_64-apple-darwin15.6.0   
+## platform       x86_64-pc-linux-gnu         
 ## arch           x86_64                      
-## os             darwin15.6.0                
-## system         x86_64, darwin15.6.0        
+## os             linux-gnu                   
+## system         x86_64, linux-gnu           
 ## status                                     
 ## major          3                           
 ## minor          4.3                         
