@@ -1,7 +1,7 @@
 ---
 title: Ebola Outbreak in DRC 2018
 author: Michelle
-date: '2018-05-14'
+date: '2018-05-15'
 slug: drc-ebola
 categories: []
 tags:
@@ -77,26 +77,14 @@ ebola.data <- rbind(who.data.tidy, moh.data)
 
 # Epidemic Curve
 
-The epidemic curve shows the number of cases per reporting period. Here, I combine the cases across all health zones.
+The epidemic curve shows the number of cases per reporting period. Here, I plot the cumulative cases, which is how the CDC and MOH report them.
 
 ```{r}
-
-#create function to undo cumulative
-unCumulate <- function(vector){
-  new <- vector - lag(vector,1)
-  #fix NA at starting value
-  new[1] <- vector[1]
-  return(new)
-}
 
 p <- ebola.data %>%
   dplyr::select(-health_zone) %>%
   group_by(Date, source, type) %>%
   summarise_all(sum, na.rm=T) %>%
-  #get values by removing the cumulative
-  spread(type, number) %>%
-  summarise_all(funs(unCumulate)) %>%
-  gather(type, number, confirmed_cases:suspect_cases) %>%
   ungroup() %>%
   #shrink labels by wrapping
   mutate(labels = gsub("_", "\n",type)) %>%
@@ -121,7 +109,7 @@ The cases are reported by health zone. You can download a shapefile or GeoJSON o
 
 In the map below, you can toggle between cases reported by the WHO, the DRC Ministry of Health, or both combined.
 
-```{r}
+```{r, message=F}
 health.zones <- readOGR("../../static/data/drc-ebola", "healthZones2", stringsAsFactors = F)
 
 #add to health data
@@ -187,7 +175,7 @@ leaflet(both.map) %>%
     addPolygons(color = "gray08", 
                 fillOpacity = 0.5, 
                 fillColor = ~pal(suspect_cases),
-                label = labels.who,
+                label = labels.both,
                 highlightOptions = highlightOptions(color = "#444444", weight = 2,
                                                   bringToFront = TRUE), 
                 group = "Both") %>%
