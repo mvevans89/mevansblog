@@ -7,6 +7,7 @@ categories: []
 tags:
   - R
   - leaflet
+  - Ebola
 description: ''
 ---
 
@@ -38,10 +39,11 @@ All of the data is in a public github repository that can be accessed within `R`
 ```{r}
 who.data <- read.csv(text = getURL( "https://raw.githubusercontent.com/cmrivers/ebola_drc/master/who/data.csv"), stringsAsFactors = F, header = T)
 
-drc.data <- read.csv(text = getURL("https://raw.githubusercontent.com/cmrivers/ebola_drc/master/drc/data.csv"), stringsAsFactors = F, header = T)
-```
+who.data$source <- "WHO"
 
-I'm just going to work with the WHO data, but the code above also gets the DRC Ministry of Health Data if you are interested.
+drc.data <- read.csv(text = getURL("https://raw.githubusercontent.com/cmrivers/ebola_drc/master/drc/data.csv"), stringsAsFactors = F, header = T)
+drc.data$source <- "MOH"
+```
 
 According to the [WHO website](http://www.who.int/csr/don/14-may-2018-ebola-drc/en/), this includes the confirmed, probable, and suspected cases. Deaths are split with an additional category for health care workers. As of 2018-05-14, the data was being reported as cumulative, although the DON reports are not always clear.
 
@@ -49,6 +51,24 @@ According to the [WHO website](http://www.who.int/csr/don/14-may-2018-ebola-drc/
 head(who.data)
 ```
 
+We can combine this into one data frame to look at data from both sources. I also turn it into tidy, long data to work with it in `ggplot` later.
+
+```{r}
+who.data.tidy <- who.data %>%
+  mutate(Date = as.Date(as.character(report_date), format = "%Y%m%d")) %>%
+  gather(type, number, confirmed_cases:hcw)
+
+moh.data <- drc.data %>%
+  mutate(Date = as.Date(as.character(report_date), format = "%Y%m%d")) %>%
+  #rename so columns match who
+  rename(deaths = confirmed_deaths) %>%
+  #drop probable deaths
+  select(-probable_deaths) %>%
+  gather(type, number, confirmed_cases:hcw)
+
+#combine into one
+ebola.data <- rbind(who.data.tidy, moh.data)
+```
 
 # Epidemic Curve
 
@@ -64,22 +84,31 @@ unCumulate <- function(vector){
   return(new)
 }
 
-who.data %>%
-  dplyr::select(-health_zone, -hcw) %>%
-  group_by(report_date) %>%
+p <- ebola.data %>%
+  dplyr::select(-health_zone, -report_date) %>%
+  group_by(Date, source, type) %>%
   summarise_all(sum, na.rm=T) %>%
   #get values by removing the cumulative
-  mutate_at(c("confirmed_cases", "probable_cases", "suspect_cases", "deaths"), funs(unCumulate)) %>%
-  mutate(Date = as.Date(as.character(report_date), format = "%Y%m%d")) %>%
-  gather(type, number, confirmed_cases:deaths) %>%
+  spread(type, number) %>%
+  summarise_all(funs(unCumulate)) %>%
+  gather(type, number, confirmed_cases:suspect_deaths) %>%
+  ungroup() %>%
+  #shrink labels by wrapping
+  mutate(labels = gsub("_", "\n",type)) %>%
+    #order labels
+  mutate(labels = factor(labels, levels = c("suspect\ncases", "probable\ncases", "confirmed\ncases",
+                                         "suspect\ndeaths", "deaths", "hcw"))) %>%
   ggplot(., aes(x=Date, y = number)) +
   geom_bar(stat="identity", fill = "navyblue", color = NA) +
-  theme_bw()+
-  facet_wrap(~type, dir = "v", nrow = 4)
+  theme_minimal()+
+  facet_grid(labels~source) +
+  theme(strip.text.y = element_text(angle = 0))
   
+ggplotly(p) %>%
+  layout(margin = list(r=100))
 ```
 
-As of May 14th, we only have two reporting dates, so can't see much about the dynamics of the epidemic yet.
+As of May 14th, we don't have many reporting dates, so can't say much about the dynamics of the epidemic yet.
 
 # Spatial Distribution of Suspected Cases
 
@@ -89,7 +118,7 @@ The cases are reported by health zone. You can download a shapefile or GeoJSON o
 health.zones <- readOGR("../../static/data/drc-ebola", "healthZones2", stringsAsFactors = F)
 
 #add to health data
-ebola.zone <- who.data %>%
+ebola.zone <- ebola.data %>%
   dplyr::select(-report_date) %>%
   group_by(health_zone) %>%
   summarise_all(sum, na.rm = T) %>%
