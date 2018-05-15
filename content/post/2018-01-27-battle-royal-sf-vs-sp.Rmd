@@ -30,6 +30,8 @@ library(sf)
 library(pryr)
 library(dplyr)
 library(ggplot2)
+library(tidyr)
+library(ggthemes)
 ```
 
     
@@ -123,7 +125,7 @@ Looks like `sp` is the faster, lighter option for this step. However, even for t
 Next I wanted to try a simple transformation of the spatial data, drawing a line between the starting and ending bike stations for the first 100,000 trips (I'm choosing a subset to avoid a computer explosion).
 
 <p align="center">
-<img src="/img/computerExplore.gif" width="300px" >
+<img src="/img/computerExplode.gif" width="300px" >
 </p>
 
 *Quick Qualifier: I'm not arguing this is the most efficient way to create lines from starting and ending coordinates, but this is using a similar method and amount of code for each method. This was mostly gleaned from this [stackoverflow thread](https://stackoverflow.com/questions/20531066/convert-begin-and-end-coordinates-into-spatial-lines-in-r).*
@@ -280,11 +282,11 @@ knitr::kable(results, digits = 3)
 
 
 ```{r, echo = F, warning = F, message=F, eval = T}
-library(tidyr)
+
 results.plot <- results %>%
   gather(variable, value, speed:memoryUsage) 
 
-library(ggthemes)
+
 ggplot(data = results.plot, aes(x=test, y = value, group = method))+
   geom_bar(stat = "identity", aes(fill = method), position = position_dodge())+
   facet_wrap(~variable, scales = "free", dir = "v")+

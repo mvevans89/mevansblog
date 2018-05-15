@@ -1,0 +1,128 @@
+---
+title: Ebola Outbreak in DRC 2018
+author: Michelle
+date: '2018-05-14'
+slug: drc-ebola
+categories: []
+tags:
+  - R
+  - leaflet
+description: ''
+---
+
+An outbreak of Ebola occurred in the Equator province of the Democratic Republic of Congo in April 2018. The WHO published its first Disease Outbreak News on the outbreak on May 10th and began efforts to conduct ring vaccination around the area. You can read more about it on the [WHO's website on the 2018 Ebola outbreak in the DRC](http://www.who.int/ebola/situation-reports/drc-2018/en/).
+
+Since the start of the outbreak, [Caitlin Rivers](https://www.jhsph.edu/faculty/directory/profile/3525/caitlin-m-rivers), an Assistant Professor at the John Hopkins Center for Health Security has been digitizing the WHO Disease Outbreak Network situations reports and the DRC Ministry of Health mailing list reports and posting the data on her [github repository](https://github.com/cmrivers/ebola_drc).
+
+I've put together some visualizations to explore the data here. This is more of an exploration of the data than a tutorial in how to do so, but all of the code is provided if you want to take a shot at it yourself.
+
+# Last Updated: May 14, 2018
+
+# Packages you'll need
+
+```{r, eval = T, warning = F, message = F}
+library(tidyr)
+library(sp)
+library(leaflet)
+library(rgdal)
+library(RCurl)
+library(ggplot2)
+library(dplyr)
+```
+
+
+# Accessing Github Data
+
+All of the data is in a public github repository that can be accessed within `R`, making it easy to update by simply rendering the document. You need the `RCurl` package to read the `csv` file. To read in a github `csv` file you need click on the "Raw" button to get the url of the raw text file.
+
+```{r}
+who.data <- read.csv(text = getURL( "https://raw.githubusercontent.com/cmrivers/ebola_drc/master/who/data.csv"), stringsAsFactors = F, header = T)
+
+drc.data <- read.csv(text = getURL("https://raw.githubusercontent.com/cmrivers/ebola_drc/master/drc/data.csv"), stringsAsFactors = F, header = T)
+```
+
+I'm just going to work with the WHO data, but the code above also gets the DRC Ministry of Health Data if you are interested.
+
+According to the [WHO website](http://www.who.int/csr/don/14-may-2018-ebola-drc/en/), this includes the confirmed, probable, and suspected cases. Deaths are split with an additional category for health care workers. As of 2018-05-14, the data was being reported as cumulative, although the DON reports are not always clear.
+
+```{r}
+head(who.data)
+```
+
+
+# Epidemic Curve
+
+The epidemic curve shows the number of cases per reporting period. Here, I combine the cases across all health zones.
+
+```{r}
+
+#create function to undo cumulative
+unCumulate <- function(vector){
+  new <- vector - lag(vector,1)
+  #fix NA at starting value
+  new[1] <- vector[1]
+  return(new)
+}
+
+who.data %>%
+  dplyr::select(-health_zone, -hcw) %>%
+  group_by(report_date) %>%
+  summarise_all(sum, na.rm=T) %>%
+  #get values by removing the cumulative
+  mutate_at(c("confirmed_cases", "probable_cases", "suspect_cases", "deaths"), funs(unCumulate)) %>%
+  mutate(Date = as.Date(as.character(report_date), format = "%Y%m%d")) %>%
+  gather(type, number, confirmed_cases:deaths) %>%
+  ggplot(., aes(x=Date, y = number)) +
+  geom_bar(stat="identity", fill = "navyblue", color = NA) +
+  theme_bw()+
+  facet_wrap(~type, dir = "v", nrow = 4)
+  
+```
+
+As of May 14th, we only have two reporting dates, so can't see much about the dynamics of the epidemic yet.
+
+# Spatial Distribution of Suspected Cases
+
+The cases are reported by health zone. You can download a shapefile or GeoJSON of the DRC's health zones [here](https://mapforenvironment.org/layer/info/140/DRC-health-zones#4.13/-4.09/21.75).
+
+```{r}
+health.zones <- readOGR("../../static/data/drc-ebola", "healthZones2", stringsAsFactors = F)
+
+#add to health data
+ebola.zone <- who.data %>%
+  dplyr::select(-report_date) %>%
+  group_by(health_zone) %>%
+  summarise_all(sum, na.rm = T) %>%
+  ungroup() %>%
+  rename(Name = health_zone)
+
+ebola.map <- merge(health.zones, ebola.zone, by = "Name", all.x = T)
+
+ebola.map@data[is.na(ebola.map@data)] <- 0
+```
+
+```{r}
+pal <- colorBin("YlOrRd", domain = ebola.map$suspect_cases, bins = c(0,1,5,10,15,20,25,Inf))
+
+labels <- sprintf(
+  "<strong>%s</strong><br/>%g Suspected Cases, ",
+  ebola.map$Name, ebola.map$suspect_cases
+) %>% lapply(htmltools::HTML)
+
+leaflet(ebola.map) %>%
+    addProviderTiles(providers$OpenStreetMap.HOT) %>%
+    addPolygons(color = "gray08", 
+              fillOpacity = 0.5, 
+              fillColor = ~pal(suspect_cases),
+              label = labels,
+              highlightOptions = highlightOptions(color = "#444444", weight = 2,
+      bringToFront = TRUE)) %>%
+    addLegend(pal = pal, values = ~suspect_cases, opacity = 0.7, title = "Suspected Cases",
+    position = "bottomright") %>%
+    setView(lng = 17.1, lat = -1.3, zoom = 7)
+
+```
+
+While the cases so far (as of May 14th 2018) are pretty remote, they are directly up-river from Brazzaville and Kinshasha.
+
+I will try and keep this updated as data comes in. Check the **Last Updated** tag at the top of this post to see when the data was last updated.

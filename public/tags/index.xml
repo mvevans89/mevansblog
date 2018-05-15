@@ -2,49 +2,58 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on m.evans</title>
-    <link>/tags/</link>
+    <link>https://ditheringdata.netlify.com/tags/</link>
     <description>Recent content in Tags on m.evans</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
     <lastBuildDate>Mon, 01 Jan 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ditheringdata.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Animation</title>
-      <link>/tags/animation/</link>
+      <link>https://ditheringdata.netlify.com/tags/animation/</link>
       <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/animation/</guid>
+      <guid>https://ditheringdata.netlify.com/tags/animation/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ggplot</title>
-      <link>/tags/ggplot/</link>
+      <link>https://ditheringdata.netlify.com/tags/ggplot/</link>
       <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/ggplot/</guid>
+      <guid>https://ditheringdata.netlify.com/tags/ggplot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Leaflet</title>
+      <link>https://ditheringdata.netlify.com/tags/leaflet/</link>
+      <pubDate>Mon, 14 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ditheringdata.netlify.com/tags/leaflet/</guid>
       <description></description>
     </item>
     
     <item>
       <title>R</title>
-      <link>/tags/r/</link>
-      <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
+      <link>https://ditheringdata.netlify.com/tags/r/</link>
+      <pubDate>Mon, 14 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/r/</guid>
+      <guid>https://ditheringdata.netlify.com/tags/r/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Spatial</title>
-      <link>/tags/spatial/</link>
+      <link>https://ditheringdata.netlify.com/tags/spatial/</link>
       <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/spatial/</guid>
+      <guid>https://ditheringdata.netlify.com/tags/spatial/</guid>
       <description></description>
     </item>
     

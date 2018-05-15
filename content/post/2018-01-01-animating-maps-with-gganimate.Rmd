@@ -20,6 +20,7 @@ To illustrate this, let's look at the presidential election results from the 20t
 #load packages
 library(choroplethr)
 library(tidyverse)
+#devtools::install_github("dgrtwo/gganimate")
 library(gganimate)
 library(maps)
 library(htmltools)

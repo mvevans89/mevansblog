@@ -22,7 +22,9 @@ library(raster)
 library(sf)
 library(pryr)
 library(dplyr)
-library(ggplot2)</code></pre>
+library(ggplot2)
+library(tidyr)
+library(ggthemes)</code></pre>
 <div id="qualitative-differences" class="section level1">
 <h1>Qualitative Differences</h1>
 <p>As I mentioned, I mostly made the switch from <code>sp</code> to <code>sf</code> because it really cut down on the time and code length of my workflow plotting maps. There’s plenty of other resources on the internet about this (start with the <a href="https://r-spatial.github.io/sf/index.html">simple features for R page</a>), but here’s a quick overview.</p>
@@ -48,12 +50,12 @@ head(US.sf[,c(1:5, ncol(US.sf))])</code></pre>
 ## epsg (SRID):    4326
 ## proj4string:    +proj=longlat +datum=WGS84 +no_defs
 ##   OBJECTID ID_0 ISO        NAME_0 ID_1                       geometry
-## 1        1  244 USA United States    1 MULTIPOLYGON (((-86.9166793...
-## 2        2  244 USA United States    1 MULTIPOLYGON (((-87.5105590...
-## 3        3  244 USA United States    1 MULTIPOLYGON (((-85.1302566...
-## 4        4  244 USA United States    1 MULTIPOLYGON (((-87.4207839...
-## 5        5  244 USA United States    1 MULTIPOLYGON (((-86.9532165...
-## 6        6  244 USA United States    1 MULTIPOLYGON (((-85.4100189...</code></pre>
+## 1        1  244 USA United States    1 MULTIPOLYGON (((-86.91668 3...
+## 2        2  244 USA United States    1 MULTIPOLYGON (((-87.51056 3...
+## 3        3  244 USA United States    1 MULTIPOLYGON (((-85.13026 3...
+## 4        4  244 USA United States    1 MULTIPOLYGON (((-87.42078 3...
+## 5        5  244 USA United States    1 MULTIPOLYGON (((-86.95322 3...
+## 6        6  244 USA United States    1 MULTIPOLYGON (((-85.41002 3...</code></pre>
 <p>Rather than splitting each polygon into multiple pieces per id, an <code>sf</code> object simply has a geometry column in the data.frame that specifies what type of spatial object it is (in this case a MULTIPOLYGON) and the spatial coordinates and info needed to analyze and plot the data spatially. For me, storing all that spatial info in one column really cleans things up and makes manipulating the dataset easier. It also keeps you from misplacing metadata as you switch from SpatialDataFrames to Spatial objects (which is completely missing from the fortified object).</p>
 <p>In addition to my own personal preferences, simple features are meant to be faster because they call C and C++ code directly.</p>
 </div>
@@ -98,7 +100,7 @@ results[2,4] &lt;- object_size(bike.sf)/1000000</code></pre>
 <h2>Round two: spatial transformations</h2>
 <p>Next I wanted to try a simple transformation of the spatial data, drawing a line between the starting and ending bike stations for the first 100,000 trips (I’m choosing a subset to avoid a computer explosion).</p>
 <p align="center">
-<img src="/img/computerExplore.gif" width="300px" >
+<img src="/img/computerExplode.gif" width="300px" >
 </p>
 <p><em>Quick Qualifier: I’m not arguing this is the most efficient way to create lines from starting and ending coordinates, but this is using a similar method and amount of code for each method. This was mostly gleaned from this <a href="https://stackoverflow.com/questions/20531066/convert-begin-and-end-coordinates-into-spatial-lines-in-r">stackoverflow thread</a>.</em></p>
 <pre class="r"><code>#create functions to make lines
@@ -293,18 +295,18 @@ results[8,4] &lt;- object_size(plot.sf)/1000000</code></pre>
 <h1><strong>Winner</strong>: <code>sf</code></h1>
 <p><em>System Info</em></p>
 <pre><code>##                _                           
-## platform       x86_64-pc-linux-gnu         
+## platform       x86_64-apple-darwin15.6.0   
 ## arch           x86_64                      
-## os             linux-gnu                   
-## system         x86_64, linux-gnu           
+## os             darwin15.6.0                
+## system         x86_64, darwin15.6.0        
 ## status                                     
 ## major          3                           
-## minor          4.3                         
-## year           2017                        
-## month          11                          
-## day            30                          
-## svn rev        73796                       
+## minor          5.0                         
+## year           2018                        
+## month          04                          
+## day            23                          
+## svn rev        74626                       
 ## language       R                           
-## version.string R version 3.4.3 (2017-11-30)
-## nickname       Kite-Eating Tree</code></pre>
+## version.string R version 3.5.0 (2018-04-23)
+## nickname       Joy in Playing</code></pre>
 </div>

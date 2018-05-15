@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>The Man in the BoxPlot &middot; Michelle Evans</title>
+        <meta name="description" content="While boxplots may not be everyone’s favorite way to visualize a data distribution, they are a really useful data exploration tool, and being able to customize them to your every need is pretty great.
+violin plto cartoon
+ggplot2 is great for easy out-of-the-box visualizations, and lets you do a lot of customizations once you get familiar with the grammar of it. But sometimes you want to trick out your plots with something even extra.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.32" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="m.evans" href="/">m.evans</a>
+                            </h1>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:mvevans@uga.edu">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/mv_evans">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/mvevans89">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="https://stackoverflow.com/users/5688284/michelle-evans">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="Topics" href="/tags/">Topics</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">The Man in the BoxPlot</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2018-04-04" itemprop="datePublished">Wed, Apr 4, 2018</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="https://mvevans89.github.io/" itemprop="url" rel="author">Michelle Evans</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    <p>While boxplots may not be everyone’s favorite way to visualize a data distribution, they are a really useful data exploration tool, and being able to customize them to your every need is pretty great.</p>
+<p>violin plto cartoon</p>
+<p><code>ggplot2</code> is great for easy out-of-the-box visualizations, and lets you do a lot of customizations once you get familiar with the grammar of it. But sometimes you want to trick out your plots with something even extra. This post will go through some of the basics of boxplots in <code>ggplot</code> and work up to some extra ways to customize it all.</p>
+<div id="basic-boxplot" class="section level1">
+<h1>Basic Boxplot</h1>
+<p>I’m going to use the <code>diamonds</code> dataset that comes with <code>ggplot2</code> because it has a lot of categorical and continuous variables to play around with.</p>
+<pre class="r"><code>library(ggplot2)
+head(diamonds)</code></pre>
+<pre><code>## # A tibble: 6 x 10
+##   carat cut       color clarity depth table price     x     y     z
+##   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.23  Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+## 2 0.21  Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+## 3 0.23  Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+## 4 0.290 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63
+## 5 0.31  Good      J     SI2      63.3    58   335  4.34  4.35  2.75
+## 6 0.24  Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48</code></pre>
+<p>First, we’ll make a basic boxplot looking at price across cut.</p>
+<p>For a standard boxplot, you set your <code>x</code> variable to the categorical variable you are interested in, and the <code>y</code> to the continuous variable. Then it is as simple as adding <code>geom_boxplot</code> to your ggplot object.</p>
+<pre class="r"><code>ggplot(data=diamonds, aes(x = cut, y = price)) +
+  geom_boxplot()</code></pre>
+<p><img src="/post/2018-04-04-the-man-in-the-boxplot_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>The spread in price makes this not a very useful boxplot, so I’ll change the y-axis to be on the log scale using <code>scale_y_log10</code>. I also prefer to use the <code>theme_bw</code> ggplot theme.</p>
+<pre class="r"><code>ggplot(data=diamonds, aes(x = cut, y = price)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  theme_bw()</code></pre>
+<p><img src="/post/2018-04-04-the-man-in-the-boxplot_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>I can add color to the boxplot to distinguish across cuts by adding an <code>aes</code> to the boxplot call. Like the hollow symbols used in <code>geom_point</code>, color refers to the outline of the boxplot, while fill will actually color the box in.</p>
+<pre class="r"><code>ggplot(data=diamonds, aes(x = cut, y = price, fill = cut)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  theme_bw()</code></pre>
+<p><img src="/post/2018-04-04-the-man-in-the-boxplot_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>If you want to visualize two variables at once, you simply add the second as another aesthetic. In this case, I add clarity as an alpha, and remove the color aesthetic that was set for cut.</p>
+<pre class="r"><code>ggplot(data=diamonds, aes(x = cut, y = price, alpha = clarity)) +
+  geom_boxplot(fill=&quot;navyblue&quot;) +
+  scale_y_log10() +
+  theme_bw()</code></pre>
+<p><img src="/post/2018-04-04-the-man-in-the-boxplot_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The thing I like about ggplot is how easy it is to add yet another marginal variable. Here, I can add the color of the diamond too.</p>
+<pre class="r"><code>ggplot(data=diamonds, aes(x = cut, y = price, alpha = clarity, fill = color)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  theme_bw()</code></pre>
+<p><img src="/post/2018-04-04-the-man-in-the-boxplot_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>This now becomes basically impossible for someone to pick out, unless I make the plot very very wide. Instead, I will use another way to visualize a variable, that isn’t reliant on aesthetic, <code>facet_wrap</code>. This is similar to <code>lattice</code>, and will create a seperate plot for each level of the categorical variable I choose. It won’t work, however, for a continuous variable.</p>
+<pre class="r"><code>ggplot(data=diamonds, aes(x = cut, y = price, alpha = clarity)) +
+  geom_boxplot(fill = &quot;navyblue&quot;) +
+  scale_y_log10() +
+  theme_bw() +
+  facet_wrap(~color, dir = &#39;v&#39;)</code></pre>
+<p><img src="/post/2018-04-04-the-man-in-the-boxplot_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Basic Color and Fill Dodge Error Bars Adding Points Behind</p>
+</div>
+<div id="getting-fancy" class="section level1">
+<h1>Getting Fancy</h1>
+</div>
+<div id="super-fancy" class="section level1">
+<h1>Super Fancy</h1>
+<p>Setting ranges</p>
+</div>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+            
+                <a href="/tags/ggplot2/">ggplot2</a>, 
+            
+                <a href="/tags/visualization/">visualization</a>
+            
+        </p>
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=The%20Man%20in%20the%20BoxPlot&url=%2f2018%2f04%2f04%2fthe-man-in-the-boxplot%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+
+        
+        
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="m.evans" href="/">m.evans</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2018 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="/js/jquery-1.11.3.min.js"></script>
+        <script src="/js/jquery.fitvids.js"></script>
+        
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        
+        
+        <script src="/js/scripts.js"></script>
+    </body>
+</html>
+

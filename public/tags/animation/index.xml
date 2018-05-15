@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Animation on m.evans</title>
-    <link>/tags/animation/</link>
+    <link>https://ditheringdata.netlify.com/tags/animation/</link>
     <description>Recent content in Animation on m.evans</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
     <lastBuildDate>Mon, 01 Jan 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/animation/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ditheringdata.netlify.com/tags/animation/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Animating Maps with gganimate</title>
-      <link>/2018/01/01/gganimate/</link>
+      <link>https://ditheringdata.netlify.com/2018/01/01/gganimate/</link>
       <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/01/01/gganimate/</guid>
+      <guid>https://ditheringdata.netlify.com/2018/01/01/gganimate/</guid>
       <description>I’ve recently been working on a monthly yellow fever dataset from Brazil that spans fourteen years. Overall, there are over 5600 spatial units and 168 months (that’s nearly 1,000,000 rows of data for those of you keeping track). It is great to have access to so much data, but sometimes visualizing it can be a bit of a pain, especially when we are trying to look at patterns across time and space.</description>
     </item>
     

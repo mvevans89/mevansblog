@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ggplot2 on m.evans</title>
+    <link>/tags/ggplot2/</link>
+    <description>Recent content in Ggplot2 on m.evans</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Michelle Evans</copyright>
+    <lastBuildDate>Wed, 04 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/ggplot2/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>The Man in the BoxPlot</title>
+      <link>/2018/04/04/the-man-in-the-boxplot/</link>
+      <pubDate>Wed, 04 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/04/04/the-man-in-the-boxplot/</guid>
+      <description>While boxplots may not be everyone’s favorite way to visualize a data distribution, they are a really useful data exploration tool, and being able to customize them to your every need is pretty great.
+violin plto cartoon
+ggplot2 is great for easy out-of-the-box visualizations, and lets you do a lot of customizations once you get familiar with the grammar of it. But sometimes you want to trick out your plots with something even extra.</description>
+    </item>
+    
+  </channel>
+</rss>
