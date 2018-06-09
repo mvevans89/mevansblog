@@ -17,7 +17,7 @@ Since the start of the outbreak, [Caitlin Rivers](https://www.jhsph.edu/faculty/
 
 I've put together some visualizations to explore the data here. This is more of an exploration of the data than a tutorial in how to do so, but all of the code is provided if you want to take a shot at it yourself.
 
-# Last Updated: May 15, 2018
+# Last Updated: June 9, 2018
 
 # Packages you'll need
 
@@ -30,7 +30,6 @@ library(RCurl)
 library(ggplot2)
 library(dplyr)
 library(plotly)
-library(ggthemes)
 ```
 
 
@@ -47,32 +46,23 @@ drc.data <- read.csv(text = getURL("https://raw.githubusercontent.com/cmrivers/e
 drc.data$source <- "MOH"
 ```
 
-According to the [WHO website](http://www.who.int/csr/don/14-may-2018-ebola-drc/en/), this includes the confirmed, probable, and suspected cases. Deaths are split with an additional category for health care workers. As of 2018-05-14, the data was being reported as cumulative, although the DON reports are not always clear.
+According to the [WHO website](http://www.who.int/csr/don/14-may-2018-ebola-drc/en/), this includes the confirmed, probable, and suspected cases. Deaths are split with an additional category for health care workers. As of 2018-05-14, the data was being reported as cumulative, although the MOH reports also include a category for new cases, and deaths may not be cumulative.
 
 ```{r}
 head(who.data)
+
+head(drc.data)
 ```
 
-We can combine this into one data frame to look at data from both sources. I also turn it into tidy, long data to work with it in `ggplot` later.
+As of June 9 2018, the Ministry of Health Data seems to be more current (goes until 2018-06-06) so I'm just going to focus on that.
 
 ```{r}
-who.data.tidy <- who.data %>%
-  mutate(Date = as.Date(as.character(report_date), format = "%Y%m%d")) %>%
-  gather(type, number, confirmed_cases:hcw) %>%
-  select(Date, health_zone, source, type, number)
-
-moh.data <- drc.data %>%
-  mutate(Date = as.Date(as.character(report_date), format = "%Y%m%d")) %>%
-  #rename so columns match who
-  mutate(deaths = sum(confirmed_deaths,probable_deaths,suspect_deaths, na.rm=T)) %>%
-  #drop probable deaths
-  select(-probable_deaths, -suspect_deaths, -confirmed_deaths) %>%
-  gather(type, number, confirmed_cases:hcw, deaths) %>%
-  select(Date, health_zone, source, type, number)
-
-#colnames(who.data.tidy) == colnames(moh.data)
-#combine into one
-ebola.data <- rbind(who.data.tidy, moh.data)
+ebola.data <- drc.data %>%
+  mutate(Date = as.Date(as.character(event_date), format = "%Y%m%d")) %>%
+  #selet columns of interest
+  select(-starts_with("new")) %>%
+  gather(type, number, confirmed_cases:deaths) %>%
+  select(Date, health_zone, type, number)
 ```
 
 # Epidemic Curve
@@ -83,130 +73,79 @@ The epidemic curve shows the number of cases per reporting period. Here, I plot 
 
 p <- ebola.data %>%
   dplyr::select(-health_zone) %>%
-  group_by(Date, source, type) %>%
-  summarise_all(sum, na.rm=T) %>%
-  ungroup() %>%
+  dplyr::filter(type != "deaths") %>%
   #shrink labels by wrapping
   mutate(labels = gsub("_", "\n",type)) %>%
     #order labels
   mutate(labels = factor(labels, levels = c("suspect\ncases", "probable\ncases",
-                                            "confirmed\ncases", "deaths", "hcw"))) %>%
+                                            "confirmed\ncases"))) %>%
   ggplot(., aes(x=Date, y = number)) +
-  geom_bar(stat="identity", fill = "navyblue", color = NA) +
-  theme_minimal()+
-  facet_grid(labels~source) +
-  theme(strip.text.y = element_text(angle = 0))
+  geom_bar(stat="identity", aes(fill = labels), color = NA) +
+  theme_minimal() +
+  ylab("No. of cases")+
+  scale_fill_brewer(palette = "Set2", type = "qual", name = "Reporting Type")
   
 ggplotly(p) %>%
   layout(margin = list(r=100))
 ```
 
-As of May 14th, we don't have many reporting dates, so can't say much about the dynamics of the epidemic yet.
+As of June 9 2018, the growth in cases has slowed and the slope is almost zero, suggesting the epidemic has burned out.
 
 # Spatial Distribution of Suspected Cases
 
 The cases are reported by health zone. You can download a shapefile or GeoJSON of the DRC's health zones [here](https://mapforenvironment.org/layer/info/140/DRC-health-zones#4.13/-4.09/21.75).
 
-In the map below, you can toggle between cases reported by the WHO, the DRC Ministry of Health, or both combined.
+When this outbreak started, most digital data of the healthzones of the DRC was wrong (including my own!). You can read about how a group of Congolese cartographers worked to update and correct these maps in this [Atlantic article by Ed Yong](https://www.theatlantic.com/health/archive/2018/05/most-maps-of-the-new-ebola-outbreak-are-wrong/560777/). The WHO and CDC have since updated its maps, but (as of June 9) I haven't been able to find the correct shapefile freely available online.
+
 
 ```{r, message=F}
 health.zones <- readOGR("../../static/data/drc-ebola", "healthZones2", stringsAsFactors = F)
 
-#add to health data
-who.zone <- who.data %>%
-  dplyr::select(-report_date, -source) %>%
+moh.zone <- ebola.data %>%
   group_by(health_zone) %>%
-  summarise_all(sum, na.rm = T) %>%
-  ungroup() %>%
-  rename(Name = health_zone)
-
-moh.zone <- moh.data %>%
+  #get lastest reporting date
+  filter(Date == max(Date)) %>%
+  #spread data to work with leaflet
   spread(type, number) %>%
-  group_by(health_zone) %>%
-  dplyr::select(-source, -Date) %>%
-  summarise_all(sum, na.rm = T) %>%
-  ungroup() %>%
-  select(Name = health_zone, confirmed_cases, probable_cases, suspect_cases, deaths, hcw)
-
-both.zone <- moh.zone %>%
-  bind_rows(who.zone) %>%
-  group_by(Name) %>%
-  summarise_all(sum, na.rm =T) %>%
-  ungroup()
+  #calculate total cases
+  mutate(total_cases = sum(suspect_cases, probable_cases, confirmed_cases)) %>%
+  select(Name = health_zone, suspect_cases, probable_cases, confirmed_cases, total_cases, deaths)
 ```
 
 ```{r}
-createMap <- function(map.data, case.data){
-  new.map <- merge(map.data, case.data, by = "Name", all.x = T)
-  #fill in NAs
-  new.map@data[is.na(new.map@data)] <- 0
-  return(new.map)
-}
-
-who.map <- createMap(health.zones, who.zone)
-moh.map <- createMap(health.zones, moh.zone)
-both.map <- createMap(health.zones, both.zone)
+moh.map <- merge(health.zones, moh.zone, by = "Name", all.x = T) 
+#fix NAs
+moh.map@data[is.na(moh.map@data)] <- 0
 ```
 
 ```{r}
 #create color palette
-pal <- colorNumeric("YlOrRd", domain = both.map$suspect_cases)
-
-labels.who <- sprintf(
-  "<strong>%s</strong><br/>%g Suspected Cases (WHO) ",
-  who.map$Name, who.map$suspect_cases
-) %>% lapply(htmltools::HTML)
+pal <- colorNumeric("YlOrRd", domain = moh.map$total_cases)
 
 labels.moh <-  sprintf(
-  "<strong>%s</strong><br/>%g Suspected Cases (DRC MOH)",
-  moh.map$Name, moh.map$suspect_cases
-) %>% lapply(htmltools::HTML)
-
-labels.both <-  sprintf(
-  "<strong>%s</strong><br/>%g Suspected Cases (Both)",
-  both.map$Name, both.map$suspect_cases
+  "<strong>%s</strong><br/>%g Total Cases, %g Deaths (DRC MOH)",
+  moh.map$Name, moh.map$total_cases, moh.map$deaths
 ) %>% lapply(htmltools::HTML)
 ```
 
 ```{r}
-leaflet(both.map) %>%
+leaflet(moh.map) %>%
     # basemap
     addProviderTiles(providers$OpenStreetMap.HOT) %>%
     addPolygons(color = "gray08", 
                 fillOpacity = 0.5, 
-                fillColor = ~pal(suspect_cases),
-                label = labels.both,
-                highlightOptions = highlightOptions(color = "#444444", weight = 2,
-                                                  bringToFront = TRUE), 
-                group = "Both") %>%
-    # add different data source polygons
-    addPolygons(data = moh.map,
-                color = "gray08", 
-                fillOpacity = 0.5, 
-                fillColor = ~pal(suspect_cases),
+                fillColor = ~pal(total_cases),
                 label = labels.moh,
                 highlightOptions = highlightOptions(color = "#444444", weight = 2,
-                                                  bringToFront = TRUE), 
-                group = "MOH") %>%
-    addPolygons(data = who.map,
-                color = "gray08", 
-                fillOpacity = 0.5, 
-                fillColor = ~pal(suspect_cases),
-                label = labels.who,
-                highlightOptions = highlightOptions(color = "#444444", weight = 2,
-                                                  bringToFront = TRUE), 
-                group = "WHO") %>%
-    # add layer control
-    addLayersControl(baseGroups = c("Both", "WHO", "MOH"),
-                     options = layersControlOptions(collapsed = F)) %>%
+                                                  bringToFront = TRUE)) %>%
     # add legend
-    addLegend(pal = pal, values = ~suspect_cases, opacity = 0.7, title = "Suspected\nCases",
+    addLegend(pal = pal, values = ~total_cases, opacity = 0.7, title = "Total\nCases",
               position = "bottomright") %>%
     # set custom zoom
     setView(lng = 17.1, lat = -1.3, zoom = 7)
 
 ```
 
-While the cases so far (as of May 14th 2018) are pretty remote, they are directly up-river from Brazzaville and Kinshasha.
+The majority of cases were not in densely populated areas, although there was a confirmed case in Mbandaka (Wangata Health Zone) in late May ([WHO Report](http://www.who.int/csr/don/30-may-2018-ebola-drc/en/)).
 
 I will try and keep this updated as data comes in. Check the **Last Updated** tag at the top of this post to see when the data was last updated.
