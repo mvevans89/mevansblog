@@ -1,0 +1,39 @@
+---
+title: dplyr and ggplot pipe dreams
+author: Michelle
+date: '2018-06-15'
+slug: dplyr-and-ggplot-pipe-dreams
+categories: []
+tags:
+  - ggplot2
+  - dplyr
+description: ''
+---
+
+
+
+<p>I’ve been getting more and more immersed into using <code>tidyverse</code> packages as time goes on. Every now and then I have trouble getting something to work that I could do very quickly in base <code>R</code>, but that seems to be happening less and less as more SO questions use the <code>tidyverse</code> and documentation gets better and better.</p>
+<p>Anyways, I am a little late to the party but I recently discovered that you can pipe directly from your <code>dplyr</code> calls into <code>ggplot2</code>, manipulating and plotting your data all at once. I hate filling my environment with similar objects. These normally end up being something like dataframe1, dataframe2, dataframe3, etc. because I have no creativity when it comes to names and in the end becoming an unusable mess. Using this piping lets you try-out transformations, scaling, or centering and visualize them without having to add extra columns to your dataframe or create new objects.</p>
+<p>Here’s how it works:</p>
+<p>Go about your normal data wrangling with dplyr, maybe creating a new variable with mutate. Then, simply pipe into your ggplot call, using the <code>.</code> to represent the data you are feeding into it:</p>
+<pre class="r"><code>diamonds %&gt;%
+  #calculate the volume
+  mutate(volume = x * y * z) %&gt;%
+  #drop crazy outlier
+  filter(volume &lt; 2000) %&gt;%
+  ggplot(data = ., aes (x = cut, y = volume)) +
+    geom_boxplot(aes(fill = cut))</code></pre>
+<p><img src="/post/2018-06-15-dplyr-and-ggplot-pipe-dreams_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>The other key thing to note is that once you switch over to <code>ggplot</code> you need to use <code>+</code> (plus sign) to pipe and not the <code>magrittr</code> style pipe (<code>%&gt;%</code>). If not, you’ll get an error like this:</p>
+<pre class="r"><code>diamonds %&gt;%
+  #calculate the volume
+  mutate(volume = x * y * z) %&gt;%
+  #drop crazy outlier
+  filter(volume &lt; 2000) %&gt;%
+  ggplot(data = ., aes (x = cut, y = volume))  %&gt;% #this is the wrong pipe!
+    geom_boxplot(aes(fill = cut))
+
+#&gt; Error: `data` must be a data frame, or other object coercible by `fortify()`, not an S3 object with class uneval
+#&gt; Did you accidentally pass `aes()` to the `data` argument?</code></pre>
+<p>Unfortunately that error isn’t very informative, but it has to with the incorrect pipe usage within the <code>ggplot</code> portion of the call.</p>
+<p>And that’s it. Start using this piping and watch your workspace declutter itself!</p>
