@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>GRASS GIS and R: A perfect pair &middot; Michelle Evans</title>
+        <meta name="description" content="I’m always amazed at how many types of spatial analyses that are now possible in R and how fast the field is growing. But, you can’t quite do everything purely in R yet, and sometimes need to call on some already existing open source software.
+In this post I’m going to go over how to integrate GRASS GIS into your R workflow. If you’ve worked with QGIS for a while, you may remember at one point installing GRASS as part of the steps to get QGIS up and running.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.55.0" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="m.evans" href="/">m.evans</a>
+                            </h1>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:mvevans@uga.edu">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/mv_evans">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/mvevans89">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="https://stackoverflow.com/users/5688284/michelle-evans">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="Topics" href="/tags/">Topics</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">GRASS GIS and R: A perfect pair</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2019-04-11" itemprop="datePublished">Thu, Apr 11, 2019</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="https://mvevans89.github.io/" itemprop="url" rel="author">Michelle Evans</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+
+<p>I’m always amazed at how many types of spatial analyses that are now possible in <code>R</code> and how fast the field is growing. But, you can’t quite do everything purely in <code>R</code> yet, and sometimes need to call on some already existing open source software.</p>
+<p>In this post I’m going to go over how to integrate <a href="https://grass.osgeo.org/">GRASS GIS</a> into your <code>R</code> workflow. If you’ve worked with <a href="https://qgis.org/">QGIS</a> for a while, you may remember at one point installing GRASS as part of the steps to get QGIS up and running. QGIS continues to work really nicely with GRASS through plug-ins, but its no longer part of the installation.</p>
+<p>GRASS, which stands for the Geographic Resources Analysis Support System, is an open source software that’s part of the suite of tools available through the <a href="https://www.osgeo.org/">Open Source Geospatial Foundation</a>. It is available both as a command line tool and GUI and can handle raster and vector data. I use GRASS because it offers topology tools that I would otherwise need to use ArcGIS for, such as creating a stream network or calculation flow accumulation across a watershed. It is <em>not</em> really well set up for just visualizing data, and is better thought of as an analysis tool to become part of your workflow, rather than replace the whole thing.</p>
+<p>Luckily, if you currently work in <code>R</code>, there is a package called <code>rgrass7</code> that makes it relatively easy to start using GRASS through R. As with all open source tools, the installation and set-up can be a little tricky. However, because you can use command line scripts, it becomes very easy to use once everything is set up.</p>
+<div id="installing-grass-on-your-machine" class="section level1">
+<h1>Installing GRASS on your machine</h1>
+<p>Before you can use GRASS thru R, you need to install GRASS on your machine. You can download the software <a href="https://grass.osgeo.org/download/">here</a> and follow the <a href="https://grasswiki.osgeo.org/wiki/Installation_Guide">official installation guide</a>. I would recommend downloading the latest stable release.</p>
+<p>I’m running Mac OS (Mojave) and hit some speed bumps when installing GRASS on my laptop. I’ve also installed it on Ubuntu and the process was a breeze, so it is dependent on OS.</p>
+<p>My main issue was finding the path to the GRASS GIS library. Normally this can be done by opening a <code>Terminal</code> and using <code>which</code> or <code>type</code> to find a PATH, but this was not working. Robin Lovelace recommends using the <code>findGRASS()</code> function from the <code>link2GI</code> package in the GRASS section of her <em>Geocompution with R</em> <a href="https://geocompr.robinlovelace.net/gis.html#rgrass">book</a>. This was resulting in the following error:</p>
+<pre class="r"><code>Warning message:
+In system2(&quot;find&quot;, paste(MP, &quot; ! -readable -prune -o -type f -executable -iname &#39;grass??&#39; -print&quot;),  :
+  running command &#39;&#39;find&#39; /usr  ! -readable -prune -o -type f -executable -iname &#39;grass??&#39; -print 2&gt;/dev/null&#39; had status 1</code></pre>
+<p>Luckily, GRASS is pretty transparent in how it runs. When you open the GUI version by clicking on it in your <code>Applications</code> folder, a <code>Terminal</code> will open that shows the PATH to the GRASS library.</p>
+<div class="figure">
+<img src="/post/2019-04-11-grass-gis-and-r-a-perfect-pair_files/grass-path.png" />
+
+</div>
+<p>From there, I just did some digging around to find which subdirectory held the <code>bin</code> and <code>lib</code> directories, with the final PATH: <code>/Applications/GRASS-7.6.app/Contents/Resources</code>. The actual path will likely differ depending on how you chose to install GRASS, but this method should work for finding the PATH in the end.</p>
+</div>
+<div id="locations-vs.mapsets" class="section level1">
+<h1>Locations vs. Mapsets</h1>
+</div>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+            
+                <a href="/tags/spatial/">spatial</a>, 
+            
+                <a href="/tags/r/">R</a>, 
+            
+                <a href="/tags/grass/">GRASS</a>
+            
+        </p>
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=GRASS%20GIS%20and%20R%3a%20A%20perfect%20pair&url=%2f2019%2f04%2f11%2fgrass-r%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+
+        
+        
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="m.evans" href="/">m.evans</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2019 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="/js/jquery-1.11.3.min.js"></script>
+        <script src="/js/jquery.fitvids.js"></script>
+        
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        
+        
+        <script src="/js/scripts.js"></script>
+    </body>
+</html>
+

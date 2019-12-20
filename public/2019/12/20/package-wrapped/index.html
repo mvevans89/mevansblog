@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Your Packages Wrapped 2019 &middot; Michelle Evans</title>
+        <meta name="description" content="As the the decade winds to a close, the internet abounds with various Best of the 2010’s or Best of 2019, from the best TV shows and movies to the best grocery store snacks. You can even get your own personalized ‘Best Of’ list of your most listened to songs and albums on Spotify. But let’s be honest, the majority of my time is not spent watching Award-winning TV, but trying to convince my computer to run that last bit of R code needed for my analysis.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.55.0" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="m.evans" href="/">m.evans</a>
+                            </h1>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:mvevans@uga.edu">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/mv_evans">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/mvevans89">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="https://stackoverflow.com/users/5688284/michelle-evans">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="Topics" href="/tags/">Topics</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Your Packages Wrapped 2019</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2019-12-20" itemprop="datePublished">Fri, Dec 20, 2019</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="https://mvevans89.github.io/" itemprop="url" rel="author">Michelle Evans</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+
+<p>As the the decade winds to a close, the internet abounds with various Best of the 2010’s or Best of 2019, from the best TV shows and movies to the best <a href="https://people.com/food/people-food-awards-2019-best-new-snacks/">grocery store snacks</a>. You can even get your own personalized ‘Best Of’ list of your most listened to songs and albums on Spotify. But let’s be honest, the majority of my time is not spent watching Award-winning TV, but trying to convince my computer to run that last bit of R code needed for my analysis. Of course, this often involves Spotify and snacks, but that’s another matter. And so, the need for an <code>R</code> Best of 2019 Wrapped was born!</p>
+<div class="figure">
+<img src="https://bitbucket.org/mv_evans/packagewrapped/raw/36d7d01e3525664989aeffd6b7d76581f8872f27/examples/r-wrapped.png" />
+
+</div>
+<p>I whipped up a quick package that parses through all the <code>R</code> and <code>Rmd</code> code on your local machine in specified directories and creates a Spotify-themed image of your most used functions and packages. The powerhouse of the package is a function from the <a href="https://cran.r-project.org/web/packages/NCmisc/index.html"><code>NCmisc</code> package</a> that lists all the functions used in an R script, and identifies what package they are from. I also drew heavily from this very helpful <a href="https://stackoverflow.com/questions/28513444/how-to-tell-what-packages-you-have-used-in-r/28513913">StackOverflow post</a>.</p>
+<div id="package-overview" class="section level1">
+<h1>Package Overview</h1>
+<p>The package can be installed from its <a href="https://bitbucket.org/mv_evans/packagewrapped/src/master/">bitbucket repo</a> with the following code:</p>
+<pre class="r"><code>devtools::install_bitbucket(&quot;mv_evans/packageWrapped&quot;)</code></pre>
+<p>The workflow for creating the final image only has a couple steps:</p>
+<ol style="list-style-type: decimal">
+<li>extract R code from Rmd documents using <code>purl</code> (<code>Rmd_to_R</code> function)</li>
+<li>generate a list of all functions and packages in the selected path (<code>check_packs</code> function)</li>
+<li>create and save the image (<code>plot_wrapped</code> function)</li>
+</ol>
+<p>For the TL:DR version, you can follow the steps in the package <a href="https://bitbucket.org/mv_evans/packagewrapped/src/master/">README</a> to create your own image. If you’re interested in some of the nitty-gritty, check out the package internals below.</p>
+</div>
+<div id="package-functions" class="section level1">
+<h1>Package Functions</h1>
+<div id="purling-your-code" class="section level2">
+<h2><code>purl</code>ing your code</h2>
+<p>A limitation of the <code>list.functions.in.file</code> function is that it only works on <code>.R</code> files, not <code>.Rmd</code>. I do most of my work in <code>.Rmd</code> because I like being able to knit to more easily viewable html files, and because the text highlighting makes me feel like Angelina Jolie in <em>Hackers</em>. The <code>purl</code> function from the <code>knitr</code> package extracts all of the R code from these <code>Rmd</code> documents to use later in the workflow. In <code>packageWrapped</code>, this is the <code>Rmd_to_R</code> function.</p>
+<pre class="r"><code>Rmd_to_R(path, temporary.path)</code></pre>
+<p>You provide two locations to this function:</p>
+<ul>
+<li><code>path</code>: the top level directory that you want the function to look for <code>Rmd</code> files in. For me, this is my Dropbox folder where I have all work related things saved.</li>
+<li><code>temporary.path</code>: a directory where a folder named <code>package-wrap-purl</code> will be created and all of the R code documents saved in</li>
+</ul>
+<p>The function then creates a list of all the <code>Rmd</code> files contained in the <code>path</code> directory by searching recursively. It then uses the <code>file.mtime</code> function to get the time the file was last modified for each file, and then filters all of the Rmd files to those only modififed in 2019 (for the purpose of the Wrapped 2019).</p>
+<pre class="r"><code>#find all Rmd files
+files &lt;- c(list.files(path, recursive = T, pattern = &quot;Rmd$&quot;, full.names = T))
+  
+
+#get date info and filter to year of interest
+rmd.files &lt;- data.frame(
+    files = files,
+    #extract date modified
+    date_mod= file.mtime(files)) %&gt;%
+    dplyr::mutate(date_mod = as.Date(date_mod)) %&gt;%
+    dplyr::mutate(year = lubridate::year(date_mod)) %&gt;%
+    #limit to 2019
+    dplyr::filter(year == 2019) %&gt;%
+  #create individual ID codes for each file to save as an R script
+    dplyr::mutate(output = paste0(temporary.path, &quot;/package-wrap-purl/&quot;, 
+                                  date_mod, &quot;_&quot;, dplyr::row_number(), &quot;.R&quot;)) %&gt;%
+    dplyr::mutate(input = as.character(files))</code></pre>
+<p>Once the dataframe of files to be <code>purl</code>ed is created with an individual ID for each file to be saved to, the function <code>purl</code> function is mapped to the dataframe using the <code>walk2</code> function. This is similar to the <code>map2</code> function from <code>purrr</code>, but is used when what you are interested in is only the “side-effect” of the function, in this case that a new R script is created containing the code in the <code>package-wrapped-purl</code> directory. Because this is doing quite a large operation on many different individuals’ computers, I also wrap the function in <code>possibly</code>. This means the function will be applied to each file, but if it encounters an error, it will simply spit out the supplied error message and move on to the next file. It’s similar to using <code>tryCatch</code> but with a syntax that I find much more intuitive.</p>
+<pre class="r"><code>purl_func &lt;- purrr::possibly(knitr::purl, otherwise = print(&quot;error converting Rmd to R. moving to next file&quot;))
+
+purrr::walk2(rmd.files$input, rmd.files$output, purl_func)</code></pre>
+</div>
+<div id="generating-function-and-package-data" class="section level2">
+<h2>Generating function and package data</h2>
+<p>Now that all the R code is contained in <code>.R</code> files that are easily readable by <code>list.functions.in.file</code>, we simply apply that function over all the files and summarize the resulting lists of functions and packages into something more interesting. This is all done in the <code>check_packs</code> function.</p>
+<pre class="r"><code>packs.data &lt;- check_packs(path, purled_R_dir, ignore.Rmd = F, load.packages = T, include.default = F)</code></pre>
+<p>The first two arguments should be the same as those provided to the <code>Rmd_to_R</code> function, with <code>purled_R_dir</code> now pointing directly to the <code>package-wrapped-purl</code> directory. The second two arguments are more like checks to make sure you are truly searching all of your files and packages.</p>
+<ul>
+<li><code>ignore.Rmd</code>: the default for this is <code>FALSE</code>, in which case the function will also search for any <code>.Rmd</code> files within your PATH, and return how many files there are. This is a reminder to purl those files to <code>R</code> scripts via the <code>Rmd_to_R</code> function. If you’ve already done this, then you can set this argument to <code>TRUE</code>.</li>
+<li><code>load.packages</code>: is a boolean as to whether all of your installed packages should be loaded or not. The <code>list.functions.in.file</code> function can only indentify a function’s package if that package is loaded, so you ideally want to load all of your packages. The function will do this automatically, if set to <code>TRUE</code>, but you can turn this behavior off if you prefer to choose which packages to load. This is particularly helpful if certain packages take a long time to load or if loading some packages is resulting in errors.</li>
+</ul>
+<p>The final argument, <code>include.default</code>, is whether or not you want to include the seven default packages that come loaded with R. These are <code>base</code>, <code>utils</code>, <code>datasets</code>,<code>grDevices</code>, <code>graphics</code>, <code>stats</code>, and <code>methods</code>. I found that most workflows relied heavily on these packages, especially functions like <code>c</code>, <code>library</code>, and <code>read.csv</code>, and including them made an overall kind of boring list of packages and functions. Feel free to include if you are curious which base functions you use the most.</p>
+<p>The majority of this function is simply filtering to get out any odd packages or strange text strings returned by the <code>list.functions.in.file</code> function. It again uses <code>list.files</code> to find any <code>.R</code> files, and filters them to those modified in 2019.</p>
+<pre class="r"><code>  ## get all R files in your directory
+  files &lt;- c(list.files(path, recursive = T, pattern = &quot;\\.R$&quot;, full.names = T),
+             list.files(purled_R_dir, recursive = T, pattern = &quot;\\.R$&quot;, full.names = T))
+
+  #drop any duplicates
+  files &lt;- unique(files)
+
+  #limit to the year (2019)
+  file.times &lt;- file.mtime(files)
+  files &lt;- files[lubridate::year(file.times)==2019]</code></pre>
+<p>The package also drops any files found in <code>packrat</code> directories, since these are supporting files for other packages and presumably not files you have written yourself. This is achieved by searching for character strings in the files using <code>grep</code>.</p>
+<pre class="r"><code>files &lt;- files[!(grepl(&quot;packrat&quot;, files))]</code></pre>
+<p>The <code>list.functions.in.file</code> function is then applied to each file using the <code>map</code> function, with the original function wrapped in <code>possibly</code> again. Depending on the number of files and length of each, this can take a while. I’ve been finding it’s about 10 files/minutes. Using one of the base <code>apply</code> functions would likely speed this up, but I’ve opted to stick with <code>purrr</code> because of the ease of wrapping the function in <code>possibly</code> and my own reluctance to spend time to finally understand how <code>tryCatch</code> works.</p>
+<pre class="r"><code>list.functions.w.error &lt;- purrr::possibly(NCmis::list.functions.in.file, otherwise = NA)
+funs &lt;- unlist(purrr::map(files, list.functions.w.error))</code></pre>
+<p>The rest of the function is then automating cleaning these function and package names as much as possible. This means dropping any functions that were not associated with a package or were global environment functions (i.e. user created). This is primarily done via functions from the <code>stringr</code> package.</p>
+<pre class="r"><code># drop empty ones from the NAs created by possibly
+packs &lt;- packs[packs!=&quot;&quot;]
+# &quot;character&quot; functions such as reactive objects in Shiny (also functions without packages)
+packs &lt;- packs[!(stringr::str_detect(packs, &quot;^character&quot;))]
+# user defined functions in the global environment
+packs &lt;- packs[!(stringr::str_detect(packs, &quot;^.GlobalEnv&quot;))]</code></pre>
+<p>The function also goes through and seperates out functions that are found in multiple packages. Unless the notation <code>package::function</code> was used, it is difficult to know which package the function was from, so each package is only counted once from this list. This probably underestimates the counts of certain packages, but including them all very much overestimated graphing packages, such as plotly. Plus it’s just a spotify spoof, so we aren’t going for precision here!</p>
+<pre class="r"><code># functions that are in multiple packages&#39; namespaces
+multipackages&lt;-packs[stringr::str_detect(packs, &quot;, &quot;)]
+
+# get just the  package names from multipackages
+mpackages&lt;-multipackages %&gt;%
+    stringr::str_extract_all(., &quot;[a-zA-Z0-9]+&quot;) %&gt;%
+    unlist()
+
+# these were just leftover characters from the list
+mpackages &lt;- mpackages[!mpackages %in% c(&quot;c&quot;, &quot;package&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;)]
+
+# functions that are from single packages
+upackages &lt;- packs[str_detect(packs, &quot;package:&quot;) &amp; !packs %in% multipackages] %&gt;%
+    stringr::str_replace(., &quot;package:&quot;, &quot;&quot;) %&gt;%
+    stringr::str_replace(., &quot;[0-9]+$&quot;, &quot;&quot;) %&gt;%
+    #ggplot gets messed up when you do this so fix it again
+    stringr::str_replace(., &quot;ggplot&quot;, &quot;ggplot2&quot;)
+
+#all packages used
+all.packages &lt;- c(mpackages, upackages)</code></pre>
+<p>Finally, some summary statistics are created from this information: the frequency of each package, the frequency of each function, and the total number of files included in the search. This makes use of the base function <code>table</code>, which outputs freuency tables.</p>
+<pre class="r"><code>#get functions and number of times used
+funs.freq &lt;- data.frame(table(funs)) %&gt;%
+    dplyr::arrange(desc(Freq))</code></pre>
+</div>
+<div id="creating-the-image" class="section level2">
+<h2>Creating the image</h2>
+<p>Once you have the summary statistics of your package and function use, the next step is image manipulation to make the final Spotify-style image.</p>
+<pre class="r"><code>plot_wrapped(my_packs, image.path)</code></pre>
+<p>This function takes the results of the last step, created via the <code>check_packs</code> function, and creates a PNG image that will be saved at the provided <code>image.path</code>. I looked into using <code>beamer</code>, which creates slideshow presentations from <code>Rmd</code> files, but ultimately, it seemed easier to get the level of customization I needed by just using base <code>R</code>’s plotting capabilities.</p>
+<p>First, is to set up the formatting, specifically the color scheme and font choice. You can use any font in a plot, as long as it is installed locally, by simply defining it as a QuartzFont. You have to provide four fonts, one each for plain, bold, italic, and bolditalic, but since we are just using one font, I provided the same font for each version.</p>
+<pre class="r"><code>bg.col &lt;- &quot;#C1F843&quot; #lime green
+text.col &lt;- &quot;#FF35B7&quot; #pink
+
+quartzFonts(spotify = rep(&quot;Asimov Regular&quot;, 4))</code></pre>
+<p>Next is loading the images that we will be adding manually. These are the R logo and the appropriate hexes for the top packages. The pink and green R logo comes with the <code>packageWrapped</code> package, so it is loaded from there</p>
+<pre class="r"><code>logo &lt;- png::readPNG(system.file(&quot;images/r-logo2.png&quot;, package = &quot;packageWrapped&quot;))</code></pre>
+<p>Hexes are chosen depending on the top packages. A folder of various hex stickers comes with the package, and the appropriate hex is chosen based on a user’s top packages via an internal <code>get_hex</code> function. The current collection is quite small, so if you find that your final image is missing a hex sticker for one of your top packages, please use a PR to add it to the package repo.</p>
+<p>Finally the image is put together by layering different calls to <code>rasterImage</code> and <code>text</code> to add each individual object to the plotting device. This is made somewhat easily modifiable by manually setting the positions for each column and row of objects.</p>
+<pre class="r"><code>#set alignments
+left.x = 0.05
+right.x = 0.55
+top.row.y = 0.50
+bottom.row.y = 0.15
+
+png(image.path, height = 800, width = 800, res = 100, family = &#39;spotify&#39;)
+par(mar = c(0,0,0,0), bg = bg.col, family = &quot;spotify&quot;)
+#create an empty plot space
+plot(c(0, 1), c(0, 1), ann = F, bty = &#39;n&#39;, type = &#39;n&#39;, xaxt = &#39;n&#39;, yaxt = &#39;n&#39;)
+
+#fun header
+rasterImage(logo,left.x,0.92,left.x+0.06,0.98)
+
+#section titles
+text(x = left.x+0.06, y = 0.94, &quot;R Programming Language&quot;,
+       cex = 1.5, col = text.col, adj = c(0,0))
+
+text(x = 0.70, y = 0.94, &quot;2019 Wrapped&quot;,
+       cex = 1.5, col = text.col, adj = c(0,0))
+
+
+#top packages
+text(x =left.x, y = top.row.y, &quot;TOP PACKAGES&quot;,
+       cex = 1.6, col = text.col, adj = 0)
+
+text(x =left.x, y = top.row.y-0.05, top.packs.text,
+       cex = 1.6, col = &quot;black&quot;, adj = c(0,1))
+
+#top functions
+text(x = right.x , y = top.row.y, &quot;TOP FUNCTIONS&quot;,
+       cex = 1.6, col = text.col, adj = 0)
+
+text(x =right.x, y = top.row.y-0.05, top.funs.text,
+       cex = 1.6, col = &quot;black&quot;, adj = c(0,1))
+
+#files written
+text(x = left.x, y = bottom.row.y , &quot;FILES WRITTEN&quot;,
+       cex = 1.6, col = text.col, adj = 0)
+
+text(x = left.x, y = bottom.row.y - 0.05, paste(my_packs$n.files),
+       cex = 1.6, col = &quot;black&quot;, adj = c(0,1))
+
+#top genre
+text(x = right.x , y = bottom.row.y , paste(&quot;TOP GENRE&quot;),
+       cex = 1.6, col = text.col, adj = 0)
+
+text(x = right.x , y = bottom.row.y-0.05 , top.genre,
+       cex = 1.6, col = &quot;black&quot;, adj = c(0,1))</code></pre>
+<p>Adding the individual hex stickers is a little more complicated, because we want them to be nicely aligned no matter how many stickers there are, so a long <code>ifelse</code> statement is used to get the alignment just right. And of course adding a dog meme if there were no matching hex stickers for the user’s top packages.</p>
+<pre class="r"><code>#add hexes
+if(exists(&quot;hex.images&quot;)){
+  if (length(hex.images)==3){
+  rasterImage(hex.images[[1]],left.x+0.03,top.row.y+0.05,left.x+0.28,top.row.y+0.35)
+  rasterImage(hex.images[[2]],left.x + 0.33,top.row.y+0.05,left.x+0.58,top.row.y+0.35)
+  rasterImage(hex.images[[3]],left.x + 0.63,top.row.y+0.05,left.x+0.88,top.row.y+0.35)
+  } else if (length(hex.images) ==2){
+    rasterImage(hex.images[[1]],left.x+0.23,top.row.y+0.05,left.x+0.48,top.row.y+0.35)
+    rasterImage(hex.images[[2]],left.x + 0.53,top.row.y+0.05,left.x+0.78,top.row.y+0.35)
+  } else if (length(hex.images==1)){
+    rasterImage(hex.images[[1]],left.x+0.4,top.row.y+0.05,left.x+0.65,top.row.y+0.35)
+  }
+  } else {
+    dog.meme &lt;- jpeg::readJPEG(system.file(&quot;images/dog_meme.jpg&quot;, package = &quot;packageWrapped&quot;))
+    rasterImage(dog.meme, left.x+0.2,top.row.y+0.05,left.x+0.65,top.row.y+0.35)
+  }</code></pre>
+<p>The entire image is then saved to the defined PNG path. This had to be set beforehand because the alignment of everything was very sensitive to the dimensions of the image and allowing it to plot to the default R device and then exporting resulted in some very misaligned text.</p>
+</div>
+<div id="linking-to-bitbucketgitlabetc." class="section level2">
+<h2>Linking to bitbucket/gitlab/etc.</h2>
+<p>A downside to this is that it only searches code that you have locally on your computer. A next step would be to link this to an API on one of these hosting services and search through all your public and private repositories.</p>
+</div>
+<div id="updating-the-package" class="section level2">
+<h2>Updating the package</h2>
+<p>The package can and should be expanded to meet the needs of new users. In particular, missing hex stickers and categorization of packages to calculate the final ‘Top Genre’ are needed. If you find any of your packages are missing, please fill a PR to the <a href="https://bitbucket.org/mv_evans/packagewrapped/src/master/">repository</a> or file an issue, which you should be able to do anonymously without a bitbucket account.</p>
+</div>
+</div>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=Your%20Packages%20Wrapped%202019&url=%2f2019%2f12%2f20%2fpackage-wrapped%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+
+        
+        
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="m.evans" href="/">m.evans</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2019 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="/js/jquery-1.11.3.min.js"></script>
+        <script src="/js/jquery.fitvids.js"></script>
+        
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        
+        
+        <script src="/js/scripts.js"></script>
+    </body>
+</html>
+

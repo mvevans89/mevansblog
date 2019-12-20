@@ -8,11 +8,11 @@
 Anyways, I am a little late to the party but I recently discovered that you can pipe directly from your dplyr calls into ggplot2, manipulating and plotting your data all at once.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.32" />
+        <meta name="generator" content="Hugo 0.55.0" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
-        <link rel="stylesheet" href="https://ditheringdata.netlify.com/dist/styles.css">
+        <link rel="stylesheet" href="/dist/styles.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         
@@ -27,7 +27,7 @@ Anyways, I am a little late to the party but I recently discovered that you can 
                     <div class="site-title-wrapper">
                         
                             <h1 class="site-title">
-                                <a title="m.evans" href="https://ditheringdata.netlify.com/">m.evans</a>
+                                <a title="m.evans" href="/">m.evans</a>
                             </h1>
                         
                         
@@ -96,7 +96,10 @@ Anyways, I am a little late to the party but I recently discovered that you can 
         <div class="post-content clearfix" itemprop="articleBody">
     
 
-    <p>I’ve been getting more and more immersed into using <code>tidyverse</code> packages as time goes on. Every now and then I have trouble getting something to work that I could do very quickly in base <code>R</code>, but that seems to be happening less and less as more SO questions use the <code>tidyverse</code> and documentation gets better and better.</p>
+    
+
+
+<p>I’ve been getting more and more immersed into using <code>tidyverse</code> packages as time goes on. Every now and then I have trouble getting something to work that I could do very quickly in base <code>R</code>, but that seems to be happening less and less as more SO questions use the <code>tidyverse</code> and documentation gets better and better.</p>
 <p>Anyways, I am a little late to the party but I recently discovered that you can pipe directly from your <code>dplyr</code> calls into <code>ggplot2</code>, manipulating and plotting your data all at once. I hate filling my environment with similar objects. These normally end up being something like dataframe1, dataframe2, dataframe3, etc. because I have no creativity when it comes to names and in the end becoming an unusable mess. Using this piping lets you try-out transformations, scaling, or centering and visualize them without having to add extra columns to your dataframe or create new objects.</p>
 <p>Here’s how it works:</p>
 <p>Go about your normal data wrangling with dplyr, maybe creating a new variable with mutate. Then, simply pipe into your ggplot call, using the <code>.</code> to represent the data you are feeding into it:</p>
@@ -139,7 +142,7 @@ Anyways, I am a little late to the party but I recently discovered that you can 
 
     <div class="share">
         
-            <a class="icon-twitter" href="https://twitter.com/share?text=dplyr%20and%20ggplot%20pipe%20dreams&url=https%3a%2f%2fditheringdata.netlify.com%2f2018%2f06%2f15%2fdplyr-and-ggplot-pipe-dreams%2f"
+            <a class="icon-twitter" href="https://twitter.com/share?text=dplyr%20and%20ggplot%20pipe%20dreams&url=%2f2018%2f06%2f15%2fdplyr-and-ggplot-pipe-dreams%2f"
                 onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                 <i class="fa fa-twitter"></i>
                 <span class="hidden">Twitter</span>
@@ -164,7 +167,7 @@ Anyways, I am a little late to the party but I recently discovered that you can 
             <div class="container">
                 <div class="site-title-wrapper">
                     <h1 class="site-title">
-                        <a title="m.evans" href="https://ditheringdata.netlify.com/">m.evans</a>
+                        <a title="m.evans" href="/">m.evans</a>
                     </h1>
                     <a class="button-square button-jump-top js-jump-top" href="#">
                         <i class="fa fa-angle-up"></i>
@@ -172,7 +175,7 @@ Anyways, I am a little late to the party but I recently discovered that you can 
                 </div>
 
                 <p class="footer-copyright">
-                    <span>&copy; 2018 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                    <span>&copy; 2019 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
                 </p>
                 <p class="footer-copyright">
                     <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
@@ -181,14 +184,14 @@ Anyways, I am a little late to the party but I recently discovered that you can 
             </div>
         </footer>
 
-        <script src="https://ditheringdata.netlify.com/js/jquery-1.11.3.min.js"></script>
-        <script src="https://ditheringdata.netlify.com/js/jquery.fitvids.js"></script>
+        <script src="/js/jquery-1.11.3.min.js"></script>
+        <script src="/js/jquery.fitvids.js"></script>
         
         
             <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         
         
-        <script src="https://ditheringdata.netlify.com/js/scripts.js"></script>
+        <script src="/js/scripts.js"></script>
     </body>
 </html>
 

@@ -1,0 +1,46 @@
+---
+title: 'GRASS GIS and R: A perfect pair'
+author: Michelle Evans
+date: '2019-04-11'
+slug: Grass-r
+draft: true
+categories: []
+tags:
+  - spatial
+  - R
+  - GRASS
+description: ''
+---
+
+I'm always amazed at how many types of spatial analyses that are now possible in `R` and how fast the field is growing. But, you can't quite do everything purely in `R` yet, and sometimes need to call on some already existing open source software.
+
+In this post I'm going to go over how to integrate [GRASS GIS](https://grass.osgeo.org/) into your `R` workflow. If you've worked with [QGIS](https://qgis.org/) for a while, you may remember at one point installing GRASS as part of the steps to get QGIS up and running. QGIS continues to work really nicely with GRASS through plug-ins, but its no longer part of the installation.
+
+GRASS, which stands for the Geographic Resources Analysis Support System, is an open source software that's part of the suite of tools available through the [Open Source Geospatial Foundation](https://www.osgeo.org/). It is available both as a command line tool and GUI and can handle raster and vector data. I use GRASS because it offers topology tools that I would otherwise need to use ArcGIS for, such as creating a stream network or calculation flow accumulation across a watershed. It is *not* really well set up for just visualizing data, and is better thought of as an analysis tool to become part of your workflow, rather than replace the whole thing.
+
+Luckily, if you currently work in `R`, there is a package called `rgrass7` that makes it relatively easy to start using GRASS through R. As with all open source tools, the installation and set-up can be a little tricky. However, because you can use command line scripts, it becomes very easy to use once everything is set up.
+
+# Installing GRASS on your machine
+
+Before you can use GRASS thru R, you need to install GRASS on your machine. You can download the software [here](https://grass.osgeo.org/download/) and follow the [official installation guide](https://grasswiki.osgeo.org/wiki/Installation_Guide). I would recommend downloading the latest stable release.
+
+I'm running Mac OS (Mojave) and hit some speed bumps when installing GRASS on my laptop. I've also installed it on Ubuntu and the process was a breeze, so it is dependent on OS.
+
+My main issue was finding the path to the GRASS GIS library. Normally this can be done by opening a `Terminal` and using `which` or `type` to find a PATH, but this was not working. Robin Lovelace recommends using the `findGRASS()` function from the `link2GI` package in the GRASS section of her *Geocompution with R* [book](https://geocompr.robinlovelace.net/gis.html#rgrass). This was resulting in the following error:
+
+```{r, eval = F}
+Warning message:
+In system2("find", paste(MP, " ! -readable -prune -o -type f -executable -iname 'grass??' -print"),  :
+  running command ''find' /usr  ! -readable -prune -o -type f -executable -iname 'grass??' -print 2>/dev/null' had status 1
+```
+
+Luckily, GRASS is pretty transparent in how it runs. When you open the GUI version by clicking on it in your `Applications` folder, a `Terminal` will open that shows the PATH to the GRASS library.
+
+![](/post/2019-04-11-grass-gis-and-r-a-perfect-pair_files/grass-path.png)
+
+From there, I just did some digging around to find which subdirectory held the `bin` and `lib` directories, with the final PATH: `/Applications/GRASS-7.6.app/Contents/Resources`. The actual path will likely differ depending on how you chose to install GRASS, but this method should work for finding the PATH in the end.
+
+# Locations vs. Mapsets
+
+
+

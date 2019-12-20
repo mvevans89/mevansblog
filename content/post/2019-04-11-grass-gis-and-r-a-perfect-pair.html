@@ -1,0 +1,38 @@
+---
+title: 'GRASS GIS and R: A perfect pair'
+author: Michelle Evans
+date: '2019-04-11'
+slug: Grass-r
+draft: true
+categories: []
+tags:
+  - spatial
+  - R
+  - GRASS
+description: ''
+---
+
+
+
+<p>I’m always amazed at how many types of spatial analyses that are now possible in <code>R</code> and how fast the field is growing. But, you can’t quite do everything purely in <code>R</code> yet, and sometimes need to call on some already existing open source software.</p>
+<p>In this post I’m going to go over how to integrate <a href="https://grass.osgeo.org/">GRASS GIS</a> into your <code>R</code> workflow. If you’ve worked with <a href="https://qgis.org/">QGIS</a> for a while, you may remember at one point installing GRASS as part of the steps to get QGIS up and running. QGIS continues to work really nicely with GRASS through plug-ins, but its no longer part of the installation.</p>
+<p>GRASS, which stands for the Geographic Resources Analysis Support System, is an open source software that’s part of the suite of tools available through the <a href="https://www.osgeo.org/">Open Source Geospatial Foundation</a>. It is available both as a command line tool and GUI and can handle raster and vector data. I use GRASS because it offers topology tools that I would otherwise need to use ArcGIS for, such as creating a stream network or calculation flow accumulation across a watershed. It is <em>not</em> really well set up for just visualizing data, and is better thought of as an analysis tool to become part of your workflow, rather than replace the whole thing.</p>
+<p>Luckily, if you currently work in <code>R</code>, there is a package called <code>rgrass7</code> that makes it relatively easy to start using GRASS through R. As with all open source tools, the installation and set-up can be a little tricky. However, because you can use command line scripts, it becomes very easy to use once everything is set up.</p>
+<div id="installing-grass-on-your-machine" class="section level1">
+<h1>Installing GRASS on your machine</h1>
+<p>Before you can use GRASS thru R, you need to install GRASS on your machine. You can download the software <a href="https://grass.osgeo.org/download/">here</a> and follow the <a href="https://grasswiki.osgeo.org/wiki/Installation_Guide">official installation guide</a>. I would recommend downloading the latest stable release.</p>
+<p>I’m running Mac OS (Mojave) and hit some speed bumps when installing GRASS on my laptop. I’ve also installed it on Ubuntu and the process was a breeze, so it is dependent on OS.</p>
+<p>My main issue was finding the path to the GRASS GIS library. Normally this can be done by opening a <code>Terminal</code> and using <code>which</code> or <code>type</code> to find a PATH, but this was not working. Robin Lovelace recommends using the <code>findGRASS()</code> function from the <code>link2GI</code> package in the GRASS section of her <em>Geocompution with R</em> <a href="https://geocompr.robinlovelace.net/gis.html#rgrass">book</a>. This was resulting in the following error:</p>
+<pre class="r"><code>Warning message:
+In system2(&quot;find&quot;, paste(MP, &quot; ! -readable -prune -o -type f -executable -iname &#39;grass??&#39; -print&quot;),  :
+  running command &#39;&#39;find&#39; /usr  ! -readable -prune -o -type f -executable -iname &#39;grass??&#39; -print 2&gt;/dev/null&#39; had status 1</code></pre>
+<p>Luckily, GRASS is pretty transparent in how it runs. When you open the GUI version by clicking on it in your <code>Applications</code> folder, a <code>Terminal</code> will open that shows the PATH to the GRASS library.</p>
+<div class="figure">
+<img src="/post/2019-04-11-grass-gis-and-r-a-perfect-pair_files/grass-path.png" />
+
+</div>
+<p>From there, I just did some digging around to find which subdirectory held the <code>bin</code> and <code>lib</code> directories, with the final PATH: <code>/Applications/GRASS-7.6.app/Contents/Resources</code>. The actual path will likely differ depending on how you chose to install GRASS, but this method should work for finding the PATH in the end.</p>
+</div>
+<div id="locations-vs.mapsets" class="section level1">
+<h1>Locations vs. Mapsets</h1>
+</div>

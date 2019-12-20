@@ -33,13 +33,13 @@ library(ggthemes)</code></pre>
 <pre class="r"><code>US.sp &lt;- getData(name = &quot;GADM&quot;, country = &quot;USA&quot;, level = 2)
 US.fort &lt;- ggplot2::fortify(US.sp)
 head(US.fort)</code></pre>
-<pre><code>##        long      lat order  hole piece id group
-## 1 -86.91668 32.66431     1 FALSE     1  1   1.1
-## 2 -86.82678 32.66050     2 FALSE     1  1   1.1
-## 3 -86.71295 32.66214     3 FALSE     1  1   1.1
-## 4 -86.71416 32.70586     4 FALSE     1  1   1.1
-## 5 -86.48744 32.70788     5 FALSE     1  1   1.1
-## 6 -86.48526 32.70788     6 FALSE     1  1   1.1</code></pre>
+<pre><code>##        long      lat order  hole piece    id   group
+## 1 -86.81896 32.34027     1 FALSE     1 10143 10143.1
+## 2 -86.81084 32.34713     2 FALSE     1 10143 10143.1
+## 3 -86.80979 32.35351     3 FALSE     1 10143 10143.1
+## 4 -86.81035 32.35852     4 FALSE     1 10143 10143.1
+## 5 -86.81583 32.37035     5 FALSE     1 10143 10143.1
+## 6 -86.82400 32.37853     6 FALSE     1 10143 10143.1</code></pre>
 <p>versus as a <code>sf</code> object.</p>
 <pre class="r"><code>US.sf &lt;- st_as_sf(US.sp)
 head(US.sf[,c(1:5, ncol(US.sf))])</code></pre>
@@ -49,13 +49,20 @@ head(US.sf[,c(1:5, ncol(US.sf))])</code></pre>
 ## bbox:           xmin: -88.02935 ymin: 30.223 xmax: -85.0595 ymax: 34.26085
 ## epsg (SRID):    4326
 ## proj4string:    +proj=longlat +datum=WGS84 +no_defs
-##   OBJECTID ID_0 ISO        NAME_0 ID_1                       geometry
-## 1        1  244 USA United States    1 MULTIPOLYGON (((-86.91668 3...
-## 2        2  244 USA United States    1 MULTIPOLYGON (((-87.51056 3...
-## 3        3  244 USA United States    1 MULTIPOLYGON (((-85.13026 3...
-## 4        4  244 USA United States    1 MULTIPOLYGON (((-87.42078 3...
-## 5        5  244 USA United States    1 MULTIPOLYGON (((-86.95322 3...
-## 6        6  244 USA United States    1 MULTIPOLYGON (((-85.41002 3...</code></pre>
+##       GID_0        NAME_0   GID_1  NAME_1 NL_NAME_1
+## 10143   USA United States USA.1_1 Alabama      &lt;NA&gt;
+## 10398   USA United States USA.1_1 Alabama      &lt;NA&gt;
+## 10224   USA United States USA.1_1 Alabama      &lt;NA&gt;
+## 10078   USA United States USA.1_1 Alabama      &lt;NA&gt;
+## 9947    USA United States USA.1_1 Alabama      &lt;NA&gt;
+## 10200   USA United States USA.1_1 Alabama      &lt;NA&gt;
+##                             geometry
+## 10143 MULTIPOLYGON (((-86.81896 3...
+## 10398 MULTIPOLYGON (((-87.51056 3...
+## 10224 MULTIPOLYGON (((-85.13026 3...
+## 10078 MULTIPOLYGON (((-87.42078 3...
+## 9947  MULTIPOLYGON (((-86.95322 3...
+## 10200 MULTIPOLYGON (((-85.66014 3...</code></pre>
 <p>Rather than splitting each polygon into multiple pieces per id, an <code>sf</code> object simply has a geometry column in the data.frame that specifies what type of spatial object it is (in this case a MULTIPOLYGON) and the spatial coordinates and info needed to analyze and plot the data spatially. For me, storing all that spatial info in one column really cleans things up and makes manipulating the dataset easier. It also keeps you from misplacing metadata as you switch from SpatialDataFrames to Spatial objects (which is completely missing from the fortified object).</p>
 <p>In addition to my own personal preferences, simple features are meant to be faster because they call C and C++ code directly.</p>
 </div>
@@ -301,12 +308,12 @@ results[8,4] &lt;- object_size(plot.sf)/1000000</code></pre>
 ## system         x86_64, darwin15.6.0        
 ## status                                     
 ## major          3                           
-## minor          5.0                         
+## minor          5.2                         
 ## year           2018                        
-## month          04                          
-## day            23                          
-## svn rev        74626                       
+## month          12                          
+## day            20                          
+## svn rev        75870                       
 ## language       R                           
-## version.string R version 3.5.0 (2018-04-23)
-## nickname       Joy in Playing</code></pre>
+## version.string R version 3.5.2 (2018-12-20)
+## nickname       Eggshell Igloo</code></pre>
 </div>

@@ -3,97 +3,124 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://ditheringdata.netlify.com/2018/06/15/dplyr-and-ggplot-pipe-dreams/</loc>
+    <loc>/post/</loc>
+    <lastmod>2019-12-20T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2019/12/20/package-wrapped/</loc>
+    <lastmod>2019-12-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-12-20T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/grass/</loc>
+    <lastmod>2019-04-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2019/04/11/grass-r/</loc>
+    <lastmod>2019-04-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/r/</loc>
+    <lastmod>2019-04-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-04-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/spatial/</loc>
+    <lastmod>2019-04-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/dplyr/</loc>
+    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2018/06/15/dplyr-and-ggplot-pipe-dreams/</loc>
     <lastmod>2018-06-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://ditheringdata.netlify.com/2018/05/15/drc-ebola/</loc>
+    <loc>/tags/ggplot2/</loc>
+    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/ebola/</loc>
+    <lastmod>2018-05-15T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2018/05/15/drc-ebola/</loc>
     <lastmod>2018-05-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://ditheringdata.netlify.com/2018/01/28/sf-vs-sp/</loc>
+    <loc>/tags/leaflet/</loc>
+    <lastmod>2018-05-15T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2018/04/04/the-man-in-the-boxplot/</loc>
+    <lastmod>2018-04-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/visualization/</loc>
+    <lastmod>2018-04-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2018/01/28/sf-vs-sp/</loc>
     <lastmod>2018-01-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://ditheringdata.netlify.com/2018/01/01/gganimate/</loc>
+    <loc>/2018/01/01/gganimate/</loc>
     <lastmod>2018-01-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://ditheringdata.netlify.com/page/about/</loc>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/animation/</loc>
+    <loc>/tags/animation/</loc>
     <lastmod>2018-01-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://ditheringdata.netlify.com/tags/dplyr/</loc>
-    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/ebola/</loc>
-    <lastmod>2018-05-15T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/ggplot/</loc>
+    <loc>/tags/ggplot/</loc>
     <lastmod>2018-01-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://ditheringdata.netlify.com/tags/ggplot2/</loc>
-    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
-    <priority>0</priority>
+    <loc>/page/about/</loc>
   </url>
   
   <url>
-    <loc>https://ditheringdata.netlify.com/tags/leaflet/</loc>
-    <lastmod>2018-05-15T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/page/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/post/</loc>
-    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/r/</loc>
-    <lastmod>2018-05-15T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/spatial/</loc>
-    <lastmod>2018-01-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/</loc>
-    <lastmod>2018-01-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/</loc>
-    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
+    <loc>/page/</loc>
     <priority>0</priority>
   </url>
   

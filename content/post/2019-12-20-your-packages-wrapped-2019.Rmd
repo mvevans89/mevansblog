@@ -1,0 +1,278 @@
+---
+title: Your Packages Wrapped 2019
+author: Michelle
+date: '2019-12-20'
+slug: Package-wrapped
+categories:
+  - R
+tags: []
+description: ''
+---
+
+As the the decade winds to a close, the internet abounds with various Best of the 2010's or Best of 2019, from the best TV shows and movies to the best [grocery store snacks](https://people.com/food/people-food-awards-2019-best-new-snacks/). You can even get your own personalized 'Best Of' list of your most listened to songs and albums on Spotify. But let's be honest, the majority of my time is not spent watching Award-winning TV, but trying to convince my computer to run that last bit of R code needed for my analysis. Of course, this often involves Spotify and snacks, but that's another matter. And so, the need for an `R` Best of 2019 Wrapped was born!
+
+![](https://bitbucket.org/mv_evans/packagewrapped/raw/36d7d01e3525664989aeffd6b7d76581f8872f27/examples/r-wrapped.png)
+
+I whipped up a quick package that parses through all the `R` and `Rmd` code on your local machine in specified directories and creates a Spotify-themed image of your most used functions and packages. The powerhouse of the package is a function from the [`NCmisc` package](https://cran.r-project.org/web/packages/NCmisc/index.html) that lists all the functions used in an R script, and identifies what package they are from. I also drew heavily from this very helpful [StackOverflow post](https://stackoverflow.com/questions/28513444/how-to-tell-what-packages-you-have-used-in-r/28513913).
+
+# Package Overview
+
+The package can be installed from its [bitbucket repo](https://bitbucket.org/mv_evans/packagewrapped/src/master/) with the following code:
+
+```{r, eval = F}
+devtools::install_bitbucket("mv_evans/packageWrapped")
+```
+
+The workflow for creating the final image only has a couple steps:
+
+1. extract R code from Rmd documents using `purl` (`Rmd_to_R` function)
+2. generate a list of all functions and packages in the selected path (`check_packs` function)
+3. create and save the image (`plot_wrapped` function)
+
+For the TL:DR version, you can follow the steps in the package [README](https://bitbucket.org/mv_evans/packagewrapped/src/master/) to create your own image. If you're interested in some of the nitty-gritty, check out the package internals below.
+
+# Package Functions
+
+## `purl`ing your code
+
+A limitation of the `list.functions.in.file` function is that it only works on `.R` files, not `.Rmd`. I do most of my work in `.Rmd` because I like being able to knit to more easily viewable html files, and because the text highlighting makes me feel like Angelina Jolie in *Hackers*. The `purl` function from the `knitr` package extracts all of the R code from these `Rmd` documents to use later in the workflow. In `packageWrapped`, this is the `Rmd_to_R` function.
+
+```{r, eval = F}
+Rmd_to_R(path, temporary.path)
+```
+
+You provide two locations to this function: 
+
+- `path`: the top level directory that you want the function to look for `Rmd` files in. For me, this is my Dropbox folder where I have all work related things saved.
+- `temporary.path`: a directory where a folder named `package-wrap-purl` will be created and all of the R code documents saved in
+
+The function then creates a list of all the `Rmd` files contained in the `path` directory by searching recursively. It then uses the `file.mtime` function to get the time the file was last modified for each file, and then filters all of the Rmd files to those only modififed in 2019 (for the purpose of the Wrapped 2019).
+
+```{r, eval = F}
+#find all Rmd files
+files <- c(list.files(path, recursive = T, pattern = "Rmd$", full.names = T))
+  
+
+#get date info and filter to year of interest
+rmd.files <- data.frame(
+    files = files,
+    #extract date modified
+    date_mod= file.mtime(files)) %>%
+    dplyr::mutate(date_mod = as.Date(date_mod)) %>%
+    dplyr::mutate(year = lubridate::year(date_mod)) %>%
+    #limit to 2019
+    dplyr::filter(year == 2019) %>%
+  #create individual ID codes for each file to save as an R script
+    dplyr::mutate(output = paste0(temporary.path, "/package-wrap-purl/", 
+                                  date_mod, "_", dplyr::row_number(), ".R")) %>%
+    dplyr::mutate(input = as.character(files))
+```
+
+Once the dataframe of files to be `purl`ed is created with an individual ID for each file to be saved to, the function `purl` function is mapped to the dataframe using the `walk2` function. This is similar to the `map2` function from `purrr`, but is used when what you are interested in is only the "side-effect" of the function, in this case that a new R script is created containing the code in the `package-wrapped-purl` directory. Because this is doing quite a large operation on many different individuals' computers, I also wrap the function in `possibly`. This means the function will be applied to each file, but if it encounters an error, it will simply spit out the supplied error message and move on to the next file. It's similar to using `tryCatch` but with a syntax that I find much more intuitive.
+
+```{r, eval =F}
+purl_func <- purrr::possibly(knitr::purl, otherwise = print("error converting Rmd to R. moving to next file"))
+
+purrr::walk2(rmd.files$input, rmd.files$output, purl_func)
+```
+
+## Generating function and package data
+
+Now that all the R code is contained in `.R` files that are easily readable by `list.functions.in.file`, we simply apply that function over all the files and summarize the resulting lists of functions and packages into something more interesting. This is all done in the `check_packs` function.
+
+```{r, eval = F}
+packs.data <- check_packs(path, purled_R_dir, ignore.Rmd = F, load.packages = T, include.default = F)
+```
+
+The first two arguments should be the same as those provided to the `Rmd_to_R` function, with  `purled_R_dir` now pointing directly to the `package-wrapped-purl` directory. The second two arguments are more like checks to make sure you are truly searching all of your files and packages.
+
+- `ignore.Rmd`: the default for this is `FALSE`, in which case the function will also search for any `.Rmd` files within your PATH, and return how many files there are. This is a reminder to purl those files to `R` scripts via the `Rmd_to_R` function. If you've already done this, then you can set this argument to `TRUE`.
+- `load.packages`: is a boolean as to whether all of your installed packages should be loaded or not. The `list.functions.in.file` function can only indentify a function's package if that package is loaded, so you ideally want to load all of your packages. The function will do this automatically, if set to `TRUE`, but you can turn this behavior off if you prefer to choose which packages to load. This is particularly helpful if certain packages take a long time to load or if loading some packages is resulting in errors. 
+
+The final argument, `include.default`, is whether or not you want to include the seven default packages that come loaded with R. These are `base`, `utils`, `datasets`,`grDevices`, `graphics`, `stats`, and `methods`. I found that most workflows relied heavily on these packages, especially functions like `c`, `library`, and `read.csv`, and including them made an overall kind of boring list of packages and functions. Feel free to include if you are curious which base functions you use the most.
+
+The majority of this function is simply filtering to get out any odd packages or strange text strings returned by the `list.functions.in.file` function. It again uses `list.files` to find any `.R` files, and filters them to those modified in 2019.
+
+```{r, eval = F}
+  ## get all R files in your directory
+  files <- c(list.files(path, recursive = T, pattern = "\\.R$", full.names = T),
+             list.files(purled_R_dir, recursive = T, pattern = "\\.R$", full.names = T))
+
+  #drop any duplicates
+  files <- unique(files)
+
+  #limit to the year (2019)
+  file.times <- file.mtime(files)
+  files <- files[lubridate::year(file.times)==2019]
+```
+
+The package also drops any files found in `packrat` directories, since these are supporting files for other packages and presumably not files you have written yourself. This is achieved by searching for character strings in the files using `grep`.
+
+```{r, eval = F}
+files <- files[!(grepl("packrat", files))]
+```
+
+The `list.functions.in.file` function is then applied to each file using the `map` function, with the original function wrapped in `possibly` again. Depending on the number of files and length of each, this can take a while. I've been finding it's about 10 files/minutes. Using one of the base `apply` functions would likely speed this up, but I've opted to stick with `purrr` because of the ease of wrapping the function in `possibly` and my own reluctance to spend time to finally understand how `tryCatch` works.
+
+```{r, eval = F}
+list.functions.w.error <- purrr::possibly(NCmis::list.functions.in.file, otherwise = NA)
+funs <- unlist(purrr::map(files, list.functions.w.error))
+```
+
+The rest of the function is then automating cleaning these function and package names as much as possible. This means dropping any functions that were not associated with a package or were global environment functions (i.e. user created). This is primarily done via functions from the `stringr` package.
+
+```{r, eval = F}
+# drop empty ones from the NAs created by possibly
+packs <- packs[packs!=""]
+# "character" functions such as reactive objects in Shiny (also functions without packages)
+packs <- packs[!(stringr::str_detect(packs, "^character"))]
+# user defined functions in the global environment
+packs <- packs[!(stringr::str_detect(packs, "^.GlobalEnv"))]
+```
+
+The function also goes through and seperates out functions that are found in multiple packages. Unless the notation `package::function` was used, it is difficult to know which package the function was from, so each package is only counted once from this list. This probably underestimates the counts of certain packages, but including them all very much overestimated graphing packages, such as plotly. Plus it's just a spotify spoof, so we aren't going for precision here!
+
+
+
+```{r, eval = F}
+# functions that are in multiple packages' namespaces
+multipackages<-packs[stringr::str_detect(packs, ", ")]
+
+# get just the  package names from multipackages
+mpackages<-multipackages %>%
+    stringr::str_extract_all(., "[a-zA-Z0-9]+") %>%
+    unlist()
+
+# these were just leftover characters from the list
+mpackages <- mpackages[!mpackages %in% c("c", "package", "1", "2", "3", "4", "5", "6")]
+
+# functions that are from single packages
+upackages <- packs[str_detect(packs, "package:") & !packs %in% multipackages] %>%
+    stringr::str_replace(., "package:", "") %>%
+    stringr::str_replace(., "[0-9]+$", "") %>%
+    #ggplot gets messed up when you do this so fix it again
+    stringr::str_replace(., "ggplot", "ggplot2")
+
+#all packages used
+all.packages <- c(mpackages, upackages)
+```
+
+Finally, some summary statistics are created from this information: the frequency of each package, the frequency of each function, and the total number of files included in the search. This makes use of the base function `table`, which outputs freuency tables.
+
+```{r, eval = F}
+#get functions and number of times used
+funs.freq <- data.frame(table(funs)) %>%
+    dplyr::arrange(desc(Freq))
+```
+
+## Creating the image
+
+Once you have the summary statistics of your package and function use, the next step is image manipulation to make the final Spotify-style image.
+
+```{r, eval = F}
+plot_wrapped(my_packs, image.path)
+```
+
+This function takes the results of the last step, created via the `check_packs` function, and creates a PNG image that will be saved at the provided `image.path`. I looked into using `beamer`, which creates slideshow presentations from `Rmd` files, but ultimately, it seemed easier to get the level of customization I needed by just using base `R`'s plotting capabilities.
+
+First, is to set up the formatting, specifically the color scheme and font choice. You can use any font in a plot, as long as it is installed locally, by simply defining it as a QuartzFont. You have to provide four fonts, one each for plain, bold, italic, and bolditalic, but since we are just using one font, I provided the same font for each version.
+
+```{r, eval = F}
+bg.col <- "#C1F843" #lime green
+text.col <- "#FF35B7" #pink
+
+quartzFonts(spotify = rep("Asimov Regular", 4))
+```
+
+Next is loading the images that we will be adding manually. These are the R logo and the appropriate hexes for the top packages. The pink and green R logo comes with the `packageWrapped` package, so it is loaded from there
+
+```{r, eval = F}
+logo <- png::readPNG(system.file("images/r-logo2.png", package = "packageWrapped"))
+```
+
+Hexes are chosen depending on the top packages. A folder of various hex stickers comes with the package, and the appropriate hex is chosen based on a user's top packages via an internal `get_hex` function. The current collection is quite small, so if you find that your final image is missing a hex sticker for one of your top packages, please use a PR to add it to the package repo.
+
+Finally the image is put together by layering different calls to `rasterImage` and `text` to add each individual object to the plotting device. This is made somewhat easily modifiable by manually setting the positions for each column and row of objects.
+
+```{r, eval = F}
+#set alignments
+left.x = 0.05
+right.x = 0.55
+top.row.y = 0.50
+bottom.row.y = 0.15
+
+png(image.path, height = 800, width = 800, res = 100, family = 'spotify')
+par(mar = c(0,0,0,0), bg = bg.col, family = "spotify")
+#create an empty plot space
+plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
+
+#fun header
+rasterImage(logo,left.x,0.92,left.x+0.06,0.98)
+
+#section titles
+text(x = left.x+0.06, y = 0.94, "R Programming Language",
+       cex = 1.5, col = text.col, adj = c(0,0))
+
+text(x = 0.70, y = 0.94, "2019 Wrapped",
+       cex = 1.5, col = text.col, adj = c(0,0))
+
+
+#top packages
+text(x =left.x, y = top.row.y, "TOP PACKAGES",
+       cex = 1.6, col = text.col, adj = 0)
+
+text(x =left.x, y = top.row.y-0.05, top.packs.text,
+       cex = 1.6, col = "black", adj = c(0,1))
+
+#top functions
+text(x = right.x , y = top.row.y, "TOP FUNCTIONS",
+       cex = 1.6, col = text.col, adj = 0)
+
+text(x =right.x, y = top.row.y-0.05, top.funs.text,
+       cex = 1.6, col = "black", adj = c(0,1))
+
+#files written
+text(x = left.x, y = bottom.row.y , "FILES WRITTEN",
+       cex = 1.6, col = text.col, adj = 0)
+
+text(x = left.x, y = bottom.row.y - 0.05, paste(my_packs$n.files),
+       cex = 1.6, col = "black", adj = c(0,1))
+
+#top genre
+text(x = right.x , y = bottom.row.y , paste("TOP GENRE"),
+       cex = 1.6, col = text.col, adj = 0)
+
+text(x = right.x , y = bottom.row.y-0.05 , top.genre,
+       cex = 1.6, col = "black", adj = c(0,1))
+```
+
+Adding the individual hex stickers is a little more complicated, because we want them to be nicely aligned no matter how many stickers there are, so a long `ifelse` statement is used to get the alignment just right. And of course adding a dog meme if there were no matching hex stickers for the user's top packages.
+
+```{r, eval = F}
+#add hexes
+if(exists("hex.images")){
+  if (length(hex.images)==3){
+  rasterImage(hex.images[[1]],left.x+0.03,top.row.y+0.05,left.x+0.28,top.row.y+0.35)
+  rasterImage(hex.images[[2]],left.x + 0.33,top.row.y+0.05,left.x+0.58,top.row.y+0.35)
+  rasterImage(hex.images[[3]],left.x + 0.63,top.row.y+0.05,left.x+0.88,top.row.y+0.35)
+  } else if (length(hex.images) ==2){
+    rasterImage(hex.images[[1]],left.x+0.23,top.row.y+0.05,left.x+0.48,top.row.y+0.35)
+    rasterImage(hex.images[[2]],left.x + 0.53,top.row.y+0.05,left.x+0.78,top.row.y+0.35)
+  } else if (length(hex.images==1)){
+    rasterImage(hex.images[[1]],left.x+0.4,top.row.y+0.05,left.x+0.65,top.row.y+0.35)
+  }
+  } else {
+    dog.meme <- jpeg::readJPEG(system.file("images/dog_meme.jpg", package = "packageWrapped"))
+    rasterImage(dog.meme, left.x+0.2,top.row.y+0.05,left.x+0.65,top.row.y+0.35)
+  }
+```
+
+The entire image is then saved to the defined PNG path. This had to be set beforehand because the alignment of everything was very sensitive to the dimensions of the image and allowing it to plot to the default R device and then exporting resulted in some very misaligned text.
+
+## Linking to bitbucket/gitlab/etc.
+
+A downside to this is that it only searches code that you have locally on your computer. A next step would be to link this to an API on one of these hosting services and search through all your public and private repositories. 
+
+## Updating the package
+
+The package can and should be expanded to meet the needs of new users. In particular, missing hex stickers and categorization of packages to calculate the final 'Top Genre' are needed. If you find any of your packages are missing, please fill a PR to the [repository](https://bitbucket.org/mv_evans/packagewrapped/src/master/) or file an issue, which you should be able to do anonymously without a bitbucket account.

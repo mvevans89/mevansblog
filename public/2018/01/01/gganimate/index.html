@@ -7,11 +7,11 @@
         <meta name="description" content="I’ve recently been working on a monthly yellow fever dataset from Brazil that spans fourteen years. Overall, there are over 5600 spatial units and 168 months (that’s nearly 1,000,000 rows of data for those of you keeping track). It is great to have access to so much data, but sometimes visualizing it can be a bit of a pain, especially when we are trying to look at patterns across time and space.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
-        <meta name="generator" content="Hugo 0.32" />
+        <meta name="generator" content="Hugo 0.55.0" />
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
-        <link rel="stylesheet" href="https://ditheringdata.netlify.com/dist/styles.css">
+        <link rel="stylesheet" href="/dist/styles.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         
@@ -26,7 +26,7 @@
                     <div class="site-title-wrapper">
                         
                             <h1 class="site-title">
-                                <a title="m.evans" href="https://ditheringdata.netlify.com/">m.evans</a>
+                                <a title="m.evans" href="/">m.evans</a>
                             </h1>
                         
                         
@@ -95,7 +95,10 @@
         <div class="post-content clearfix" itemprop="articleBody">
     
 
-    <p>I’ve recently been working on a monthly yellow fever dataset from Brazil that spans fourteen years. Overall, there are over 5600 spatial units and 168 months (that’s nearly 1,000,000 rows of data for those of you keeping track). It is great to have access to so much data, but sometimes visualizing it can be a bit of a pain, especially when we are trying to look at patterns across time and space. Static maps can show the spatial patterns, time series plots can show seasonal patterns and can even be broken down to regions, but visualizing thousands of lines becomes basically uninterpretable. Luckily, in the age of computers, we are not limited to a static map, and can instead loop together maps over time using animation.</p>
+    
+
+
+<p>I’ve recently been working on a monthly yellow fever dataset from Brazil that spans fourteen years. Overall, there are over 5600 spatial units and 168 months (that’s nearly 1,000,000 rows of data for those of you keeping track). It is great to have access to so much data, but sometimes visualizing it can be a bit of a pain, especially when we are trying to look at patterns across time and space. Static maps can show the spatial patterns, time series plots can show seasonal patterns and can even be broken down to regions, but visualizing thousands of lines becomes basically uninterpretable. Luckily, in the age of computers, we are not limited to a static map, and can instead loop together maps over time using animation.</p>
 <p>There are many ways to create animated plots in R, including interactive tools such as <a href="https://shiny.rstudio.com/articles/sliders.html">shiny</a>, but as a ggplot user I’m going to focus on a package called gganimate. This package follows all the grammar of ggplot and simply adds an aesthetic called <code>frame</code> that will looped over.</p>
 <p>To illustrate this, let’s look at the presidential election results from the 20th century, taking advantage of a dataset in the <code>choroplethr</code> package. This package also has it’s own function to animate maps (choroplethr_animate), but I prefer using gganimate as it is more customizable and saves the resulting image as a gif, rather than an html file.</p>
 <pre class="r"><code>#load packages
@@ -211,7 +214,7 @@ data(&quot;df_president_ts&quot;)</code></pre>
 
     <div class="share">
         
-            <a class="icon-twitter" href="https://twitter.com/share?text=Animating%20Maps%20with%20gganimate&url=https%3a%2f%2fditheringdata.netlify.com%2f2018%2f01%2f01%2fgganimate%2f"
+            <a class="icon-twitter" href="https://twitter.com/share?text=Animating%20Maps%20with%20gganimate&url=%2f2018%2f01%2f01%2fgganimate%2f"
                 onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                 <i class="fa fa-twitter"></i>
                 <span class="hidden">Twitter</span>
@@ -236,7 +239,7 @@ data(&quot;df_president_ts&quot;)</code></pre>
             <div class="container">
                 <div class="site-title-wrapper">
                     <h1 class="site-title">
-                        <a title="m.evans" href="https://ditheringdata.netlify.com/">m.evans</a>
+                        <a title="m.evans" href="/">m.evans</a>
                     </h1>
                     <a class="button-square button-jump-top js-jump-top" href="#">
                         <i class="fa fa-angle-up"></i>
@@ -244,7 +247,7 @@ data(&quot;df_president_ts&quot;)</code></pre>
                 </div>
 
                 <p class="footer-copyright">
-                    <span>&copy; 2018 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                    <span>&copy; 2019 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
                 </p>
                 <p class="footer-copyright">
                     <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
@@ -253,14 +256,14 @@ data(&quot;df_president_ts&quot;)</code></pre>
             </div>
         </footer>
 
-        <script src="https://ditheringdata.netlify.com/js/jquery-1.11.3.min.js"></script>
-        <script src="https://ditheringdata.netlify.com/js/jquery.fitvids.js"></script>
+        <script src="/js/jquery-1.11.3.min.js"></script>
+        <script src="/js/jquery.fitvids.js"></script>
         
         
             <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         
         
-        <script src="https://ditheringdata.netlify.com/js/scripts.js"></script>
+        <script src="/js/scripts.js"></script>
     </body>
 </html>
 
