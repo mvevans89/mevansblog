@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>dplyr on m.evans</title>
-    <link>/tags/dplyr/</link>
+    <link>https://ditheringdata.netlify.com/tags/dplyr/</link>
     <description>Recent content in dplyr on m.evans</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
     <lastBuildDate>Fri, 15 Jun 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ditheringdata.netlify.com/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>dplyr and ggplot pipe dreams</title>
-      <link>/2018/06/15/dplyr-and-ggplot-pipe-dreams/</link>
+      <link>https://ditheringdata.netlify.com/2018/06/15/dplyr-and-ggplot-pipe-dreams/</link>
       <pubDate>Fri, 15 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/06/15/dplyr-and-ggplot-pipe-dreams/</guid>
+      <guid>https://ditheringdata.netlify.com/2018/06/15/dplyr-and-ggplot-pipe-dreams/</guid>
       <description>I’ve been getting more and more immersed into using tidyverse packages as time goes on. Every now and then I have trouble getting something to work that I could do very quickly in base R, but that seems to be happening less and less as more SO questions use the tidyverse and documentation gets better and better.
 Anyways, I am a little late to the party but I recently discovered that you can pipe directly from your dplyr calls into ggplot2, manipulating and plotting your data all at once.</description>
     </item>

@@ -2,51 +2,41 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>R on m.evans</title>
-    <link>/tags/r/</link>
+    <link>https://ditheringdata.netlify.com/tags/r/</link>
     <description>Recent content in R on m.evans</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Thu, 11 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 May 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ditheringdata.netlify.com/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>GRASS GIS and R: A perfect pair</title>
-      <link>/2019/04/11/grass-r/</link>
-      <pubDate>Thu, 11 Apr 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/2019/04/11/grass-r/</guid>
-      <description>I’m always amazed at how many types of spatial analyses that are now possible in R and how fast the field is growing. But, you can’t quite do everything purely in R yet, and sometimes need to call on some already existing open source software.
-In this post I’m going to go over how to integrate GRASS GIS into your R workflow. If you’ve worked with QGIS for a while, you may remember at one point installing GRASS as part of the steps to get QGIS up and running.</description>
-    </item>
     
     <item>
       <title>Ebola Outbreak in DRC 2018</title>
-      <link>/2018/05/15/drc-ebola/</link>
+      <link>https://ditheringdata.netlify.com/2018/05/15/drc-ebola/</link>
       <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/05/15/drc-ebola/</guid>
+      <guid>https://ditheringdata.netlify.com/2018/05/15/drc-ebola/</guid>
       <description>An outbreak of Ebola occurred in the Equator province of the Democratic Republic of Congo in April 2018. The WHO published its first Disease Outbreak News on the outbreak on May 10th and began efforts to conduct ring vaccination around the area. You can read more about it on the WHO’s website on the 2018 Ebola outbreak in the DRC.</description>
     </item>
     
     <item>
       <title>Battle Royal: sf vs. sp</title>
-      <link>/2018/01/28/sf-vs-sp/</link>
+      <link>https://ditheringdata.netlify.com/2018/01/28/sf-vs-sp/</link>
       <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/01/28/sf-vs-sp/</guid>
+      <guid>https://ditheringdata.netlify.com/2018/01/28/sf-vs-sp/</guid>
       <description>I’ve recently made the jump from sp to sf for a lot of my simple spatial work. I’ll go into why in more detail below, but this was mostly because it plays so nicely with my tidy workflow. But I’ve also been wondering if I gain anything else from making the switch, or worse, if I’m losing out? My two main questions:
  Which is faster? Which one is better on my poor ol’ MacBook’s memory?</description>
     </item>
     
     <item>
       <title>Animating Maps with gganimate</title>
-      <link>/2018/01/01/gganimate/</link>
+      <link>https://ditheringdata.netlify.com/2018/01/01/gganimate/</link>
       <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/01/01/gganimate/</guid>
+      <guid>https://ditheringdata.netlify.com/2018/01/01/gganimate/</guid>
       <description>I’ve recently been working on a monthly yellow fever dataset from Brazil that spans fourteen years. Overall, there are over 5600 spatial units and 168 months (that’s nearly 1,000,000 rows of data for those of you keeping track). It is great to have access to so much data, but sometimes visualizing it can be a bit of a pain, especially when we are trying to look at patterns across time and space.</description>
     </item>
     

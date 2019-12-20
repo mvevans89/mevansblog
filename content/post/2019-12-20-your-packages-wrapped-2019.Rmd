@@ -11,7 +11,7 @@ description: ''
 
 As the the decade winds to a close, the internet abounds with various Best of the 2010's or Best of 2019, from the best TV shows and movies to the best [grocery store snacks](https://people.com/food/people-food-awards-2019-best-new-snacks/). You can even get your own personalized 'Best Of' list of your most listened to songs and albums on Spotify. But let's be honest, the majority of my time is not spent watching Award-winning TV, but trying to convince my computer to run that last bit of R code needed for my analysis. Of course, this often involves Spotify and snacks, but that's another matter. And so, the need for an `R` Best of 2019 Wrapped was born!
 
-![](https://bitbucket.org/mv_evans/packagewrapped/raw/36d7d01e3525664989aeffd6b7d76581f8872f27/examples/r-wrapped.png)
+![](https://bitbucket.org/mv_evans/packagewrapped/raw/06dcfd3e4ee69a46f637e0ebf8b85c68657a591d/examples/r-wrapped.png)
 
 I whipped up a quick package that parses through all the `R` and `Rmd` code on your local machine in specified directories and creates a Spotify-themed image of your most used functions and packages. The powerhouse of the package is a function from the [`NCmisc` package](https://cran.r-project.org/web/packages/NCmisc/index.html) that lists all the functions used in an R script, and identifies what package they are from. I also drew heavily from this very helpful [StackOverflow post](https://stackoverflow.com/questions/28513444/how-to-tell-what-packages-you-have-used-in-r/28513913).
 
