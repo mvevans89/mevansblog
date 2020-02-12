@@ -1,0 +1,9 @@
+base
+tidyr
+sp
+leaflet
+rgdal
+RCurl
+ggplot2
+dplyr
+plotly

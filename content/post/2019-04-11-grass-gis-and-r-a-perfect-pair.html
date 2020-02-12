@@ -27,10 +27,7 @@ description: ''
 In system2(&quot;find&quot;, paste(MP, &quot; ! -readable -prune -o -type f -executable -iname &#39;grass??&#39; -print&quot;),  :
   running command &#39;&#39;find&#39; /usr  ! -readable -prune -o -type f -executable -iname &#39;grass??&#39; -print 2&gt;/dev/null&#39; had status 1</code></pre>
 <p>Luckily, GRASS is pretty transparent in how it runs. When you open the GUI version by clicking on it in your <code>Applications</code> folder, a <code>Terminal</code> will open that shows the PATH to the GRASS library.</p>
-<div class="figure">
-<img src="/post/2019-04-11-grass-gis-and-r-a-perfect-pair_files/grass-path.png" />
-
-</div>
+<p><img src="/post/2019-04-11-grass-gis-and-r-a-perfect-pair_files/grass-path.png" /></p>
 <p>From there, I just did some digging around to find which subdirectory held the <code>bin</code> and <code>lib</code> directories, with the final PATH: <code>/Applications/GRASS-7.6.app/Contents/Resources</code>. The actual path will likely differ depending on how you chose to install GRASS, but this method should work for finding the PATH in the end.</p>
 </div>
 <div id="locations-vs.mapsets" class="section level1">

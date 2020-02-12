@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Tue, 15 May 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ditheringdata.netlify.com/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Rolling functions along columns</title>
+      <link>https://ditheringdata.netlify.com/2020/02/11/rolling-functions-along-columns/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://ditheringdata.netlify.com/2020/02/11/rolling-functions-along-columns/</guid>
+      <description>Rolling, or window, functions allow you to apply a function over a window of size n of a vector, such as a column in a dataframe. This is especialy useful when you want to know the accumulation of some variable over time, like precipitation over the past month or the count of some occurence in a surrounding number of days.
+To follow this you’ll need the following packages:
+library(RcppRoll) library(ggplot2); theme_set(theme_bw()) library(dplyr) I recently used rolling functions to deal with a data puzzle of my own.</description>
+    </item>
     
     <item>
       <title>Ebola Outbreak in DRC 2018</title>

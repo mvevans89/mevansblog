@@ -11,9 +11,7 @@ categories: []
 
 
 ```{r, echo = F, warnings = F, message=F}
-
 knitr::opts_chunk$set(eval = F)
-
 ```
 
 I've recently made the jump from `sp` to `sf` for a lot of my simple spatial work. I'll go into why in more detail below, but this was mostly because it plays **so** nicely with my `tidy` workflow. But I've also been wondering if I gain anything else from making the switch, or worse, if I'm losing out? My two main questions:

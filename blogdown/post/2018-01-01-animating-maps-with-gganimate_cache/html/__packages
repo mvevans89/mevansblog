@@ -1,0 +1,16 @@
+base
+stringr
+XML
+acs
+choroplethr
+tidyverse
+ggplot2
+tibble
+tidyr
+readr
+purrr
+dplyr
+forcats
+gganimate
+maps
+htmltools

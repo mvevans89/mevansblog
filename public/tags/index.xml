@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Fri, 15 Jun 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ditheringdata.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>R</title>
+      <link>https://ditheringdata.netlify.com/tags/r/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://ditheringdata.netlify.com/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ggplot</title>
+      <link>https://ditheringdata.netlify.com/tags/ggplot/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://ditheringdata.netlify.com/tags/ggplot/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>dplyr</title>
@@ -40,15 +58,6 @@
     </item>
     
     <item>
-      <title>R</title>
-      <link>https://ditheringdata.netlify.com/tags/r/</link>
-      <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://ditheringdata.netlify.com/tags/r/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>leaflet</title>
       <link>https://ditheringdata.netlify.com/tags/leaflet/</link>
       <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
@@ -72,15 +81,6 @@
       <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
       
       <guid>https://ditheringdata.netlify.com/tags/animation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ggplot</title>
-      <link>https://ditheringdata.netlify.com/tags/ggplot/</link>
-      <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://ditheringdata.netlify.com/tags/ggplot/</guid>
       <description></description>
     </item>
     

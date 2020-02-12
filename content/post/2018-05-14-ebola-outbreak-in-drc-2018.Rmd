@@ -11,6 +11,10 @@ tags:
 description: ''
 ---
 
+```{r, include = F}
+knitr::opts_chunk$set(cache = F) #leaflet breaks with cache
+```
+
 An outbreak of Ebola occurred in the Equator province of the Democratic Republic of Congo in April 2018. The WHO published its first Disease Outbreak News on the outbreak on May 10th and began efforts to conduct ring vaccination around the area. You can read more about it on the [WHO's website on the 2018 Ebola outbreak in the DRC](http://www.who.int/ebola/situation-reports/drc-2018/en/).
 
 Since the start of the outbreak, [Caitlin Rivers](https://www.jhsph.edu/faculty/directory/profile/3525/caitlin-m-rivers), an Assistant Professor at the John Hopkins Center for Health Security has been digitizing the WHO Disease Outbreak Network situations reports and the DRC Ministry of Health mailing list reports and posting the data on her [github repository](https://github.com/cmrivers/ebola_drc).
@@ -70,7 +74,6 @@ ebola.data <- drc.data %>%
 The epidemic curve shows the number of cases per reporting period. Here, I plot the cumulative cases, which is how the CDC and MOH report them.
 
 ```{r}
-
 p <- ebola.data %>%
   dplyr::select(-health_zone) %>%
   dplyr::filter(type != "deaths") %>%

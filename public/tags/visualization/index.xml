@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>visualization on m.evans</title>
-    <link>/tags/visualization/</link>
+    <link>https://ditheringdata.netlify.com/tags/visualization/</link>
     <description>Recent content in visualization on m.evans</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Wed, 04 Apr 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 02 Jan 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/visualization/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ditheringdata.netlify.com/tags/visualization/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>The Man in the BoxPlot</title>
-      <link>/2018/04/04/the-man-in-the-boxplot/</link>
-      <pubDate>Wed, 04 Apr 2018 00:00:00 +0000</pubDate>
+      <title>Using custom images with geom_point</title>
+      <link>https://ditheringdata.netlify.com/2020/01/02/using-custom-images-with-geom-point/</link>
+      <pubDate>Thu, 02 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2018/04/04/the-man-in-the-boxplot/</guid>
-      <description>While boxplots may not be everyone’s favorite way to visualize a data distribution, they are a really useful data exploration tool, and being able to customize them to your every need is pretty great.
-violin plto cartoon
-ggplot2 is great for easy out-of-the-box visualizations, and lets you do a lot of customizations once you get familiar with the grammar of it. But sometimes you want to trick out your plots with something even extra.</description>
+      <guid>https://ditheringdata.netlify.com/2020/01/02/using-custom-images-with-geom-point/</guid>
+      <description>ggplot comes with a standard set of point shapes (below left) that you can use with geom_point that are generally enough for standard plotting. If you’re using ggplot for map making, you may require the use of symbols more common to GIS software (below right). This is where using your own custom images can be helpful.
+IMAGE COMPARING POINTS
+There isn’t out-of-the-box support for using customs icons or images as points in ggplot (at least as far as I know), but you can add icons as a raster using annotation_raster.</description>
     </item>
     
   </channel>

@@ -4,25 +4,42 @@
   
   <url>
     <loc>https://ditheringdata.netlify.com/post/</loc>
-    <lastmod>2019-12-20T00:00:00+00:00</lastmod>
+    <lastmod>2020-02-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/tags/r/</loc>
+    <lastmod>2020-02-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/2020/02/11/rolling-functions-along-columns/</loc>
+    <lastmod>2020-02-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/tags/</loc>
+    <lastmod>2020-02-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/tags/ggplot/</loc>
+    <lastmod>2020-02-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/</loc>
+    <lastmod>2020-02-11T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://ditheringdata.netlify.com/2019/12/20/package-wrapped/</loc>
     <lastmod>2019-12-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/</loc>
-    <lastmod>2019-12-20T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/</loc>
-    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -54,12 +71,6 @@
   </url>
   
   <url>
-    <loc>https://ditheringdata.netlify.com/tags/r/</loc>
-    <lastmod>2018-05-15T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://ditheringdata.netlify.com/tags/leaflet/</loc>
     <lastmod>2018-05-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -83,12 +94,6 @@
   
   <url>
     <loc>https://ditheringdata.netlify.com/tags/animation/</loc>
-    <lastmod>2018-01-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/ggplot/</loc>
     <lastmod>2018-01-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

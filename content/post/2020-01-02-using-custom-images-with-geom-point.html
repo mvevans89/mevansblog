@@ -1,0 +1,24 @@
+---
+title: Using custom images with geom_point
+author: Michelle
+date: '2020-01-02'
+slug: using-custom-images-with-geom-point
+draft: true
+categories: []
+tags:
+  - ggplot2
+  - R
+  - visualization
+description: ''
+---
+
+
+
+<p><code>ggplot</code> comes with a standard set of point shapes (below left) that you can use with <code>geom_point</code> that are generally enough for standard plotting. If you’re using <code>ggplot</code> for map making, you may require the use of symbols more common to GIS software (below right). This is where using your own custom images can be helpful.</p>
+<p>IMAGE COMPARING POINTS</p>
+<p>There isn’t out-of-the-box support for using customs icons or images as points in <code>ggplot</code> (at least as far as I know), but you can add icons as a raster using <code>annotation_raster</code>. Here’s a quick example, with a function to do it all at the bottom.</p>
+<p>TL;DR - skip to the function [link to code at bottom of page]</p>
+<div id="civic-buildings-in-dc" class="section level1">
+<h1>Civic buildings in DC</h1>
+<p>I use this most often with spatial data for maps, so will demonstrate with an example of some public buildings in Washington, DC. DC has a great <a href="https://opendata.dc.gov/">open data dashboard</a>, so is a useful example for things like this.</p>
+</div>
