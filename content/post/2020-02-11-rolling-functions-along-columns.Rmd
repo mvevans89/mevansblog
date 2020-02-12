@@ -15,7 +15,7 @@ description: ''
 knitr::opts_chunk$set(warning = F, message = F, cache = T)
 ```
 
-Rolling, or window, functions allow you to apply a function over a window of size `n` of a vector, such as a column in a dataframe. This is especialy useful when you want to know the accumulation of some variable over time, like precipitation over the past month or the count of some occurence in a surrounding number of days.
+Rolling, or window, functions allow you to apply a function over a window of size `n` of a vector, such as a column in a dataframe. This is especially useful when you want to know the accumulation of some variable over time, like precipitation over the past month or the count of some occurrence in a surrounding number of days.
 
 To follow this you'll need the following packages:
 
