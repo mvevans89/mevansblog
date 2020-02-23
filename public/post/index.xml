@@ -2,71 +2,113 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on m.evans</title>
-    <link>https://ditheringdata.netlify.com/post/</link>
+    <link>/post/</link>
     <description>Recent content in Posts on m.evans</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Feb 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://ditheringdata.netlify.com/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Extract spatial polygon values to points</title>
+      <link>/2020/02/22/extract-data-from-spatial-polygons/</link>
+      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/02/22/extract-data-from-spatial-polygons/</guid>
+      <description>If you work with spatial data, you are probably familiar with the extract function from the raster package, which extracts values from a RasterLayer or RasterStack to polygons or points. This is the type of function you may use when you want to know the elevation at a latitude/longitude value or the mean temperature within a county polygon.
+This function only works when you value you want to extract is in a raster.</description>
+    </item>
+    
+    <item>
       <title>Rolling functions along columns</title>
-      <link>https://ditheringdata.netlify.com/2020/02/11/rolling-functions-along-columns/</link>
+      <link>/2020/02/11/rolling-functions-along-columns/</link>
       <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/2020/02/11/rolling-functions-along-columns/</guid>
+      <guid>/2020/02/11/rolling-functions-along-columns/</guid>
       <description>Rolling, or window, functions allow you to apply a function over a window of size n of a vector, such as a column in a dataframe. This is especially useful when you want to know the accumulation of some variable over time, like precipitation over the past month or the count of some occurrence in a surrounding number of days.
 To follow this you’ll need the following packages:
 library(RcppRoll) library(ggplot2); theme_set(theme_bw()) library(dplyr) I recently used rolling functions to deal with a data puzzle of my own.</description>
     </item>
     
     <item>
+      <title>Using custom images with geom_point</title>
+      <link>/2020/01/02/using-custom-images-with-geom-point/</link>
+      <pubDate>Thu, 02 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/02/using-custom-images-with-geom-point/</guid>
+      <description>ggplot comes with a standard set of point shapes (below left) that you can use with geom_point that are generally enough for standard plotting. If you’re using ggplot for map making, you may require the use of symbols more common to GIS software (below right). This is where using your own custom images can be helpful.
+IMAGE COMPARING POINTS
+There isn’t out-of-the-box support for using customs icons or images as points in ggplot (at least as far as I know), but you can add icons as a raster using annotation_raster.</description>
+    </item>
+    
+    <item>
       <title>Your Packages Wrapped 2019</title>
-      <link>https://ditheringdata.netlify.com/2019/12/20/package-wrapped/</link>
+      <link>/2019/12/20/package-wrapped/</link>
       <pubDate>Fri, 20 Dec 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/2019/12/20/package-wrapped/</guid>
+      <guid>/2019/12/20/package-wrapped/</guid>
       <description>As the the decade winds to a close, the internet abounds with various Best of the 2010’s or Best of 2019, from the best TV shows and movies to the best grocery store snacks. You can even get your own personalized ‘Best Of’ list of your most listened to songs and albums on Spotify. But let’s be honest, the majority of my time is not spent watching Award-winning TV, but trying to convince my computer to run that last bit of R code needed for my analysis.</description>
     </item>
     
     <item>
+      <title>GRASS GIS and R: A perfect pair</title>
+      <link>/2019/04/11/grass-r/</link>
+      <pubDate>Thu, 11 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/04/11/grass-r/</guid>
+      <description>I’m always amazed at how many types of spatial analyses that are now possible in R and how fast the field is growing. But, you can’t quite do everything purely in R yet, and sometimes need to call on some already existing open source software.
+In this post I’m going to go over how to integrate GRASS GIS into your R workflow. If you’ve worked with QGIS for a while, you may remember at one point installing GRASS as part of the steps to get QGIS up and running.</description>
+    </item>
+    
+    <item>
       <title>dplyr and ggplot pipe dreams</title>
-      <link>https://ditheringdata.netlify.com/2018/06/15/dplyr-and-ggplot-pipe-dreams/</link>
+      <link>/2018/06/15/dplyr-and-ggplot-pipe-dreams/</link>
       <pubDate>Fri, 15 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/2018/06/15/dplyr-and-ggplot-pipe-dreams/</guid>
+      <guid>/2018/06/15/dplyr-and-ggplot-pipe-dreams/</guid>
       <description>I’ve been getting more and more immersed into using tidyverse packages as time goes on. Every now and then I have trouble getting something to work that I could do very quickly in base R, but that seems to be happening less and less as more SO questions use the tidyverse and documentation gets better and better.
 Anyways, I am a little late to the party but I recently discovered that you can pipe directly from your dplyr calls into ggplot2, manipulating and plotting your data all at once.</description>
     </item>
     
     <item>
       <title>Ebola Outbreak in DRC 2018</title>
-      <link>https://ditheringdata.netlify.com/2018/05/15/drc-ebola/</link>
+      <link>/2018/05/15/drc-ebola/</link>
       <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/2018/05/15/drc-ebola/</guid>
+      <guid>/2018/05/15/drc-ebola/</guid>
       <description>An outbreak of Ebola occurred in the Equator province of the Democratic Republic of Congo in April 2018. The WHO published its first Disease Outbreak News on the outbreak on May 10th and began efforts to conduct ring vaccination around the area. You can read more about it on the WHO’s website on the 2018 Ebola outbreak in the DRC.</description>
     </item>
     
     <item>
+      <title>The Man in the BoxPlot</title>
+      <link>/2018/04/04/the-man-in-the-boxplot/</link>
+      <pubDate>Wed, 04 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/04/04/the-man-in-the-boxplot/</guid>
+      <description>While boxplots may not be everyone’s favorite way to visualize a data distribution, they are a really useful data exploration tool, and being able to customize them to your every need is pretty great.
+violin plto cartoon
+ggplot2 is great for easy out-of-the-box visualizations, and lets you do a lot of customizations once you get familiar with the grammar of it. But sometimes you want to trick out your plots with something even extra.</description>
+    </item>
+    
+    <item>
       <title>Battle Royal: sf vs. sp</title>
-      <link>https://ditheringdata.netlify.com/2018/01/28/sf-vs-sp/</link>
+      <link>/2018/01/28/sf-vs-sp/</link>
       <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/2018/01/28/sf-vs-sp/</guid>
+      <guid>/2018/01/28/sf-vs-sp/</guid>
       <description>I’ve recently made the jump from sp to sf for a lot of my simple spatial work. I’ll go into why in more detail below, but this was mostly because it plays so nicely with my tidy workflow. But I’ve also been wondering if I gain anything else from making the switch, or worse, if I’m losing out? My two main questions:
  Which is faster? Which one is better on my poor ol’ MacBook’s memory?</description>
     </item>
     
     <item>
       <title>Animating Maps with gganimate</title>
-      <link>https://ditheringdata.netlify.com/2018/01/01/gganimate/</link>
+      <link>/2018/01/01/gganimate/</link>
       <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/2018/01/01/gganimate/</guid>
+      <guid>/2018/01/01/gganimate/</guid>
       <description>I’ve recently been working on a monthly yellow fever dataset from Brazil that spans fourteen years. Overall, there are over 5600 spatial units and 168 months (that’s nearly 1,000,000 rows of data for those of you keeping track). It is great to have access to so much data, but sometimes visualizing it can be a bit of a pain, especially when we are trying to look at patterns across time and space.</description>
     </item>
     

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sf on m.evans</title>
+    <link>/tags/sf/</link>
+    <description>Recent content in sf on m.evans</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Michelle Evans</copyright>
+    <lastBuildDate>Sat, 22 Feb 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/sf/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Extract spatial polygon values to points</title>
+      <link>/2020/02/22/extract-data-from-spatial-polygons/</link>
+      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/02/22/extract-data-from-spatial-polygons/</guid>
+      <description>If you work with spatial data, you are probably familiar with the extract function from the raster package, which extracts values from a RasterLayer or RasterStack to polygons or points. This is the type of function you may use when you want to know the elevation at a latitude/longitude value or the mean temperature within a county polygon.
+This function only works when you value you want to extract is in a raster.</description>
+    </item>
+    
+  </channel>
+</rss>

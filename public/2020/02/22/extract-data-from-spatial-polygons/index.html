@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Extract spatial polygon values to points &middot; Michelle Evans</title>
+        <meta name="description" content="If you work with spatial data, you are probably familiar with the extract function from the raster package, which extracts values from a RasterLayer or RasterStack to polygons or points. This is the type of function you may use when you want to know the elevation at a latitude/longitude value or the mean temperature within a county polygon.
+This function only works when you value you want to extract is in a raster.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.55.0" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="m.evans" href="/">m.evans</a>
+                            </h1>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:mvevans@uga.edu">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/mv_evans">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/mvevans89">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="https://stackoverflow.com/users/5688284/michelle-evans">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="Topics" href="/tags/">Topics</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Extract spatial polygon values to points</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2020-02-22" itemprop="datePublished">Sat, Feb 22, 2020</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="https://mvevans89.github.io/" itemprop="url" rel="author">Michelle Evans</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+
+<p>If you work with spatial data, you are probably familiar with the <code>extract</code> function from the raster package, which extracts values from a RasterLayer or RasterStack to polygons or points. This is the type of function you may use when you want to know the elevation at a latitude/longitude value or the mean temperature within a county polygon.</p>
+<p>This function only works when you value you want to extract is in a raster. If you want to extract from a vector layer, you’ll need to use another operation or function. This technique is a type of vector overlay that is similar to an <a href="http://wiki.gis.com/wiki/index.php/Intersect">intersect operation</a>.</p>
+<p align="center">
+<img src="/img/overlay-img.png" width="400" height = "300" >
+</p>
+<p>I’ll go over the full workflow below, but the function is:</p>
+<pre class="r"><code>st_join(points, polygons, join = st_intersects)</code></pre>
+<p>This is from the <code>sf</code> package, and you provide it with the point and polygon vector data, both as sf objects.</p>
+<p>As an example, I’ll go through extracting state names to some random points.</p>
+<p>The <code>USAboundaries</code> package has spatial data for the US.</p>
+<pre class="r"><code>library(USAboundaries)
+#install.packages(&quot;USAboundariesData&quot;, repos = &quot;http://packages.ropensci.org&quot;)
+library(USAboundariesData)
+library(sf)
+library(ggplot2)
+
+states &lt;- us_states()
+cities &lt;- us_cities()</code></pre>
+<p>We’ll just choose 100 cities at random and plot them over the states to get an idea of what this looks like. I’m going to zoom in on the East Coast just for visualization purposes.</p>
+<pre class="r"><code>sampled.cities &lt;- cities[sample(1:nrow(cities), 100, replace = F),]
+
+ggplot() +
+  geom_sf(data = states) +
+  geom_sf(data = sampled.cities) +
+  theme_void() +
+  coord_sf(xlim = c(-95,-60), ylim = c(25,50)) </code></pre>
+<p><img src="/post/2020-02-22-extract-data-from-spatial-polygons_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>We’ll drop some columns so it is easier to see how the extracted values are added to the dataset.</p>
+<pre class="r"><code>sampled.cities &lt;- dplyr::select(sampled.cities, city, state_name)
+
+head(sampled.cities)</code></pre>
+<pre><code>## Simple feature collection with 6 features and 2 fields
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: -122.647 ymin: 39.08197 xmax: -68.48009 ymax: 47.10752
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+## # A tibble: 6 x 3
+##   city        state_name             geometry
+##   &lt;chr&gt;       &lt;chr&gt;               &lt;POINT [°]&gt;
+## 1 Ellsworth   Maine      (-68.48009 44.58293)
+## 2 Salem       Ohio        (-80.84894 40.9046)
+## 3 Trenton     Michigan   (-83.19291 42.14006)
+## 4 Fort Thomas Kentucky   (-84.45317 39.08197)
+## 5 DuPont      Washington  (-122.647 47.10752)
+## 6 Sidney      New York   (-75.40331 42.30295)</code></pre>
+<p>We can then extract the values held in the polygons to the points.</p>
+<pre class="r"><code>point.extraction &lt;- st_join(sampled.cities, states, join = st_intersects)
+
+head(point.extraction)</code></pre>
+<pre><code>## Simple feature collection with 6 features and 14 fields
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: -122.647 ymin: 39.08197 xmax: -68.48009 ymax: 47.10752
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+## # A tibble: 6 x 15
+##   city  state_name.x                  geometry statefp statens affgeoid geoid
+##   &lt;chr&gt; &lt;chr&gt;                      &lt;POINT [°]&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;
+## 1 Ells… Maine             (-68.48009 44.58293) 23      017797… 0400000… 23   
+## 2 Salem Ohio               (-80.84894 40.9046) 39      010854… 0400000… 39   
+## 3 Tren… Michigan          (-83.19291 42.14006) 26      017797… 0400000… 26   
+## 4 Fort… Kentucky          (-84.45317 39.08197) 21      017797… 0400000… 21   
+## 5 DuPo… Washington         (-122.647 47.10752) 53      017798… 0400000… 53   
+## 6 Sidn… New York          (-75.40331 42.30295) 36      017797… 0400000… 36   
+## # … with 8 more variables: stusps &lt;chr&gt;, name &lt;chr&gt;, lsad &lt;chr&gt;, aland &lt;dbl&gt;,
+## #   awater &lt;dbl&gt;, state_name.y &lt;chr&gt;, state_abbr &lt;chr&gt;, jurisdiction_type &lt;chr&gt;</code></pre>
+<p>This extracts all of the columns from the <code>states</code> object to the city points, but you can also specify which columns you want by using <code>select</code> nested within the <code>st_join</code> function.</p>
+<pre class="r"><code>state.abbr.extraction &lt;- st_join(sampled.cities, dplyr::select(states, state_abbr), 
+                                 join = st_intersects)
+
+head(state.abbr.extraction)</code></pre>
+<pre><code>## Simple feature collection with 6 features and 3 fields
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: -122.647 ymin: 39.08197 xmax: -68.48009 ymax: 47.10752
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+## # A tibble: 6 x 4
+##   city        state_name             geometry state_abbr
+##   &lt;chr&gt;       &lt;chr&gt;               &lt;POINT [°]&gt; &lt;chr&gt;     
+## 1 Ellsworth   Maine      (-68.48009 44.58293) ME        
+## 2 Salem       Ohio        (-80.84894 40.9046) OH        
+## 3 Trenton     Michigan   (-83.19291 42.14006) MI        
+## 4 Fort Thomas Kentucky   (-84.45317 39.08197) KY        
+## 5 DuPont      Washington  (-122.647 47.10752) WA        
+## 6 Sidney      New York   (-75.40331 42.30295) NY</code></pre>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+            
+                <a href="/tags/r/">R</a>, 
+            
+                <a href="/tags/spatial/">spatial</a>, 
+            
+                <a href="/tags/sf/">sf</a>
+            
+        </p>
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=Extract%20spatial%20polygon%20values%20to%20points&url=%2f2020%2f02%2f22%2fextract-data-from-spatial-polygons%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+
+        
+        
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="m.evans" href="/">m.evans</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2020 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="/js/jquery-1.11.3.min.js"></script>
+        <script src="/js/jquery.fitvids.js"></script>
+        
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        
+        
+        <script src="/js/scripts.js"></script>
+    </body>
+</html>
+

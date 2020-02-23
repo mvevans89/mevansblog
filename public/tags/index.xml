@@ -2,85 +2,112 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on m.evans</title>
-    <link>https://ditheringdata.netlify.com/tags/</link>
+    <link>/tags/</link>
     <description>Recent content in Tags on m.evans</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Feb 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://ditheringdata.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>R</title>
-      <link>https://ditheringdata.netlify.com/tags/r/</link>
-      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      <link>/tags/r/</link>
+      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/tags/r/</guid>
+      <guid>/tags/r/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>ggplot</title>
-      <link>https://ditheringdata.netlify.com/tags/ggplot/</link>
-      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      <title>sf</title>
+      <link>/tags/sf/</link>
+      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/tags/ggplot/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>dplyr</title>
-      <link>https://ditheringdata.netlify.com/tags/dplyr/</link>
-      <pubDate>Fri, 15 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://ditheringdata.netlify.com/tags/dplyr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ggplot2</title>
-      <link>https://ditheringdata.netlify.com/tags/ggplot2/</link>
-      <pubDate>Fri, 15 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://ditheringdata.netlify.com/tags/ggplot2/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Ebola</title>
-      <link>https://ditheringdata.netlify.com/tags/ebola/</link>
-      <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://ditheringdata.netlify.com/tags/ebola/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>leaflet</title>
-      <link>https://ditheringdata.netlify.com/tags/leaflet/</link>
-      <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://ditheringdata.netlify.com/tags/leaflet/</guid>
+      <guid>/tags/sf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>spatial</title>
-      <link>https://ditheringdata.netlify.com/tags/spatial/</link>
-      <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
+      <link>/tags/spatial/</link>
+      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/tags/spatial/</guid>
+      <guid>/tags/spatial/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ggplot</title>
+      <link>/tags/ggplot/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ggplot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ggplot2</title>
+      <link>/tags/ggplot2/</link>
+      <pubDate>Thu, 02 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ggplot2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>visualization</title>
+      <link>/tags/visualization/</link>
+      <pubDate>Thu, 02 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/visualization/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GRASS</title>
+      <link>/tags/grass/</link>
+      <pubDate>Thu, 11 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/grass/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dplyr</title>
+      <link>/tags/dplyr/</link>
+      <pubDate>Fri, 15 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/dplyr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Ebola</title>
+      <link>/tags/ebola/</link>
+      <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ebola/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>leaflet</title>
+      <link>/tags/leaflet/</link>
+      <pubDate>Tue, 15 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/leaflet/</guid>
       <description></description>
     </item>
     
     <item>
       <title>animation</title>
-      <link>https://ditheringdata.netlify.com/tags/animation/</link>
+      <link>/tags/animation/</link>
       <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/tags/animation/</guid>
+      <guid>/tags/animation/</guid>
       <description></description>
     </item>
     

@@ -1,0 +1,85 @@
+---
+title: Extract spatial polygon values to points
+author: Michelle
+date: '2020-02-22'
+slug: extract-data-from-spatial-polygons
+categories: []
+tags:
+  - R
+  - spatial
+  - sf
+description: ''
+---
+
+```{r, include = F}
+knitr::opts_chunk$set(warning = F, message = F, cache = T)
+```
+
+If you work with spatial data, you are probably familiar with the `extract` function from the raster package, which extracts values from a RasterLayer or RasterStack to polygons or points. This is the type of function you may use when you want to know the elevation at a latitude/longitude value or the mean temperature within a county polygon.
+
+This function only works when you value you want to extract is in a raster. If you want to extract from a vector layer, you'll need to use another operation or function. This technique is a type of vector overlay that is similar to an [intersect operation](http://wiki.gis.com/wiki/index.php/Intersect).
+
+<p align="center">
+<img src="/img/overlay-img.png" width="400" height = "300" >
+</p>
+
+I'll go over the full workflow below, but the function is:
+
+```{r, eval = F}
+st_join(points, polygons, join = st_intersects)
+```
+
+This is from the `sf` package, and you provide it with the point and polygon vector data, both as sf objects.
+
+As an example, I'll go through extracting state names to some random points.
+
+The `USAboundaries` package has spatial data for the US.
+
+```{r}
+library(USAboundaries)
+#install.packages("USAboundariesData", repos = "http://packages.ropensci.org")
+library(USAboundariesData)
+library(sf)
+library(ggplot2)
+
+states <- us_states()
+cities <- us_cities()
+```
+
+We'll just choose 100 cities at random and plot them over the states to get an idea of what this looks like. I'm going to zoom in on the East Coast just for visualization purposes.
+
+```{r}
+sampled.cities <- cities[sample(1:nrow(cities), 100, replace = F),]
+
+ggplot() +
+  geom_sf(data = states) +
+  geom_sf(data = sampled.cities) +
+  theme_void() +
+  coord_sf(xlim = c(-95,-60), ylim = c(25,50)) 
+```
+
+We'll drop some columns so it is easier to see how the extracted values are added to the dataset.
+
+```{r}
+sampled.cities <- dplyr::select(sampled.cities, city, state_name)
+
+head(sampled.cities)
+```
+
+We can then extract the values held in the polygons to the points. 
+
+```{r, warning=F}
+point.extraction <- st_join(sampled.cities, states, join = st_intersects)
+
+head(point.extraction)
+```
+
+This extracts all of the columns from the `states` object to the city points, but you can also specify which columns you want by using `select` nested within the `st_join` function.
+
+```{r, warning=F}
+state.abbr.extraction <- st_join(sampled.cities, dplyr::select(states, state_abbr), 
+                                 join = st_intersects)
+
+head(state.abbr.extraction)
+```
+
