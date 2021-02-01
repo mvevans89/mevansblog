@@ -1,23 +1,28 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>ggplot on m.evans</title>
-    <link>/tags/ggplot/</link>
+    <link>https://ditheringdata.netlify.com/tags/ggplot/</link>
     <description>Recent content in ggplot on m.evans</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/ggplot/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Wed, 27 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/tags/ggplot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Accidentally repeating geom_text</title>
+      <link>https://ditheringdata.netlify.com/2021/01/27/accidentally-repeating-geom_text/</link>
+      <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://ditheringdata.netlify.com/2021/01/27/accidentally-repeating-geom_text/</guid>
+      <description>When adding labels or text to ggplot you may have run into a problem where it is either taking much longer than you expect to plot, crashing Rstudio while plotting, or creating blurry or jagged text/labels. This all stems from the same problem, which is that, if the labels are repeated n times in your dataset, they are being plotted n times. As it writes those text over and over again on top of itself, it 1) will take a long time and 2) will create blurry text.</description>
+    </item>
     
     <item>
       <title>Rolling functions along columns</title>
-      <link>/2020/02/11/rolling-functions-along-columns/</link>
+      <link>https://ditheringdata.netlify.com/2020/02/11/rolling-functions-along-columns/</link>
       <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/02/11/rolling-functions-along-columns/</guid>
+      <guid>https://ditheringdata.netlify.com/2020/02/11/rolling-functions-along-columns/</guid>
       <description>Rolling, or window, functions allow you to apply a function over a window of size n of a vector, such as a column in a dataframe. This is especially useful when you want to know the accumulation of some variable over time, like precipitation over the past month or the count of some occurrence in a surrounding number of days.
 To follow this you’ll need the following packages:
 library(RcppRoll) library(ggplot2); theme_set(theme_bw()) library(dplyr) I recently used rolling functions to deal with a data puzzle of my own.</description>
@@ -25,10 +30,10 @@ library(RcppRoll) library(ggplot2); theme_set(theme_bw()) library(dplyr) I recen
     
     <item>
       <title>Animating Maps with gganimate</title>
-      <link>/2018/01/01/gganimate/</link>
+      <link>https://ditheringdata.netlify.com/2018/01/01/gganimate/</link>
       <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/01/01/gganimate/</guid>
+      <guid>https://ditheringdata.netlify.com/2018/01/01/gganimate/</guid>
       <description>I’ve recently been working on a monthly yellow fever dataset from Brazil that spans fourteen years. Overall, there are over 5600 spatial units and 168 months (that’s nearly 1,000,000 rows of data for those of you keeping track). It is great to have access to so much data, but sometimes visualizing it can be a bit of a pain, especially when we are trying to look at patterns across time and space.</description>
     </item>
     

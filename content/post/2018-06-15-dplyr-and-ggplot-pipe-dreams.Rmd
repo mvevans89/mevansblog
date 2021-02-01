@@ -5,7 +5,7 @@ date: '2018-06-15'
 slug: dplyr-and-ggplot-pipe-dreams
 categories: []
 tags:
-  - ggplot2
+  - ggplot
   - dplyr
 description: ''
 ---

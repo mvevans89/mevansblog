@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Accidentally repeating geom_text &middot; Michelle Evans</title>
+        <meta name="description" content="When adding labels or text to ggplot you may have run into a problem where it is either taking much longer than you expect to plot, crashing Rstudio while plotting, or creating blurry or jagged text/labels. This all stems from the same problem, which is that, if the labels are repeated n times in your dataset, they are being plotted n times. As it writes those text over and over again on top of itself, it 1) will take a long time and 2) will create blurry text.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://ditheringdata.netlify.com/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="m.evans" href="https://ditheringdata.netlify.com/">m.evans</a>
+                            </h1>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:mvevans@uga.edu">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/mv_evans">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/mvevans89">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="https://stackoverflow.com/users/5688284/michelle-evans">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="Topics" href="/tags/">Topics</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Accidentally repeating geom_text</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2021-01-27" itemprop="datePublished">Wed, Jan 27, 2021</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="https://mvevans89.github.io/" itemprop="url" rel="author">Michelle Evans</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+
+<p>When adding labels or text to <code>ggplot</code> you may have run into a problem where it is either taking much longer than you expect to plot, crashing Rstudio while plotting, or creating blurry or jagged text/labels. This all stems from the same problem, which is that, if the labels are repeated <strong>n</strong> times in your dataset, they are being plotted <strong>n</strong> times. As it writes those text over and over again on top of itself, it 1) will take a long time and 2) will create blurry text. Below are several options to fix this problem.</p>
+<p>But first, the problem…</p>
+<div id="example-of-the-repeating-problem" class="section level1">
+<h1>Example of the repeating problem</h1>
+<p>Let’s create an example where this problem could arise. For me, it’s when I want to use a summary statistic within a ggplot call. Say we want to look at the frequency of mpg <code>mtcars</code> dataset, for example, and add a label for the median.</p>
+<pre class="r"><code>data(mtcars)
+
+ggplot(mtcars, aes(x = mpg))+
+  geom_histogram() +
+  geom_vline(aes(xintercept = median(mpg)), color = &quot;red&quot;, linetype = &#39;dashed&#39;)+
+  geom_text(aes(x = median(mpg), y = 5, label = paste(&quot; Median =&quot;, median(mpg))), hjust = 0)+
+  ggtitle(&quot;Distribution of MPG in the mtcars dataset&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2021-01-27-accidentally-repeating-geom-label/repeat-geom-label_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>This dataset is not very long, so it will plot quickly, but you can see that the text for the “Median” label is very jagged. This is because it is plotting that for each row in the dataset, 32 times total. <code>geom_text</code> was originally designed for work with a dataframe where you may want to label each point or observation, and so, following the philosophy of <a href="https://r4ds.had.co.nz/tidy-data.html">tidy data</a>, repeats this for each row of the initial dataframe.</p>
+<p>Here are three ways to fix the problem, presented in my order of preference:</p>
+<ol style="list-style-type: decimal">
+<li>Use <code>annotate</code> instead of <code>geom_text</code></li>
+<li>Reset the data source before the <code>geom_text</code> call</li>
+<li>Calculate the summary statistic outside of the <code>ggplot</code> function and call it directly</li>
+</ol>
+<p>I came across these solutions in a couple of different places, but most were drawn from this <a href="https://stackoverflow.com/questions/10952832/ggplot2-is-there-a-fix-for-jagged-poor-quality-text-produced-by-geom-text">stackoverflow post</a>.</p>
+</div>
+<div id="use-the-annotate-geom" class="section level1">
+<h1>Use the <code>annotate</code> geom</h1>
+<p>Perhaps the most straight-forward solution is to switch to using a geom that is made for this purpose, <code>annotate</code>. From its <a href="https://ggplot2.tidyverse.org/reference/annotate.html">reference page</a>, “properties of the geoms are not mapped from variables of a data frame, but are instead passed in as vectors”. This solves the repeating problem due to the label being linked to the data source above.</p>
+<pre class="r"><code>ggplot(mtcars, aes(x = mpg))+
+  geom_histogram() +
+  geom_vline(aes(xintercept = median(mpg)), color = &quot;red&quot;, linetype = &#39;dashed&#39;)+
+  annotate(geom = &quot;text&quot;, x = median(mtcars$mpg), y = 5, label = paste(&quot; Median =&quot;, median(mtcars$mpg)), 
+           hjust = 0)+
+  ggtitle(&quot;Distribution of MPG in the mtcars dataset&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2021-01-27-accidentally-repeating-geom-label/repeat-geom-label_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>The important thing to note in the code above is that we must specify the dataset in the <code>annotate</code> call (e.g. <code>mtcars$mpg</code>, instead of just <code>mpg)</code>, since it doesn’t use non-standard evaluation (NSE) within the <code>aes</code> like other geoms.</p>
+</div>
+<div id="reset-the-data-source" class="section level1">
+<h1>Reset the data source</h1>
+<p>If you’d like to keep using <code>geom_text</code>, you can reset the data source within its call, so that it is no longer linking labels to the multi-rowed data source used in the original ggplot call. This is done by manually setting the data to an empty data.frame in the <code>geom_text</code> call.</p>
+<pre class="r"><code>ggplot(mtcars, aes(x = mpg))+
+  geom_histogram() +
+  geom_vline(aes(xintercept = median(mpg)), color = &quot;red&quot;, linetype = &#39;dashed&#39;)+
+  geom_text(data = data.frame(), aes(x = median(mtcars$mpg), y = 5, 
+                                     label = paste(&quot; Median =&quot;, median(mtcars$mpg))), hjust = 0)+
+  ggtitle(&quot;Distribution of MPG in the mtcars dataset&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2021-01-27-accidentally-repeating-geom-label/repeat-geom-label_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>As in the first solution, you’ll need to specify that mpg is within the <code>mtcars</code> dataframe within the aes, because the dataframe that the <code>geom_text</code> is using is the blank one.</p>
+</div>
+<div id="calculate-the-summary-statistic-outside" class="section level1">
+<h1>Calculate the summary statistic outside</h1>
+<p>Another option is to calculate the median value outside of the ggplot call and then call it directly with <code>geom_text</code>. This is my least favorite because it creates an extra object in your environment, and I am all for a clean environment. Plus the functionality to do this already exists in ggplot, so why not use it?</p>
+<pre class="r"><code>#create the median value
+med.mpg &lt;- median(mtcars$mpg)
+
+ggplot(mtcars, aes(x = mpg))+
+  geom_histogram() +
+  geom_vline(aes(xintercept = median(mpg)), color = &quot;red&quot;, linetype = &#39;dashed&#39;)+
+  geom_text(data = data.frame(), aes(x = med.mpg, y = 5, 
+                                     label = paste(&quot; Median =&quot;, med.mpg)), hjust = 0)+
+  ggtitle(&quot;Distribution of MPG in the mtcars dataset&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2021-01-27-accidentally-repeating-geom-label/repeat-geom-label_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>You could use this method with either <code>geom_text</code> or <code>annotate</code>, but if you are already using <code>annotate</code> you may as well just use the first solution.</p>
+</div>
+<div id="what-about-geom_label" class="section level1">
+<h1>What about <code>geom_label</code>?</h1>
+<p>Although I only talked about this issue with <code>geom_text</code>, there is another geom that is functionally the same, except it adds a box and background, <code>geom_label</code>. Interestingly this doesn’t have the same blurry problem as <code>geom_text</code>:</p>
+<pre class="r"><code>ggplot(mtcars, aes(x = mpg))+
+  geom_histogram() +
+  geom_vline(aes(xintercept = median(mpg)), color = &quot;red&quot;, linetype = &#39;dashed&#39;)+
+  geom_label(aes(x = median(mpg), y = 5, label = paste(&quot; Median =&quot;, median(mpg))), hjust = 0)+
+  ggtitle(&quot;Distribution of MPG in the mtcars dataset&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2021-01-27-accidentally-repeating-geom-label/repeat-geom-label_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>But is this just because it has a white background and so you can’t see the labels that it is plotting over? One way to check this is to benchmark a larger dataset and compare the times. First, the original plot:</p>
+<pre class="r"><code>library(tictoc)
+
+tic()
+ggplot(mtcars, aes(x = mpg))+
+  geom_histogram() +
+  geom_vline(aes(xintercept = median(mpg)), color = &quot;red&quot;, linetype = &#39;dashed&#39;)+
+  geom_label(aes(x = median(mpg), y = 5, label = paste(&quot; Median =&quot;, median(mpg))), hjust = 0)+
+  ggtitle(&quot;Distribution of MPG in the mtcars dataset&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2021-01-27-accidentally-repeating-geom-label/repeat-geom-label_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>toc()</code></pre>
+<pre><code>## 0.209 sec elapsed</code></pre>
+<pre class="r"><code>#make a larger mtcars dataset using rep
+mtcars.3k &lt;- mtcars[(rep(1:nrow(mtcars), each = 100)),]
+
+tic()
+ggplot(mtcars.3k, aes(x = mpg))+
+  geom_histogram() +
+  geom_vline(aes(xintercept = median(mpg)), color = &quot;red&quot;, linetype = &#39;dashed&#39;)+
+  geom_label(aes(x = median(mpg), y = 500, label = paste(&quot; Median =&quot;, median(mpg))), hjust = 0)+
+  ggtitle(&quot;Distribution of MPG in the mtcars dataset&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2021-01-27-accidentally-repeating-geom-label/repeat-geom-label_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>toc()</code></pre>
+<pre><code>## 8.641 sec elapsed</code></pre>
+<p>The larger dataset takes over 25 times longer to plot. Clearly, the problem remains, even if the resulting plot isn’t blurry. The solutions are the same as for <code>geom_text</code>, with the primary difference being that you must specify the type of annotation as ‘label’ instead of ‘text’, when using annotate.</p>
+<pre class="r"><code>tic()
+ggplot(mtcars.3k, aes(x = mpg))+
+  geom_histogram() +
+  geom_vline(aes(xintercept = median(mpg)), color = &quot;red&quot;, linetype = &#39;dashed&#39;)+
+  annotate(geom = &quot;label&quot;, x = median(mtcars$mpg), y = 500, label = paste(&quot; Median =&quot;, median(mtcars$mpg)), 
+           hjust = 0)+
+  ggtitle(&quot;Distribution of MPG in the mtcars dataset&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2021-01-27-accidentally-repeating-geom-label/repeat-geom-label_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>toc()</code></pre>
+<pre><code>## 0.155 sec elapsed</code></pre>
+<p>And we can double-check that this is doing what we want because the plotting is fast again, less than 0.2 sec!</p>
+</div>
+<div id="tldr" class="section level1">
+<h1>TL;DR</h1>
+<p>If using <code>geom_text</code> or <code>geom_label</code> is creating blurry labels or taking much longer than expected when used with summary statistics, try switching to using <code>annotate</code>.</p>
+</div>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+            
+                <a href="/tags/ggplot/">ggplot</a>
+            
+        </p>
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=Accidentally%20repeating%20geom_text&url=https%3a%2f%2fditheringdata.netlify.com%2f2021%2f01%2f27%2faccidentally-repeating-geom_text%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+
+        
+        
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="m.evans" href="https://ditheringdata.netlify.com/">m.evans</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2021 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://ditheringdata.netlify.com/js/jquery-1.11.3.min.js"></script>
+        <script src="https://ditheringdata.netlify.com/js/jquery.fitvids.js"></script>
+        
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        
+        
+        <script src="https://ditheringdata.netlify.com/js/scripts.js"></script>
+    </body>
+</html>
+
