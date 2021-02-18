@@ -17,7 +17,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$","_cache$"]
 [Params]
     intro = true
     headline = "Dithering Data"
-    description = "Hacky solutions to common data manipulation and mapping problems in R"
+    description = ""
     github = "https://github.com/mvevans89"
     twitter = "https://twitter.com/mv_evans"
     stackoverflow = "https://stackoverflow.com/users/5688284/michelle-evans"

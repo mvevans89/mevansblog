@@ -1,7 +1,7 @@
 ---
 title: Dummy Variables for Dummies
 author: R package build
-date: '2021-02-04'
+date: '2021-02-17'
 slug: []
 categories: []
 tags:
@@ -50,9 +50,9 @@ $y_i = \beta_{1}corn_i + \beta_2wheat_i + \beta_3rice_i +\epsilon$
 
 where:
 
-- $y_i$ is the % N of the field, *i*
+- $y_i$ is the % N of the field, *i* </br>
 
-- $beta_1$, $\beta_2$, $\beta_3$ are the coefficients for the effects of corn, wheat, and rice, respectively
+- $\beta_1$, $\beta_2$, $\beta_3$ are the coefficients for the effects of corn, wheat, and rice, respectively
 
 - $corn_i$, $wheat_i$, $rice_i$ are all binomial variables (0/1) for the type of crop grown in field *i*.
 
