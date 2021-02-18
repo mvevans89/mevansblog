@@ -17,11 +17,11 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$","_cache$"]
 [Params]
     intro = true
     headline = "Dithering Data"
-    description = ""
+    description = "Hacky solutions to common data manipulation and mapping problems in R"
     github = "https://github.com/mvevans89"
     twitter = "https://twitter.com/mv_evans"
     stackoverflow = "https://stackoverflow.com/users/5688284/michelle-evans"
-    email = "mvevans@uga.edu"
+    email = "mv.evans.phd@gmail.com"
     opengraph = false
     shareTwitter = true
     shareFacebook = false
@@ -30,6 +30,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$","_cache$"]
     dateFormat = "Mon, Jan 2, 2006"
     highlightJsUrl = ""
     highlightJsLocalUrl = ""
+    MathJaxCDN = "//cdn.bootcss.com"
+    MathJaxVersion = "2.7.1"
 
 [Permalinks]
     post = "/:year/:month/:day/:slug/"

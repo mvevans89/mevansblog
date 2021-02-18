@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Fri, 15 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 04 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dummy Variables for Dummies</title>
+      <link>https://ditheringdata.netlify.com/2021/02/04/dummy-variables-for-dummies/</link>
+      <pubDate>Thu, 04 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://ditheringdata.netlify.com/2021/02/04/dummy-variables-for-dummies/</guid>
+      <description>As you may have guessed from the cliched title that I couldn’t resist, this post is about dummy variables. Specifically, comparing a couple of different ways to create them in R, and seeing which is fastest.
+What are dummy variables? Dummy variables, sometimes called indicator variables, are a way to encode categorical variables as numerical (often binomial), so that we can model them in a regression. Luckily, R will often deal with creating these dummy variables under the hood when we use something like lm to model a regression, but this is not true for all methods.</description>
+    </item>
+    
     <item>
       <title>dplyr and ggplot pipe dreams</title>
       <link>https://ditheringdata.netlify.com/2018/06/15/dplyr-and-ggplot-pipe-dreams/</link>

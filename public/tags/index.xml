@@ -7,22 +7,31 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Wed, 27 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 04 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>ggplot</title>
-      <link>https://ditheringdata.netlify.com/tags/ggplot/</link>
-      <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
+      <title>dplyr</title>
+      <link>https://ditheringdata.netlify.com/tags/dplyr/</link>
+      <pubDate>Thu, 04 Feb 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://ditheringdata.netlify.com/tags/ggplot/</guid>
+      <guid>https://ditheringdata.netlify.com/tags/dplyr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>R</title>
       <link>https://ditheringdata.netlify.com/tags/r/</link>
-      <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 04 Feb 2021 00:00:00 +0000</pubDate>
       
       <guid>https://ditheringdata.netlify.com/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ggplot</title>
+      <link>https://ditheringdata.netlify.com/tags/ggplot/</link>
+      <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://ditheringdata.netlify.com/tags/ggplot/</guid>
       <description></description>
     </item>
     
@@ -41,15 +50,6 @@
       <pubDate>Sat, 22 Feb 2020 00:00:00 +0000</pubDate>
       
       <guid>https://ditheringdata.netlify.com/tags/spatial/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>dplyr</title>
-      <link>https://ditheringdata.netlify.com/tags/dplyr/</link>
-      <pubDate>Fri, 15 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://ditheringdata.netlify.com/tags/dplyr/</guid>
       <description></description>
     </item>
     

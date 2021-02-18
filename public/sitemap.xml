@@ -3,6 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://ditheringdata.netlify.com/tags/dplyr/</loc>
+    <lastmod>2021-02-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/2021/02/04/dummy-variables-for-dummies/</loc>
+    <lastmod>2021-02-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/</loc>
+    <lastmod>2021-02-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/post/</loc>
+    <lastmod>2021-02-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/tags/r/</loc>
+    <lastmod>2021-02-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/tags/</loc>
+    <lastmod>2021-02-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://ditheringdata.netlify.com/2021/01/27/accidentally-repeating-geom_text/</loc>
     <lastmod>2021-01-27T00:00:00+00:00</lastmod>
   </url>
@@ -13,27 +43,7 @@
   </url>
   
   <url>
-    <loc>https://ditheringdata.netlify.com/</loc>
-    <lastmod>2021-01-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/post/</loc>
-    <lastmod>2021-01-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/</loc>
-    <lastmod>2021-01-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://ditheringdata.netlify.com/2020/02/22/extract-data-from-spatial-polygons/</loc>
-    <lastmod>2020-02-22T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/r/</loc>
     <lastmod>2020-02-22T00:00:00+00:00</lastmod>
   </url>
   
@@ -55,11 +65,6 @@
   <url>
     <loc>https://ditheringdata.netlify.com/2019/12/20/package-wrapped/</loc>
     <lastmod>2019-12-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/dplyr/</loc>
-    <lastmod>2018-06-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>

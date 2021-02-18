@@ -1,0 +1,167 @@
+---
+title: Dummy Variables for Dummies
+author: R package build
+date: '2021-02-04'
+slug: []
+categories: []
+tags:
+  - R
+  - dplyr
+description: ''
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<p>As you may have guessed from the cliched title that I couldn’t resist, this post is about dummy variables. Specifically, comparing a couple of different ways to create them in R, and seeing which is fastest.</p>
+<div id="what-are-dummy-variables" class="section level1">
+<h1>What are dummy variables?</h1>
+<p>Dummy variables, sometimes called indicator variables, are a way to encode categorical variables as numerical (often binomial), so that we can model them in a regression. Luckily, R will often deal with creating these dummy variables under the hood when we use something like <code>lm</code> to model a regression, but this is not true for all methods.</p>
+<p>As an example, let’s say we are interested in the effect of three different types of crops (corn, wheat, rice) on soil nitrogen content (% N). The dataset may look something like this:</p>
+<pre class="r"><code>n.sample &lt;- 100000 #how many rows of data will you have?
+crop.types &lt;- c(&quot;corn&quot;, &quot;rice&quot;, &quot;wheat&quot;) #what are the levels of your categorical variable?
+nitrogen.data &lt;- data.frame(
+  crop_type = crop.types[sample(1:3, n.sample, replace = T)],
+  perc_N = runif(n.sample, min = 0, max =1 )
+)
+head(nitrogen.data)</code></pre>
+<pre><code>##   crop_type    perc_N
+## 1      rice 0.7539681
+## 2      corn 0.7737673
+## 3      rice 0.4085785
+## 4      corn 0.2349576
+## 5      rice 0.2283669
+## 6      rice 0.5988569</code></pre>
+<p>In R, we may model this in a regression framework with the following code:</p>
+<pre class="r"><code>lm(perc_N ~ 0 + crop_type,
+   data = nitrogen.data)</code></pre>
+<p>This corresponds to a regression equation that may look something like this:</p>
+<p><span class="math inline">\(y_i = \beta_{1}corn_i + \beta_2wheat_i + \beta_3rice_i +\epsilon\)</span></p>
+<p>where:
+- <span class="math inline">\(y_i\)</span> is the % N of the field, <em>i</em>
+- <span class="math inline">\(beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span> are the coefficients for the effects of corn, wheat, and rice, respectively
+- <span class="math inline">\(corn_i\)</span>, <span class="math inline">\(wheat_i\)</span>, <span class="math inline">\(rice_i\)</span> are all binomial variables (0/1) for the type of crop grown in field <em>i</em>.</p>
+<p>The model formula in the call to <code>lm</code> looks much simpler than this. That is because, under the hood, R is creating dummy variables from our <code>crop_type</code> variable, creating a binomial variable for each level of our categorical variable, without us needing to specify it.</p>
+<p align="center">
+<img src="/img/dummy_crop-type.png" width="500" height = "300" >
+</p>
+<p>When recording our data, it is much easier to do it like the data frame on the left, which is more human readable. Then we can turn it into the data frame on the right programmatically using R. This blog post will go over several ways to do this:</p>
+<ol style="list-style-type: decimal">
+<li>applying a function in base R</li>
+<li>via the <code>pivot_wider</code> function of the <code>tidyr</code> package (tidyverse framework)</li>
+<li>the<code>dummies</code> package</li>
+<li>the <code>fastDummies</code>package</li>
+</ol>
+<p>And then compare the speeds on a larger dataset.</p>
+</div>
+<div id="using-base-r" class="section level1">
+<h1>Using base R</h1>
+<p>If you don’t want to install any additional packages, you can do this in base R via the <code>model.matrix</code> function. It takes as an argument a model formula, but note that you need to add the <code>~ 0 +</code> to the formula so that it doesn’t include an intercept when creating the dummy data frame. This will create a matrix without the response variable, so you will may want to join it back to the original dataset.</p>
+<pre class="r"><code>base.mat &lt;- model.matrix(object = ~0 + crop_type, data = nitrogen.data)
+#join with original data
+base.df &lt;- cbind(nitrogen.data, base.mat) 
+
+head(base.df)</code></pre>
+<pre><code>##   crop_type    perc_N crop_typecorn crop_typerice crop_typewheat
+## 1      rice 0.7539681             0             1              0
+## 2      corn 0.7737673             1             0              0
+## 3      rice 0.4085785             0             1              0
+## 4      corn 0.2349576             1             0              0
+## 5      rice 0.2283669             0             1              0
+## 6      rice 0.5988569             0             1              0</code></pre>
+<p>This is essentially what is happening behind the scenes when you do a linear regression without creating a dummy variable first. In fact the formula used in this call is the same as the one above.</p>
+</div>
+<div id="using-the-tidyverse" class="section level1">
+<h1>Using the tidyverse</h1>
+<p>You can also do this using the <code>pivot_wider</code> function in <code>tidyr</code>. Using this method, you create a dummy_value column with all 1’s and then spread that value across each of the categories from the <code>names_from</code> column.</p>
+<pre class="r"><code>library(dplyr)
+library(tidyr)
+pivot_df &lt;- nitrogen.data %&gt;%
+  #create dummy value column
+  mutate(dummy_val = 1) %&gt;%
+  #spread across crop type
+  pivot_wider(names_from = crop_type, values_from = dummy_val, values_fill = 0)
+
+head(pivot_df)</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   perc_N  rice  corn wheat
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  0.754     1     0     0
+## 2  0.774     0     1     0
+## 3  0.409     1     0     0
+## 4  0.235     0     1     0
+## 5  0.228     1     0     0
+## 6  0.599     1     0     0</code></pre>
+<p>Note that we also supply the value to fill in a cell when a row doesn’t correspond to that category, via the <code>values_fill</code> argument.</p>
+</div>
+<div id="using-the-dummies-package" class="section level1">
+<h1>Using the <code>dummies</code> package</h1>
+<p>The <a href="https://cran.r-project.org/web/packages/dummies/dummies.pdf"><code>dummies</code> package</a> exists purely for this purpose. It has two functions that you can use to create dummy variables:</p>
+<ul>
+<li><code>dummy</code>: where you can specify which column you would like to create a dummy variable from and returns a matrix of these variables. Works for one column only.</li>
+<li><code>dummy.data.frame</code>: takes as input a data.frame, where you can again specify the columns you would like to create a dummy variable from, and returns a data.frame.</li>
+</ul>
+<p>Using the <code>dummy</code> function looks like this, where we provide the name of the column as a string and the dataset. I also set the <code>sep</code> argument to make this easier to read and manipulate later:</p>
+<pre class="r"><code>library(dummies)
+dummy.mat &lt;- dummy(x = &quot;crop_type&quot;, data = nitrogen.data, sep = &quot;-&quot;)
+#see that this is a matrix
+str(dummy.mat)</code></pre>
+<pre><code>##  int [1:100000, 1:3] 0 1 0 1 0 0 1 1 1 1 ...
+##  - attr(*, &quot;dimnames&quot;)=List of 2
+##   ..$ : chr [1:100000] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   ..$ : chr [1:3] &quot;crop_type-corn&quot; &quot;crop_type-rice&quot; &quot;crop_type-wheat&quot;</code></pre>
+<p>This is not as useful as the <code>dummy.data.frame</code> function, since we usually want the rest of the data.frame to be associated with our new dummy variables. Here is how I would recommend doing this using this package, so it results in a data.frame ready to use with a model:</p>
+<pre class="r"><code>dummy.df &lt;- dummy.data.frame(data = nitrogen.data, names = &quot;crop_type&quot;, sep = &quot;-&quot;)
+#inspect this object
+str(dummy.df)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    100000 obs. of  4 variables:
+##  $ crop_type-corn : int  0 1 0 1 0 0 1 1 1 1 ...
+##  $ crop_type-rice : int  1 0 1 0 1 1 0 0 0 0 ...
+##  $ crop_type-wheat: int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ perc_N         : num  0.754 0.774 0.409 0.235 0.228 ...
+##  - attr(*, &quot;dummies&quot;)=List of 1
+##   ..$ crop_type: int [1:3] 1 2 3</code></pre>
+</div>
+<div id="using-the-fastdummies-package" class="section level1">
+<h1>Using the <code>fastDummies</code> package</h1>
+<p>The play dataset we are using for this is only 100,000 rows and we are only concerned with one categorical variable with three levels, but real data may have many more rows and more complicated categorical variables, which can take much longer to turn into dummy variables. Hence the <a href="https://jacobkap.github.io/fastDummies/"><code>fastDummies</code> package</a>.</p>
+<p>Using this package is super simple, and relies on one function to create dummy variables across columns. The function will by default turn all character or categorical variables into dummy variables, but you can also specify the columns you would like to “dummify” with the <code>select_columns</code> argument.</p>
+<pre class="r"><code>library(fastDummies)
+fastdummy.df &lt;- dummy_cols(nitrogen.data, select_columns = &quot;crop_type&quot;)
+
+head(fastdummy.df)</code></pre>
+<pre><code>##   crop_type    perc_N crop_type_corn crop_type_rice crop_type_wheat
+## 1      rice 0.7539681              0              1               0
+## 2      corn 0.7737673              1              0               0
+## 3      rice 0.4085785              0              1               0
+## 4      corn 0.2349576              1              0               0
+## 5      rice 0.2283669              0              1               0
+## 6      rice 0.5988569              0              1               0</code></pre>
+</div>
+<div id="comparing-the-speed" class="section level1">
+<h1>Comparing the speed</h1>
+<p>There isn’t much difference between these methods code-wise, except the tidyverse method which is a couple of lines longer. Using <code>pivot_wider</code> also probably scales up the worst, as you will need to repeat the technique for every categorical variable column you have, while the other methods allow you specify additional columns in the function itself. So we’ll use <code>microbenchmark</code> to see which method is fastest when applied to a larger dataset of 500k rows and a categorical variable with 26 levels.</p>
+<pre class="r"><code>n.sample = 500000
+fast.data &lt;- data.frame(response = rnorm(n.sample, 0,1),
+                        category = sample(LETTERS, n.sample, replace = T))
+
+time.test &lt;- microbenchmark(
+  base = cbind(fast.data, model.matrix(object = ~0 + category, data = fast.data)),
+  tidyr_way = fast.data %&gt;% mutate(dummy_val = 1) %&gt;% pivot_wider(names_from = category, values_from = dummy_val, values_fill = 0),
+  dummies = dummy.data.frame(data = fast.data, names = &quot;category&quot;, sep = &quot;-&quot;),
+  fast_dummies = dummy_cols(fast.data, select_columns = &quot;category&quot;),
+  times = 20
+)</code></pre>
+<pre class="r"><code>time.test</code></pre>
+<pre><code>## Unit: milliseconds
+##          expr       min        lq      mean    median        uq       max neval
+##          base 2501.6907 2564.6752 2593.0336 2593.7326 2616.3484 2702.3949    20
+##     tidyr_way  149.5695  177.1884  190.1481  187.7919  196.1529  265.7048    20
+##       dummies 2759.4780 2814.5998 2867.4487 2852.2270 2911.1408 3082.2030    20
+##  fast_dummies  489.1666  517.1898  559.6078  537.7500  593.2775  717.9804    20</code></pre>
+<pre class="r"><code>autoplot(time.test)</code></pre>
+<p><img src="/post/2021-02-04-dummy-variables-for-dummies/dummy-variables_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Surprisingly, the method using <code>tidyr</code> was actually the fastest way to create dummy variables, even though tidyverse is often critiqued for being relatively slow. It also required the most code and wasn’t as clean of a workflow as the others, so there is a trade-off there. It was only about 3x slower than <code>fastDummies</code>, which is another relatively fast option when creating dummy variables for a larger dataset.</p>
+<p>I personally like the ability to pipe into the tidyr method within a tidyverse workflow and will probably continue to use that since it is the fastest, even if it is a couple of more lines of code.</p>
+</div>
