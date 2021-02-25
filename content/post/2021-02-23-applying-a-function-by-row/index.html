@@ -1,0 +1,111 @@
+---
+title: Applying a function by row
+author: R package build
+date: '2021-02-23'
+slug: []
+categories: []
+tags:
+  - R
+description: ''
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<p>I often run into a problem where I have a dataframe of arguments that I would like to provide to a function, running it iteratively over each row. It is a difficult problem to describe, and therefore to search for solutions to on StackOverflow, but it comes up most often when doing something like a parameter search when fitting a model or running simulations. The best way I can describe it as a “row-wise apply statement”.</p>
+<p>Let’s use the <code>iris</code> dataset as an example. In this example, I’m interested in creating a subset of the data corresponding to a certain size bracket of each species. Because the three species in the iris set are really different, the range of sizes I am interested in subsetting differs by species:</p>
+<pre class="r"><code>size.brackets &lt;- data.frame(species = unique(iris$Species),
+                    min_width = c(0,1,2),
+                    max_width = c(0.15,1.2,2.5))
+
+head(size.brackets)</code></pre>
+<pre><code>##      species min_width max_width
+## 1     setosa         0      0.15
+## 2 versicolor         1      1.20
+## 3  virginica         2      2.50</code></pre>
+<p>So for the <em>setosa</em> species, I am interested in plants with a petal width between 0 - 0.15, for the <em>versicolor</em> species, I am interested in plants with a petal width between 1 - 1.20, and for <em>virginicia</em>, I am interested in plants with a petal width between 2 - 2.50. This is a toy example with only three rows, and we could easily accomplish this by combining multiple instances of the <code>subset</code> function.</p>
+<pre class="r"><code>subset.df &lt;- rbind(subset(iris, Species == &quot;setosa&quot; &amp; Petal.Width &gt; 0 &amp; Petal.Width &lt; 0.15),
+                   subset(iris, Species == &quot;versicolor&quot; &amp; Petal.Width &gt; 1 &amp; Petal.Width &lt; 1.20),
+                   subset(iris, Species == &quot;virginica&quot; &amp; Petal.Width&gt;2 &amp; Petal.Width &lt; 2.50))</code></pre>
+<p>This would become tedious as you have more subsets to do, so you may write a function to reduce how much you are hardcoding.</p>
+<pre class="r"><code>width_func &lt;- function(species, min_w, max_w){
+  sub.df &lt;- subset(iris, Species == species &amp; Petal.Width &gt; min_w &amp; Petal.Width &lt; max_w)
+  return(sub.df)
+}</code></pre>
+<p>Then you could simply run this and change what row you are referring to:</p>
+<pre class="r"><code>subset.df &lt;- rbind(width_func(size.brackets$species[1], size.brackets$min_width[1], size.brackets$max_width[1]),
+                  width_func(size.brackets$species[2], size.brackets$min_width[2], size.brackets$max_width[2]),
+                  width_func(size.brackets$species[3], size.brackets$min_width[3], size.brackets$max_width[3]))</code></pre>
+<p>Written this way, it is clear that all we are changing for each subset is the index number in the square brackets. This is clue that we can “vectorize” this process to make it easier to read and faster to run. There’s a lot on the internet on vectorization and functionals, and I recommend <a href="https://www.noamross.net/archives/2014-04-16-vectorization-in-r-why/">Noam Ross’s blog post on this</a> as a good starting place.</p>
+<div id="old-way-a-for-loop" class="section level2">
+<h2>Old way: a for loop</h2>
+<p>Old me would have just written a for-loop for this. I like for-loops for their readability and the time spent figuring out how to write an apply statement wasn’t usually worth the time I would be saving. The classic trade-off of investing time to learn how to do something faster in R vs. just writing what you know even if it is slower. A standard for-loop would look something like this:</p>
+<pre class="r"><code>#create a dataframe that we will fill in
+#use iris so it has the proper column names and classes
+subset.df &lt;- iris[0,]
+for(i in 1:nrow(size.brackets)){
+  this.subset &lt;- width_func(size.brackets$species[i], size.brackets$min_width[i],
+                            size.brackets$max_width[i])
+  
+  subset.df &lt;- rbind(subset.df, this.subset)
+}</code></pre>
+<p>We’ve replaced the numbers in the <code>[ ]</code> index with an <code>i</code>, and it changes the numbers from 1 to 2 to 3 programmatically as it works through the for-loop, rather than needing to type it all ourselves. But this can also be done using the family of apply statements, also called ‘functionals’.</p>
+</div>
+<div id="lapply" class="section level2">
+<h2>lapply</h2>
+<p>One option is to use the <code>lapply</code> function. Admittedly, this way is pretty hacky, but does get the job done. It is similar to a for-loop, in that what we will provide the <code>lapply</code> function to “apply over” is actually a vector of the row numbers we want to loop over.</p>
+<pre class="r"><code>lapply.subset &lt;- lapply(1:nrow(size.brackets), 
+                        function(r_num) { width_func(species = size.brackets$species[r_num], 
+                                                     min_w = size.brackets$min_width[r_num], 
+                                                     max_w = size.brackets$max_width[r_num]) })
+
+lapply.subset &lt;- do.call(rbind, lapply.subset)</code></pre>
+<p>Because <code>lapply</code> returns a list, we need that extra line of code to combine all of the subsets into one final dataframe. This way is a nice stepping stone in our thinking from for-loops to apply statements because we are still indexing by each row.</p>
+</div>
+<div id="map" class="section level2">
+<h2>Map</h2>
+<p>The less hacky way is to use <code>Map</code>, a function made for this purpose.</p>
+<pre class="r"><code>map.subset &lt;- Map(width_func, species = size.brackets$species, 
+                  min_w = size.brackets$min_width, max_w = size.brackets$max_width)
+
+map.subset &lt;- do.call(rbind, map.subset)</code></pre>
+<p>As with <code>lapply</code>, <code>Map</code> returns a list, so we need to use the <code>do.call(rbind,)</code> statement to combine it into a dataframe again. Unlike the other apply statements in R, Map takes the function first, and then we provide the arguments as vectors, by indexing them from the dataframe using the <code>$</code> operator sign.</p>
+</div>
+<div id="which-is-actually-fastest" class="section level2">
+<h2>Which is actually fastest?</h2>
+<p>Does it actually matter which of these we use? To test that, we will make a larger dataframe and compare the run times.</p>
+<pre class="r"><code>library(ggplot2); theme_set(theme_bw())
+library(microbenchmark)
+
+#create a large dataset of 3k rows
+size.large &lt;- size.brackets[rep(1:3, 1000),]
+
+time.test &lt;- microbenchmark(
+  for_loop = {
+    subset.df &lt;- iris[0,]
+    for(i in 1:nrow(size.large)){
+      this.subset &lt;- width_func(size.large$species[i], size.large$min_width[i],
+                              size.large$max_width[i])
+  
+      subset.df &lt;- rbind(subset.df, this.subset)
+    }},
+  lapply_test = do.call(rbind, lapply(1:nrow(size.large), 
+                        function(r_num) { width_func(species = size.large$species[r_num], 
+                                                     min_w = size.large$min_width[r_num], 
+                                                     max_w = size.large$max_width[r_num]) })),
+  map_test = do.call(rbind, Map(width_func, species = size.large$species, 
+                  min_w = size.large$min_width, max_w = size.large$max_width)),
+  times = 10
+)</code></pre>
+<pre class="r"><code>time.test</code></pre>
+<pre><code>## Unit: milliseconds
+##         expr       min        lq      mean    median        uq       max neval
+##     for_loop 7457.3130 7568.3416 7645.7005 7653.7983 7738.1951 7847.2397    10
+##  lapply_test  646.8643  647.6418  673.3883  656.1762  680.5615  791.3169    10
+##     map_test  639.1518  648.2828  661.4268  659.6918  667.7729  706.3425    10</code></pre>
+<pre class="r"><code>autoplot(time.test)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Yes, it does look like the for-loop is over 10x slower than the two apply statements. This is mostly caused by the <code>rbind</code> statement we are using to combine the subsets within each loop. At each instance, R is creating a new dataframe with the expanded dimensions, and it is this process that is a drag on memory and time.</p>
+<p>There isn’t much difference speed-wise between <code>lapply</code> and <code>Map</code>, so which you use is mostly up to personal preference for which you find more intuitive and readable.</p>
+</div>

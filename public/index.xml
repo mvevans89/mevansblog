@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Wed, 17 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Applying a function by row</title>
+      <link>https://ditheringdata.netlify.com/2021/02/23/applying-a-function-by-row/</link>
+      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://ditheringdata.netlify.com/2021/02/23/applying-a-function-by-row/</guid>
+      <description>I often run into a problem where I have a dataframe of arguments that I would like to provide to a function, running it iteratively over each row. It is a difficult problem to describe, and therefore to search for solutions to on StackOverflow, but it comes up most often when doing something like a parameter search when fitting a model or running simulations. The best way I can describe it as a “row-wise apply statement”.</description>
+    </item>
+    
     <item>
       <title>Dummy Variables for Dummies</title>
       <link>https://ditheringdata.netlify.com/2021/02/17/dummy-variables-for-dummies/</link>

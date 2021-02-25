@@ -3,32 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://ditheringdata.netlify.com/2021/02/23/applying-a-function-by-row/</loc>
+    <lastmod>2021-02-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/</loc>
+    <lastmod>2021-02-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/post/</loc>
+    <lastmod>2021-02-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/tags/r/</loc>
+    <lastmod>2021-02-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ditheringdata.netlify.com/tags/</loc>
+    <lastmod>2021-02-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://ditheringdata.netlify.com/tags/dplyr/</loc>
     <lastmod>2021-02-17T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ditheringdata.netlify.com/2021/02/17/dummy-variables-for-dummies/</loc>
-    <lastmod>2021-02-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/</loc>
-    <lastmod>2021-02-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/post/</loc>
-    <lastmod>2021-02-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/r/</loc>
-    <lastmod>2021-02-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ditheringdata.netlify.com/tags/</loc>
     <lastmod>2021-02-17T00:00:00+00:00</lastmod>
   </url>
   

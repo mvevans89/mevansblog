@@ -7,22 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Wed, 17 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>R</title>
+      <link>https://ditheringdata.netlify.com/tags/r/</link>
+      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://ditheringdata.netlify.com/tags/r/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>dplyr</title>
       <link>https://ditheringdata.netlify.com/tags/dplyr/</link>
       <pubDate>Wed, 17 Feb 2021 00:00:00 +0000</pubDate>
       
       <guid>https://ditheringdata.netlify.com/tags/dplyr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>R</title>
-      <link>https://ditheringdata.netlify.com/tags/r/</link>
-      <pubDate>Wed, 17 Feb 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://ditheringdata.netlify.com/tags/r/</guid>
       <description></description>
     </item>
     
