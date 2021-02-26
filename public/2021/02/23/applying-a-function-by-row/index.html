@@ -186,11 +186,11 @@ time.test &lt;- microbenchmark(
 <pre class="r"><code>time.test</code></pre>
 <pre><code>## Unit: milliseconds
 ##         expr       min        lq      mean    median        uq       max neval
-##     for_loop 7457.3130 7568.3416 7645.7005 7653.7983 7738.1951 7847.2397    10
-##  lapply_test  646.8643  647.6418  673.3883  656.1762  680.5615  791.3169    10
-##     map_test  639.1518  648.2828  661.4268  659.6918  667.7729  706.3425    10</code></pre>
+##     for_loop 7699.3205 7753.1948 7804.4382 7787.2812 7822.0332 8032.7781    10
+##  lapply_test  639.1096  649.9447  658.3049  656.4963  664.5575  682.3070    10
+##     map_test  622.6407  627.4965  648.8867  638.6554  668.0032  687.0292    10</code></pre>
 <pre class="r"><code>autoplot(time.test)</code></pre>
-<p><img src="https://ditheringdata.netlify.com/2021/02/23/applying-a-function-by-row/index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/post/2021-02-23-applying-a-function-by-row/row-apply_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>Yes, it does look like the for-loop is over 10x slower than the two apply statements. This is mostly caused by the <code>rbind</code> statement we are using to combine the subsets within each loop. At each instance, R is creating a new dataframe with the expanded dimensions, and it is this process that is a drag on memory and time.</p>
 <p>There isn’t much difference speed-wise between <code>lapply</code> and <code>Map</code>, so which you use is mostly up to personal preference for which you find more intuitive and readable.</p>
 </div>
