@@ -12,6 +12,15 @@ output: html
 
 This post will follow my solutions to the [2021 Advent of Code](https://adventofcode.com/2021). Each "day" is it's own self-contained chunk of code, so all of the packages, functions, data, etc. needed for that day is found under that sub-title.
 
+```{r}
+
+options(stringsAsFactors = F, scipen = 999)
+
+#load here package for easier data loading
+library(here)
+```
+
+
 # Day 1
 
 ## Part I
@@ -77,3 +86,89 @@ Note that we start the for-loop at `window_size+1` so we our first comparison ca
 ```{r}
 count_increase_window(window_size = 3, vec = input.data$V1)
 ```
+
+# Day 2
+
+[Link to challenge.](https://adventofcode.com/2021/day/2)
+
+## Part I
+
+For this day, we need to interpret both character and integer data, which come together as one string. 
+
+First, we'll make some test data that matches the test online:
+
+```{r}
+directions <- c("up","down", "forward")
+test.df <- data.frame(dir = directions[c(3,2,3,1,2,3)], 
+                      space = c(5,5,8,3,8,2))
+
+test.df
+```
+
+We'll create a function that uses this as instructions to track the movement across two directions. We don't actually need to track the movement at each step, but just know where the submarine is at the end of the movement, so we can simply sum the movements, instead of using a for loop.
+
+```{r}
+track_move <- function(move_df){
+  # rack positions
+  x.position <- sum(as.numeric(move_df[move_df[,1]=="forward",2]))
+  y.position <- sum(as.numeric(move_df[move_df[,1]=="down",2])) - sum(as.numeric(move_df[move_df[,1]=="up",2]))
+  
+  #return the product of these
+  return(x.position*y.position)
+}
+```
+
+```{r}
+track_move(test.df) #should equal 150
+```
+
+Now we will try it on the input data
+
+```{r}
+#load data
+input.data <- read.table(here("static", "data", "advent-code", "day02.txt"))
+
+track_move(input.data)
+```
+
+## Part II
+
+This part is a little more complicated because it probably will be easier to just track each step, since the angle/direction is dependent on what has happened in the steps beforehand.
+
+For this we will use a series of `if` statements to determine whether each step is affecting the movement or aim of the submarine.
+
+```{r}
+track_movement2 <- function(move_df){
+  #create vectors to track aim, depth, and horizontal position
+  aim <- 0
+  depth <- 0
+  horiz <- 0
+  
+  #use a for loop to follow each step of movement
+  for(i in 1:nrow(move_df)){
+    if(move_df[i,1]=="down") {aim <- aim + move_df[i,2]}
+    if(move_df[i,1]=="up") {aim <- aim - move_df[i,2]}
+    if(move_df[i,1]=="forward"){
+      horiz <- horiz + move_df[i,2]
+      depth <- depth + (aim * move_df[i,2])
+    }
+  }
+  
+  #return the product of depth and horizontal movement
+  return(depth*horiz)
+  
+}
+```
+
+How does this work on the test data?
+
+```{r}
+track_movement2(test.df) #should be 900
+```
+
+And then we can try on the full dataset
+
+```{r}
+track_movement2(input.data)
+```
+
