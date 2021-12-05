@@ -1,0 +1,63 @@
+---
+title: Advent of Code 2021
+author: Michelle
+date: '2021-12-05'
+slug: []
+categories: []
+tags:
+  - R
+description: ''
+output: html
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>This post will follow my solutions to the <a href="https://adventofcode.com/2021">2021 Advent of Code</a>. Each “day” is it’s own self-contained chunk of code, so all of the packages, functions, data, etc. needed for that day is found under that sub-title.</p>
+<div id="day-1" class="section level1">
+<h1>Day 1</h1>
+<div id="part-i" class="section level2">
+<h2>Part I</h2>
+<p><a href="https://adventofcode.com/2021/day/1">Here</a> is a link to the full problem. Essentially, we need to find a way to count instances where <code>x+1 &gt; x</code>. A nice way to do this is via a function.</p>
+<p>First, we can create some example data to test our function on:</p>
+<pre class="r"><code>test.data &lt;- floor(runif(10,100,200))
+test.data</code></pre>
+<pre><code>##  [1] 196 131 138 195 197 138 143 113 177 184</code></pre>
+<p>Now we write a function to return the count of how many instances of increase over one step there are:</p>
+<pre class="r"><code>count_increase &lt;- function(vec){
+  count &lt;- 0
+  for(i in 2:length(vec)){
+    if(vec[i]&gt;vec[i-1]) count &lt;- count +1
+  }
+  return(count)
+}</code></pre>
+<p>Does it work?</p>
+<pre class="r"><code>count_increase(test.data)</code></pre>
+<pre><code>## [1] 6</code></pre>
+<p>Now we try it on the true data:</p>
+<pre class="r"><code>#load here package for easier data loading
+library(here)</code></pre>
+<pre><code>## here() starts at /Users/mvevans/Dropbox/git/mevansblog</code></pre>
+<pre class="r"><code>input.data &lt;- read.table(here(&quot;static&quot;, &quot;data&quot;, &quot;advent-code&quot;, &quot;day01.txt&quot;))
+
+#test our function
+count_increase(input.data$V1)</code></pre>
+<pre><code>## [1] 1477</code></pre>
+</div>
+<div id="part-ii" class="section level2">
+<h2>Part II</h2>
+<p>For the second part, we want to compare moving window statistics to see the difference in depth across groups of three measurements. For more info on moving window statistics, you can look at an <a href="https://ditheringdata.netlify.app/2020/02/11/rolling-functions-along-columns/">old post of mine on the topic</a>.</p>
+<p>For extra challenge, we can this without the help of packages like <code>zoo</code> or <code>dplyr</code> that already have built in functions for this.</p>
+<p>We can make a new function that compares the averages across a rolling window, and make that window itself an argument for the function, so we could apply it to a range of window sizes.</p>
+<pre class="r"><code>count_increase_window &lt;- function(window_size, vec){
+  count &lt;- 0
+  for(i in (window_size+1):length(vec)){
+    if(sum(vec[(i-(window_size-1)):i]) &gt; sum(vec[(i-1):(i-window_size)])) count &lt;- count + 1
+  }
+  return(count)
+}</code></pre>
+<p>Note that we start the for-loop at <code>window_size+1</code> so we our first comparison can be with a full window from <code>1:window_size</code></p>
+<pre class="r"><code>count_increase_window(window_size = 3, vec = input.data$V1)</code></pre>
+<pre><code>## [1] 1523</code></pre>
+</div>
+</div>
