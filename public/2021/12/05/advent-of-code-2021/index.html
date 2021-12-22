@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Advent of Code 2021 &middot; Michelle Evans</title>
-        <meta name="description" content="This post will follow my solutions to the 2021 Advent of Code. Each &ldquo;day&rdquo; is it&rsquo;s own self-contained chunk of code, so all of the packages, functions, data, etc. needed for that day is found under that sub-title.
-Day 1 Part I Here is a link to the full problem. Essentially, we need to find a way to count instances where x&#43;1 &gt; x. A nice way to do this is via a function.">
+        <meta name="description" content="This post will follow my solutions to the 2021 Advent of Code. Each “day” is it’s own self-contained chunk of code, so all of the packages, functions, data, etc. needed for that day is found under that sub-title.
+options(stringsAsFactors = F, scipen = 999) #load here package for easier data loading library(here) ## here() starts at /Users/mvevans/Dropbox/git/mevansblog Day 1 Part I Here is a link to the full problem.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
         <meta name="generator" content="Hugo 0.80.0" />
@@ -96,49 +96,132 @@ Day 1 Part I Here is a link to the full problem. Essentially, we need to find a 
         <div class="post-content clearfix" itemprop="articleBody">
     
 
-    <p>This post will follow my solutions to the <a href="https://adventofcode.com/2021">2021 Advent of Code</a>. Each &ldquo;day&rdquo; is it&rsquo;s own self-contained chunk of code, so all of the packages, functions, data, etc. needed for that day is found under that sub-title.</p>
-<h1 id="day-1">Day 1</h1>
-<h2 id="part-i">Part I</h2>
-<p><a href="https://adventofcode.com/2021/day/1">Here</a> is a link to the full problem. Essentially, we need to find a way to count instances where <code>x+1 &gt; x</code>.  A nice way to do this is via a function.</p>
-<p>First, we can create some example data to test our function on:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">test.data <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">floor</span>(<span style="color:#a6e22e">runif</span>(<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">200</span>))
-test.data
-</code></pre></div><pre><code>##  [1] 108 131 157 119 130 111 100 101 103 182
-</code></pre><p>Now we write a function to return the count of how many instances of increase over one step there are:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">count_increase <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function</span>(vec){
-  count <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">0</span>
-  <span style="color:#a6e22e">for</span>(i in <span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#a6e22e">length</span>(vec)){
-    <span style="color:#a6e22e">if</span>(vec[i]<span style="color:#f92672">&gt;</span>vec[i<span style="color:#ae81ff">-1</span>]) count <span style="color:#f92672">&lt;-</span> count <span style="color:#ae81ff">+1</span>
-  }
-  <span style="color:#a6e22e">return</span>(count)
-}
-</code></pre></div><p>Does it work?</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">count_increase</span>(test.data)
-</code></pre></div><pre><code>## [1] 6
-</code></pre><p>Now we try it on the true data:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#load here package for easier data loading</span>
-<span style="color:#a6e22e">library</span>(here)
-</code></pre></div><pre><code>## here() starts at /Users/mvevans/Dropbox/git/mevansblog
-</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">input.data <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">read.table</span>(<span style="color:#a6e22e">here</span>(<span style="color:#e6db74">&#34;static&#34;</span>, <span style="color:#e6db74">&#34;data&#34;</span>, <span style="color:#e6db74">&#34;advent-code&#34;</span>, <span style="color:#e6db74">&#34;day01.txt&#34;</span>))
+    
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
-<span style="color:#75715e">#test our function</span>
-<span style="color:#a6e22e">count_increase</span>(input.data<span style="color:#f92672">$</span>V1)
-</code></pre></div><pre><code>## [1] 1477
-</code></pre><h2 id="part-ii">Part II</h2>
+
+<p>This post will follow my solutions to the <a href="https://adventofcode.com/2021">2021 Advent of Code</a>. Each “day” is it’s own self-contained chunk of code, so all of the packages, functions, data, etc. needed for that day is found under that sub-title.</p>
+<pre class="r"><code>options(stringsAsFactors = F, scipen = 999)
+
+#load here package for easier data loading
+library(here)</code></pre>
+<pre><code>## here() starts at /Users/mvevans/Dropbox/git/mevansblog</code></pre>
+<div id="day-1" class="section level1">
+<h1>Day 1</h1>
+<div id="part-i" class="section level2">
+<h2>Part I</h2>
+<p><a href="https://adventofcode.com/2021/day/1">Here</a> is a link to the full problem. Essentially, we need to find a way to count instances where <code>x+1 &gt; x</code>. A nice way to do this is via a function.</p>
+<p>First, we can create some example data to test our function on:</p>
+<pre class="r"><code>test.data &lt;- floor(runif(10,100,200))
+test.data</code></pre>
+<pre><code>##  [1] 171 107 149 191 144 104 180 180 155 107</code></pre>
+<p>Now we write a function to return the count of how many instances of increase over one step there are:</p>
+<pre class="r"><code>count_increase &lt;- function(vec){
+  count &lt;- 0
+  for(i in 2:length(vec)){
+    if(vec[i]&gt;vec[i-1]) count &lt;- count +1
+  }
+  return(count)
+}</code></pre>
+<p>Does it work?</p>
+<pre class="r"><code>count_increase(test.data)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p>Now we try it on the true data:</p>
+<pre class="r"><code>#load here package for easier data loading
+library(here)
+input.data &lt;- read.table(here(&quot;static&quot;, &quot;data&quot;, &quot;advent-code&quot;, &quot;day01.txt&quot;))
+
+#test our function
+count_increase(input.data$V1)</code></pre>
+<pre><code>## [1] 1477</code></pre>
+</div>
+<div id="part-ii" class="section level2">
+<h2>Part II</h2>
 <p>For the second part, we want to compare moving window statistics to see the difference in depth across groups of three measurements. For more info on moving window statistics, you can look at an <a href="https://ditheringdata.netlify.app/2020/02/11/rolling-functions-along-columns/">old post of mine on the topic</a>.</p>
 <p>For extra challenge, we can this without the help of packages like <code>zoo</code> or <code>dplyr</code> that already have built in functions for this.</p>
 <p>We can make a new function that compares the averages across a rolling window, and make that window itself an argument for the function, so we could apply it to a range of window sizes.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">count_increase_window <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">function</span>(window_size, vec){
-  count <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">0</span>
-  <span style="color:#a6e22e">for</span>(i <span style="color:#a6e22e">in </span>(window_size<span style="color:#ae81ff">+1</span>)<span style="color:#f92672">:</span><span style="color:#a6e22e">length</span>(vec)){
-    <span style="color:#a6e22e">if</span>(<span style="color:#a6e22e">sum</span>(vec<span style="color:#a6e22e">[</span>(i<span style="color:#f92672">-</span>(window_size<span style="color:#ae81ff">-1</span>))<span style="color:#f92672">:</span>i]) <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">sum</span>(vec<span style="color:#a6e22e">[</span>(i<span style="color:#ae81ff">-1</span>)<span style="color:#f92672">:</span>(i<span style="color:#f92672">-</span>window_size)])) count <span style="color:#f92672">&lt;-</span> count <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+<pre class="r"><code>count_increase_window &lt;- function(window_size, vec){
+  count &lt;- 0
+  for(i in (window_size+1):length(vec)){
+    if(sum(vec[(i-(window_size-1)):i]) &gt; sum(vec[(i-1):(i-window_size)])) count &lt;- count + 1
   }
-  <span style="color:#a6e22e">return</span>(count)
-}
-</code></pre></div><p>Note that we start the for-loop at <code>window_size+1</code> so we our first comparison can be with a full window from <code>1:window_size</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">count_increase_window</span>(window_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>, vec <span style="color:#f92672">=</span> input.data<span style="color:#f92672">$</span>V1)
-</code></pre></div><pre><code>## [1] 1523
-</code></pre>
+  return(count)
+}</code></pre>
+<p>Note that we start the for-loop at <code>window_size+1</code> so we our first comparison can be with a full window from <code>1:window_size</code></p>
+<pre class="r"><code>count_increase_window(window_size = 3, vec = input.data$V1)</code></pre>
+<pre><code>## [1] 1523</code></pre>
+</div>
+</div>
+<div id="day-2" class="section level1">
+<h1>Day 2</h1>
+<p><a href="https://adventofcode.com/2021/day/2">Link to challenge.</a></p>
+<div id="part-i-1" class="section level2">
+<h2>Part I</h2>
+<p>For this day, we need to interpret both character and integer data, which come together as one string.</p>
+<p>First, we’ll make some test data that matches the test online:</p>
+<pre class="r"><code>directions &lt;- c(&quot;up&quot;,&quot;down&quot;, &quot;forward&quot;)
+test.df &lt;- data.frame(dir = directions[c(3,2,3,1,2,3)], 
+                      space = c(5,5,8,3,8,2))
+
+test.df</code></pre>
+<pre><code>##       dir space
+## 1 forward     5
+## 2    down     5
+## 3 forward     8
+## 4      up     3
+## 5    down     8
+## 6 forward     2</code></pre>
+<p>We’ll create a function that uses this as instructions to track the movement across two directions. We don’t actually need to track the movement at each step, but just know where the submarine is at the end of the movement, so we can simply sum the movements, instead of using a for loop.</p>
+<pre class="r"><code>track_move &lt;- function(move_df){
+  # rack positions
+  x.position &lt;- sum(as.numeric(move_df[move_df[,1]==&quot;forward&quot;,2]))
+  y.position &lt;- sum(as.numeric(move_df[move_df[,1]==&quot;down&quot;,2])) - sum(as.numeric(move_df[move_df[,1]==&quot;up&quot;,2]))
+  
+  #return the product of these
+  return(x.position*y.position)
+}</code></pre>
+<pre class="r"><code>track_move(test.df) #should equal 150</code></pre>
+<pre><code>## [1] 150</code></pre>
+<p>Now we will try it on the input data</p>
+<pre class="r"><code>#load data
+input.data &lt;- read.table(here(&quot;static&quot;, &quot;data&quot;, &quot;advent-code&quot;, &quot;day02.txt&quot;))
+
+track_move(input.data)</code></pre>
+<pre><code>## [1] 1714680</code></pre>
+</div>
+<div id="part-ii-1" class="section level2">
+<h2>Part II</h2>
+<p>This part is a little more complicated because it probably will be easier to just track each step, since the angle/direction is dependent on what has happened in the steps beforehand.</p>
+<p>For this we will use a series of <code>if</code> statements to determine whether each step is affecting the movement or aim of the submarine.</p>
+<pre class="r"><code>track_movement2 &lt;- function(move_df){
+  #create vectors to track aim, depth, and horizontal position
+  aim &lt;- 0
+  depth &lt;- 0
+  horiz &lt;- 0
+  
+  #use a for loop to follow each step of movement
+  for(i in 1:nrow(move_df)){
+    if(move_df[i,1]==&quot;down&quot;) {aim &lt;- aim + move_df[i,2]}
+    if(move_df[i,1]==&quot;up&quot;) {aim &lt;- aim - move_df[i,2]}
+    if(move_df[i,1]==&quot;forward&quot;){
+      horiz &lt;- horiz + move_df[i,2]
+      depth &lt;- depth + (aim * move_df[i,2])
+    }
+  }
+  
+  #return the product of depth and horizontal movement
+  return(depth*horiz)
+  
+}</code></pre>
+<p>How does this work on the test data?</p>
+<pre class="r"><code>track_movement2(test.df) #should be 900</code></pre>
+<pre><code>## [1] 900</code></pre>
+<p>And then we can try on the full dataset</p>
+<pre class="r"><code>track_movement2(input.data)</code></pre>
+<pre><code>## [1] 1963088820</code></pre>
+</div>
+</div>
+
 </div>
 
         <footer class="post-footer clearfix">

@@ -14,8 +14,8 @@
       <pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>https://ditheringdata.netlify.com/2021/12/05/advent-of-code-2021/</guid>
-      <description>This post will follow my solutions to the 2021 Advent of Code. Each &amp;ldquo;day&amp;rdquo; is it&amp;rsquo;s own self-contained chunk of code, so all of the packages, functions, data, etc. needed for that day is found under that sub-title.
-Day 1 Part I Here is a link to the full problem. Essentially, we need to find a way to count instances where x+1 &amp;gt; x. A nice way to do this is via a function.</description>
+      <description>This post will follow my solutions to the 2021 Advent of Code. Each “day” is it’s own self-contained chunk of code, so all of the packages, functions, data, etc. needed for that day is found under that sub-title.
+options(stringsAsFactors = F, scipen = 999) #load here package for easier data loading library(here) ## here() starts at /Users/mvevans/Dropbox/git/mevansblog Day 1 Part I Here is a link to the full problem.</description>
     </item>
     
     <item>

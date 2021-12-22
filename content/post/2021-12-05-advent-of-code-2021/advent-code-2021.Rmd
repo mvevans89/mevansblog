@@ -3,6 +3,7 @@ title: Advent of Code 2021
 author: Michelle
 date: '2021-12-05'
 slug: []
+draft: true
 categories: []
 tags:
   - R
