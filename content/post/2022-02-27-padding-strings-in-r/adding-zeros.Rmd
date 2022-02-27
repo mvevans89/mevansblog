@@ -1,0 +1,203 @@
+---
+title: Adding Leading Zeros to Strings
+author: R package build
+date: '2022-02-27'
+slug: []
+categories: [R]
+tags: []
+description: ''
+---
+
+
+We all have that one StackOverflow post that we visit multiple times a week because we just can't remember exactly how to do that one thing. For me, it is [this SO post](https://stackoverflow.com/questions/5812493/how-to-add-leading-zeros) on adding leading zeros to character strings. This is something I do often when automatically naming files or creating a key/identifier column for a dataset.
+
+# Why add leading zeros?
+
+IMO, the primary reasons to add leading zeros to a character string are 1) so that ordering your character strings matches the actual numerical order and 2) to keep all of your strings the same length for easy subsetting later. We can explore this with two example datasets, one without leading zeros and one with, that may resemble a list of filenames or identification codes for samples that we are likely to see in data. They are a list of 100 samples with an identification cnumber for each sample.
+
+```{r}
+#create a dataset without adding zeros
+ids.noAdd <- paste("sample", 1:100, sep = "_")
+#create a dataset with leading zeros using str_pad (see below for how this works)
+ids.wZeros <- paste("sample", stringr::str_pad(1:100, 4, pad = "0"), sep = "_")
+```
+
+The list where we have samples without added zeros looks like this:
+
+```{r}
+ids.noAdd[1:10]
+```
+
+Compare that to the list where we have added zeros, so that the number of the file always has 4 digits.
+
+```{r}
+ids.wZeros[1:10]
+```
+
+The information contained is the same (which sample it is), but the second is more computer-readable, allowing us to sort the data and subset it more easily. 
+
+## Sorting Data
+
+Let's say we want to `sort` the samples, what will happen?
+
+```{r}
+sort(ids.noAdd)[1:10]
+```
+
+`sort` works by sorting by each digit. This means it groups together all of the samples that begin with 1, even though they represent 1, 10, 100, 1000 etc.
+
+This problem goes away when we have added zeros to the beginning of the number, so that they are all four digits:
+
+```{r}
+sort(ids.wZeros)[1:10]
+```
+
+`sort` is still sorting by digit, but it recognizes from the zeros that 1 thru 9 must come before 10. 
+
+## Extracting Metadata
+
+Another thing we may want to do is subset the character string to easily extract metadata,. Often, we may save samples with names that correspond to a site, block, date, and sample number (e.g. `SITEA_BLOCK1_20220227_SAMPLE005`). Having all of these identification strings the same length means we can easily extract this information using `substr`. 
+
+`substr` works by taking the starting and stopping placement of the characters you want to extract and extracting the characters between. So in the example `SITEA_BLOCK1_20220227_SAMPLE005`, if we wanted to extract the metadata on what block the sample was from, we would extract characters 7 thru 12:
+
+```{r}
+substr("SITEA_BLOCK1_20220227_SAMPLE005", start = 7, stop = 12)
+```
+
+We can also use `substr` over a vector of character strings. For example, let's say we wanted to just extract the number of each sample. This becomes difficult for the vector without added zeros because each sample identification is a different length:
+
+```{r}
+table(nchar(ids.noAdd))
+```
+
+We know we need to start the extraction at digit 8, but where we stop depends on the length of each string. One way to deal with this is to supply the number of characters in the string (found using `nchar`) as the stopping point:
+
+```{r}
+substr(ids.noAdd, start = 8, stop = nchar(ids.noAdd))
+```
+
+You can also provide a stopping point that you know is longer than all the strings and `substr` will just extract as much as it can:
+
+```{r}
+substr(ids.noAdd, start = 8, stop = 20)
+```
+
+
+These two methods work, but only because we want to extract until the end of the string. This would be much more complicated if the stopping point was in a different place for each sample. 
+
+With the sample ID's with added zeros, all of the character strings are the same length with 11 digits:
+
+```{r}
+table(nchar(ids.wZeros))
+```
+
+This means we can just supply digit 8 as our starting digit and digit 11 as our stopping digit to the `substr` call, and extract all the sample numbers:
+
+```{r}
+substr(ids.wZeros, start = 8, stop = 11)
+```
+
+While there is usually some workaround for when strings are not standardized like this, I find it easier to just standardize from the beginning to avoid any problems later in the workflow. And an easy way to do that is by adding leading 0's to character strings containing numbers. A good rule of thumb is to always add one more than you think you need (so if you think you will only go up to three digits (eg 999), make it four just in case).
+
+# Adding Leading Zeros
+
+There are many many different ways to add leading zeros, depending on what suite of packages you prefer to use. Here are the ones I like, and the pros and cons of each.
+
+## `formatC` in base R
+
+If you don't want to add any dependencies, `formatC` is a function that is in base R that lets you add leading zeros:
+
+```{r}
+formatC(x = 1:100, width = 4, format = "d", flag = "0")
+```
+
+The arguments you provide are:
+
+- `x` the vector of numbers or strings you would like to add leading 0's to
+- `width` the final width you would like each string to have
+- `format` what class you want the output to be. `"d"` is for integers (default)
+- `flag` signifies what modification you will be doing to `x`. `"0"` adds leading zeros
+
+**Pros**
+
+- very fast because it is based in `C`
+- understandable for those who are already used to `C` formats
+
+
+**Cons**
+
+- language is not intuitive to those not familiar with `C` 
+- the modification is limited by those provided by `flag`, so cannot add other characters as leading characters
+
+
+## Using the `str_pad` function from the `stringr` package
+
+If you don't mind using another package, then a great option is the `stringr` package. It is part of the tidyverse, which means it comes with a lot of [supporting documentation](https://stringr.tidyverse.org/) for string manipulations.
+
+The `str_pad` function from this pacakge is made for exactly this purpose, "padding" or adding characters to a string:
+
+```{r}
+library(stringr)
+str_pad(string = 1:100, width = 4, side = "left", pad = "0")
+```
+
+The arguments are:
+
+- `string` the vector of character strings you would like to pad
+- `width` the final width of the character string you would like
+- `side` what side of the string you would like to add the padding (left = before the string, right = after)
+- `pad` a single character that you would like to use to pad. It will be repeated when more than one digit is added.
+
+**Pros**
+
+- more intuitive language and arguments
+- ability to pad both sides of the string
+- more flexibility in what character is used to pad compared to `formatC`
+
+**Cons**
+
+- requires another package to use
+- is affected by the scientific penalty option
+
+The major downside to this package is that numbers will resort to the scientific notation (e.g. `1e10`) if their digits are more than the scientific penalty option defined in R:
+
+```{r}
+ex1 <- c(1000000000)
+str_pad(ex1, width = 13, side = "left", pad = "0")
+```
+
+In comparison, if you use `formatC`, it will keep all of the zeros:
+
+```{r}
+formatC(ex1, width = 13, format = "d", flag = "0")
+```
+
+I  usually have my scientific penalty essentially turned off (`options(scipen=999)`) by default because I find it easier to problem-check my own data. But you could also change your options just for this bit of code if you'd like to keep your scientific penalty threshold:
+
+```{r}
+with(options(scipen = 999),
+     str_pad(ex1, width = 13, side = "left", pad = "0")
+     )
+```
+
+## Comparing Performance
+
+To me, the trade-off between these two options is the speed of `formatC` vs. the more intuitive language of `str_pad` for us non-C users. But just how much faster is `formatC`?
+
+```{r}
+library(microbenchmark)
+
+microbenchmark(
+  pad_c = formatC(x = 1:1e5, width = 8, format = "d", flag = "0"),
+  stringr = with(options(scipen = 999), str_pad(string = 1:1e5, width = 8, side = "left", pad = "0")),
+  times = 25
+)
+```
+
+Looks like `formatC` is at least twice as fast as using `str_pad`, so depending on the size of the dataset or how many times you are replicating padding zeros, it may be worth using `formatC`, even if you do have to look up again which format corresponds to integers!
+
+# TL;DR
+
+If you are familiar with `C` style language or don't mind learning, use `formatC`.
+
+If you prefer using a `tidyverse` method, use `str_pad` from the `stringr` package.

@@ -7,17 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Michelle Evans</copyright>
-    <lastBuildDate>Sun, 05 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/tags/r/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Advent of Code 2021</title>
-      <link>https://ditheringdata.netlify.com/2021/12/05/advent-of-code-2021/</link>
-      <pubDate>Sun, 05 Dec 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://ditheringdata.netlify.com/2021/12/05/advent-of-code-2021/</guid>
-      <description>This post will follow my solutions to the 2021 Advent of Code. Each “day” is it’s own self-contained chunk of code, so all of the packages, functions, data, etc. needed for that day is found under that sub-title.
-options(stringsAsFactors = F, scipen = 999) #load here package for easier data loading library(here) ## here() starts at /Users/mvevans/Dropbox/git/mevansblog Day 1 Part I Here is a link to the full problem.</description>
-    </item>
-    
+    <lastBuildDate>Tue, 23 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://ditheringdata.netlify.com/tags/r/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Applying a function by row</title>
       <link>https://ditheringdata.netlify.com/2021/02/23/applying-a-function-by-row/</link>

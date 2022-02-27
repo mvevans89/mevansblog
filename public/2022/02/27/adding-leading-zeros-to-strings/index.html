@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Adding Leading Zeros to Strings &middot; Michelle Evans</title>
+        <meta name="description" content="We all have that one StackOverflow post that we visit multiple times a week because we just can’t remember exactly how to do that one thing. For me, it is this SO post on adding leading zeros to character strings. This is something I do often when automatically naming files or creating a key/identifier column for a dataset.
+Why add leading zeros? IMO, the primary reasons to add leading zeros to a character string are 1) so that ordering your character strings matches the actual numerical order and 2) to keep all of your strings the same length for easy subsetting later.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://ditheringdata.netlify.com/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="m.evans" href="https://ditheringdata.netlify.com/">m.evans</a>
+                            </h1>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:mv.evans.phd@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/mv_evans">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/mvevans89">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="https://stackoverflow.com/users/5688284/michelle-evans">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
+                        
+                        
+                        
+
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="Topics" href="/tags/">Topics</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Adding Leading Zeros to Strings</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2022-02-27" itemprop="datePublished">Sun, Feb 27, 2022</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="https://mvevans89.github.io/" itemprop="url" rel="author">Michelle Evans</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>We all have that one StackOverflow post that we visit multiple times a week because we just can’t remember exactly how to do that one thing. For me, it is <a href="https://stackoverflow.com/questions/5812493/how-to-add-leading-zeros">this SO post</a> on adding leading zeros to character strings. This is something I do often when automatically naming files or creating a key/identifier column for a dataset.</p>
+<div id="why-add-leading-zeros" class="section level1">
+<h1>Why add leading zeros?</h1>
+<p>IMO, the primary reasons to add leading zeros to a character string are 1) so that ordering your character strings matches the actual numerical order and 2) to keep all of your strings the same length for easy subsetting later. We can explore this with two example datasets, one without leading zeros and one with, that may resemble a list of filenames or identification codes for samples that we are likely to see in data. They are a list of 100 samples with an identification cnumber for each sample.</p>
+<pre class="r"><code>#create a dataset without adding zeros
+ids.noAdd &lt;- paste(&quot;sample&quot;, 1:100, sep = &quot;_&quot;)
+#create a dataset with leading zeros using str_pad (see below for how this works)
+ids.wZeros &lt;- paste(&quot;sample&quot;, stringr::str_pad(1:100, 4, pad = &quot;0&quot;), sep = &quot;_&quot;)</code></pre>
+<p>The list where we have samples without added zeros looks like this:</p>
+<pre class="r"><code>ids.noAdd[1:10]</code></pre>
+<pre><code>##  [1] &quot;sample_1&quot;  &quot;sample_2&quot;  &quot;sample_3&quot;  &quot;sample_4&quot;  &quot;sample_5&quot;  &quot;sample_6&quot; 
+##  [7] &quot;sample_7&quot;  &quot;sample_8&quot;  &quot;sample_9&quot;  &quot;sample_10&quot;</code></pre>
+<p>Compare that to the list where we have added zeros, so that the number of the file always has 4 digits.</p>
+<pre class="r"><code>ids.wZeros[1:10]</code></pre>
+<pre><code>##  [1] &quot;sample_0001&quot; &quot;sample_0002&quot; &quot;sample_0003&quot; &quot;sample_0004&quot; &quot;sample_0005&quot;
+##  [6] &quot;sample_0006&quot; &quot;sample_0007&quot; &quot;sample_0008&quot; &quot;sample_0009&quot; &quot;sample_0010&quot;</code></pre>
+<p>The information contained is the same (which sample it is), but the second is more computer-readable, allowing us to sort the data and subset it more easily.</p>
+<div id="sorting-data" class="section level2">
+<h2>Sorting Data</h2>
+<p>Let’s say we want to <code>sort</code> the samples, what will happen?</p>
+<pre class="r"><code>sort(ids.noAdd)[1:10]</code></pre>
+<pre><code>##  [1] &quot;sample_1&quot;   &quot;sample_10&quot;  &quot;sample_100&quot; &quot;sample_11&quot;  &quot;sample_12&quot; 
+##  [6] &quot;sample_13&quot;  &quot;sample_14&quot;  &quot;sample_15&quot;  &quot;sample_16&quot;  &quot;sample_17&quot;</code></pre>
+<p><code>sort</code> works by sorting by each digit. This means it groups together all of the samples that begin with 1, even though they represent 1, 10, 100, 1000 etc.</p>
+<p>This problem goes away when we have added zeros to the beginning of the number, so that they are all four digits:</p>
+<pre class="r"><code>sort(ids.wZeros)[1:10]</code></pre>
+<pre><code>##  [1] &quot;sample_0001&quot; &quot;sample_0002&quot; &quot;sample_0003&quot; &quot;sample_0004&quot; &quot;sample_0005&quot;
+##  [6] &quot;sample_0006&quot; &quot;sample_0007&quot; &quot;sample_0008&quot; &quot;sample_0009&quot; &quot;sample_0010&quot;</code></pre>
+<p><code>sort</code> is still sorting by digit, but it recognizes from the zeros that 1 thru 9 must come before 10.</p>
+</div>
+<div id="extracting-metadata" class="section level2">
+<h2>Extracting Metadata</h2>
+<p>Another thing we may want to do is subset the character string to easily extract metadata,. Often, we may save samples with names that correspond to a site, block, date, and sample number (e.g. <code>SITEA_BLOCK1_20220227_SAMPLE005</code>). Having all of these identification strings the same length means we can easily extract this information using <code>substr</code>.</p>
+<p><code>substr</code> works by taking the starting and stopping placement of the characters you want to extract and extracting the characters between. So in the example <code>SITEA_BLOCK1_20220227_SAMPLE005</code>, if we wanted to extract the metadata on what block the sample was from, we would extract characters 7 thru 12:</p>
+<pre class="r"><code>substr(&quot;SITEA_BLOCK1_20220227_SAMPLE005&quot;, start = 7, stop = 12)</code></pre>
+<pre><code>## [1] &quot;BLOCK1&quot;</code></pre>
+<p>We can also use <code>substr</code> over a vector of character strings. For example, let’s say we wanted to just extract the number of each sample. This becomes difficult for the vector without added zeros because each sample identification is a different length:</p>
+<pre class="r"><code>table(nchar(ids.noAdd))</code></pre>
+<pre><code>## 
+##  8  9 10 
+##  9 90  1</code></pre>
+<p>We know we need to start the extraction at digit 8, but where we stop depends on the length of each string. One way to deal with this is to supply the number of characters in the string (found using <code>nchar</code>) as the stopping point:</p>
+<pre class="r"><code>substr(ids.noAdd, start = 8, stop = nchar(ids.noAdd))</code></pre>
+<pre><code>##   [1] &quot;1&quot;   &quot;2&quot;   &quot;3&quot;   &quot;4&quot;   &quot;5&quot;   &quot;6&quot;   &quot;7&quot;   &quot;8&quot;   &quot;9&quot;   &quot;10&quot;  &quot;11&quot;  &quot;12&quot; 
+##  [13] &quot;13&quot;  &quot;14&quot;  &quot;15&quot;  &quot;16&quot;  &quot;17&quot;  &quot;18&quot;  &quot;19&quot;  &quot;20&quot;  &quot;21&quot;  &quot;22&quot;  &quot;23&quot;  &quot;24&quot; 
+##  [25] &quot;25&quot;  &quot;26&quot;  &quot;27&quot;  &quot;28&quot;  &quot;29&quot;  &quot;30&quot;  &quot;31&quot;  &quot;32&quot;  &quot;33&quot;  &quot;34&quot;  &quot;35&quot;  &quot;36&quot; 
+##  [37] &quot;37&quot;  &quot;38&quot;  &quot;39&quot;  &quot;40&quot;  &quot;41&quot;  &quot;42&quot;  &quot;43&quot;  &quot;44&quot;  &quot;45&quot;  &quot;46&quot;  &quot;47&quot;  &quot;48&quot; 
+##  [49] &quot;49&quot;  &quot;50&quot;  &quot;51&quot;  &quot;52&quot;  &quot;53&quot;  &quot;54&quot;  &quot;55&quot;  &quot;56&quot;  &quot;57&quot;  &quot;58&quot;  &quot;59&quot;  &quot;60&quot; 
+##  [61] &quot;61&quot;  &quot;62&quot;  &quot;63&quot;  &quot;64&quot;  &quot;65&quot;  &quot;66&quot;  &quot;67&quot;  &quot;68&quot;  &quot;69&quot;  &quot;70&quot;  &quot;71&quot;  &quot;72&quot; 
+##  [73] &quot;73&quot;  &quot;74&quot;  &quot;75&quot;  &quot;76&quot;  &quot;77&quot;  &quot;78&quot;  &quot;79&quot;  &quot;80&quot;  &quot;81&quot;  &quot;82&quot;  &quot;83&quot;  &quot;84&quot; 
+##  [85] &quot;85&quot;  &quot;86&quot;  &quot;87&quot;  &quot;88&quot;  &quot;89&quot;  &quot;90&quot;  &quot;91&quot;  &quot;92&quot;  &quot;93&quot;  &quot;94&quot;  &quot;95&quot;  &quot;96&quot; 
+##  [97] &quot;97&quot;  &quot;98&quot;  &quot;99&quot;  &quot;100&quot;</code></pre>
+<p>You can also provide a stopping point that you know is longer than all the strings and <code>substr</code> will just extract as much as it can:</p>
+<pre class="r"><code>substr(ids.noAdd, start = 8, stop = 20)</code></pre>
+<pre><code>##   [1] &quot;1&quot;   &quot;2&quot;   &quot;3&quot;   &quot;4&quot;   &quot;5&quot;   &quot;6&quot;   &quot;7&quot;   &quot;8&quot;   &quot;9&quot;   &quot;10&quot;  &quot;11&quot;  &quot;12&quot; 
+##  [13] &quot;13&quot;  &quot;14&quot;  &quot;15&quot;  &quot;16&quot;  &quot;17&quot;  &quot;18&quot;  &quot;19&quot;  &quot;20&quot;  &quot;21&quot;  &quot;22&quot;  &quot;23&quot;  &quot;24&quot; 
+##  [25] &quot;25&quot;  &quot;26&quot;  &quot;27&quot;  &quot;28&quot;  &quot;29&quot;  &quot;30&quot;  &quot;31&quot;  &quot;32&quot;  &quot;33&quot;  &quot;34&quot;  &quot;35&quot;  &quot;36&quot; 
+##  [37] &quot;37&quot;  &quot;38&quot;  &quot;39&quot;  &quot;40&quot;  &quot;41&quot;  &quot;42&quot;  &quot;43&quot;  &quot;44&quot;  &quot;45&quot;  &quot;46&quot;  &quot;47&quot;  &quot;48&quot; 
+##  [49] &quot;49&quot;  &quot;50&quot;  &quot;51&quot;  &quot;52&quot;  &quot;53&quot;  &quot;54&quot;  &quot;55&quot;  &quot;56&quot;  &quot;57&quot;  &quot;58&quot;  &quot;59&quot;  &quot;60&quot; 
+##  [61] &quot;61&quot;  &quot;62&quot;  &quot;63&quot;  &quot;64&quot;  &quot;65&quot;  &quot;66&quot;  &quot;67&quot;  &quot;68&quot;  &quot;69&quot;  &quot;70&quot;  &quot;71&quot;  &quot;72&quot; 
+##  [73] &quot;73&quot;  &quot;74&quot;  &quot;75&quot;  &quot;76&quot;  &quot;77&quot;  &quot;78&quot;  &quot;79&quot;  &quot;80&quot;  &quot;81&quot;  &quot;82&quot;  &quot;83&quot;  &quot;84&quot; 
+##  [85] &quot;85&quot;  &quot;86&quot;  &quot;87&quot;  &quot;88&quot;  &quot;89&quot;  &quot;90&quot;  &quot;91&quot;  &quot;92&quot;  &quot;93&quot;  &quot;94&quot;  &quot;95&quot;  &quot;96&quot; 
+##  [97] &quot;97&quot;  &quot;98&quot;  &quot;99&quot;  &quot;100&quot;</code></pre>
+<p>These two methods work, but only because we want to extract until the end of the string. This would be much more complicated if the stopping point was in a different place for each sample.</p>
+<p>With the sample ID’s with added zeros, all of the character strings are the same length with 11 digits:</p>
+<pre class="r"><code>table(nchar(ids.wZeros))</code></pre>
+<pre><code>## 
+##  11 
+## 100</code></pre>
+<p>This means we can just supply digit 8 as our starting digit and digit 11 as our stopping digit to the <code>substr</code> call, and extract all the sample numbers:</p>
+<pre class="r"><code>substr(ids.wZeros, start = 8, stop = 11)</code></pre>
+<pre><code>##   [1] &quot;0001&quot; &quot;0002&quot; &quot;0003&quot; &quot;0004&quot; &quot;0005&quot; &quot;0006&quot; &quot;0007&quot; &quot;0008&quot; &quot;0009&quot; &quot;0010&quot;
+##  [11] &quot;0011&quot; &quot;0012&quot; &quot;0013&quot; &quot;0014&quot; &quot;0015&quot; &quot;0016&quot; &quot;0017&quot; &quot;0018&quot; &quot;0019&quot; &quot;0020&quot;
+##  [21] &quot;0021&quot; &quot;0022&quot; &quot;0023&quot; &quot;0024&quot; &quot;0025&quot; &quot;0026&quot; &quot;0027&quot; &quot;0028&quot; &quot;0029&quot; &quot;0030&quot;
+##  [31] &quot;0031&quot; &quot;0032&quot; &quot;0033&quot; &quot;0034&quot; &quot;0035&quot; &quot;0036&quot; &quot;0037&quot; &quot;0038&quot; &quot;0039&quot; &quot;0040&quot;
+##  [41] &quot;0041&quot; &quot;0042&quot; &quot;0043&quot; &quot;0044&quot; &quot;0045&quot; &quot;0046&quot; &quot;0047&quot; &quot;0048&quot; &quot;0049&quot; &quot;0050&quot;
+##  [51] &quot;0051&quot; &quot;0052&quot; &quot;0053&quot; &quot;0054&quot; &quot;0055&quot; &quot;0056&quot; &quot;0057&quot; &quot;0058&quot; &quot;0059&quot; &quot;0060&quot;
+##  [61] &quot;0061&quot; &quot;0062&quot; &quot;0063&quot; &quot;0064&quot; &quot;0065&quot; &quot;0066&quot; &quot;0067&quot; &quot;0068&quot; &quot;0069&quot; &quot;0070&quot;
+##  [71] &quot;0071&quot; &quot;0072&quot; &quot;0073&quot; &quot;0074&quot; &quot;0075&quot; &quot;0076&quot; &quot;0077&quot; &quot;0078&quot; &quot;0079&quot; &quot;0080&quot;
+##  [81] &quot;0081&quot; &quot;0082&quot; &quot;0083&quot; &quot;0084&quot; &quot;0085&quot; &quot;0086&quot; &quot;0087&quot; &quot;0088&quot; &quot;0089&quot; &quot;0090&quot;
+##  [91] &quot;0091&quot; &quot;0092&quot; &quot;0093&quot; &quot;0094&quot; &quot;0095&quot; &quot;0096&quot; &quot;0097&quot; &quot;0098&quot; &quot;0099&quot; &quot;0100&quot;</code></pre>
+<p>While there is usually some workaround for when strings are not standardized like this, I find it easier to just standardize from the beginning to avoid any problems later in the workflow. And an easy way to do that is by adding leading 0’s to character strings containing numbers. A good rule of thumb is to always add one more than you think you need (so if you think you will only go up to three digits (eg 999), make it four just in case).</p>
+</div>
+</div>
+<div id="adding-leading-zeros" class="section level1">
+<h1>Adding Leading Zeros</h1>
+<p>There are many many different ways to add leading zeros, depending on what suite of packages you prefer to use. Here are the ones I like, and the pros and cons of each.</p>
+<div id="formatc-in-base-r" class="section level2">
+<h2><code>formatC</code> in base R</h2>
+<p>If you don’t want to add any dependencies, <code>formatC</code> is a function that is in base R that lets you add leading zeros:</p>
+<pre class="r"><code>formatC(x = 1:100, width = 4, format = &quot;d&quot;, flag = &quot;0&quot;)</code></pre>
+<pre><code>##   [1] &quot;0001&quot; &quot;0002&quot; &quot;0003&quot; &quot;0004&quot; &quot;0005&quot; &quot;0006&quot; &quot;0007&quot; &quot;0008&quot; &quot;0009&quot; &quot;0010&quot;
+##  [11] &quot;0011&quot; &quot;0012&quot; &quot;0013&quot; &quot;0014&quot; &quot;0015&quot; &quot;0016&quot; &quot;0017&quot; &quot;0018&quot; &quot;0019&quot; &quot;0020&quot;
+##  [21] &quot;0021&quot; &quot;0022&quot; &quot;0023&quot; &quot;0024&quot; &quot;0025&quot; &quot;0026&quot; &quot;0027&quot; &quot;0028&quot; &quot;0029&quot; &quot;0030&quot;
+##  [31] &quot;0031&quot; &quot;0032&quot; &quot;0033&quot; &quot;0034&quot; &quot;0035&quot; &quot;0036&quot; &quot;0037&quot; &quot;0038&quot; &quot;0039&quot; &quot;0040&quot;
+##  [41] &quot;0041&quot; &quot;0042&quot; &quot;0043&quot; &quot;0044&quot; &quot;0045&quot; &quot;0046&quot; &quot;0047&quot; &quot;0048&quot; &quot;0049&quot; &quot;0050&quot;
+##  [51] &quot;0051&quot; &quot;0052&quot; &quot;0053&quot; &quot;0054&quot; &quot;0055&quot; &quot;0056&quot; &quot;0057&quot; &quot;0058&quot; &quot;0059&quot; &quot;0060&quot;
+##  [61] &quot;0061&quot; &quot;0062&quot; &quot;0063&quot; &quot;0064&quot; &quot;0065&quot; &quot;0066&quot; &quot;0067&quot; &quot;0068&quot; &quot;0069&quot; &quot;0070&quot;
+##  [71] &quot;0071&quot; &quot;0072&quot; &quot;0073&quot; &quot;0074&quot; &quot;0075&quot; &quot;0076&quot; &quot;0077&quot; &quot;0078&quot; &quot;0079&quot; &quot;0080&quot;
+##  [81] &quot;0081&quot; &quot;0082&quot; &quot;0083&quot; &quot;0084&quot; &quot;0085&quot; &quot;0086&quot; &quot;0087&quot; &quot;0088&quot; &quot;0089&quot; &quot;0090&quot;
+##  [91] &quot;0091&quot; &quot;0092&quot; &quot;0093&quot; &quot;0094&quot; &quot;0095&quot; &quot;0096&quot; &quot;0097&quot; &quot;0098&quot; &quot;0099&quot; &quot;0100&quot;</code></pre>
+<p>The arguments you provide are:</p>
+<ul>
+<li><code>x</code> the vector of numbers or strings you would like to add leading 0’s to</li>
+<li><code>width</code> the final width you would like each string to have</li>
+<li><code>format</code> what class you want the output to be. <code>"d"</code> is for integers (default)</li>
+<li><code>flag</code> signifies what modification you will be doing to <code>x</code>. <code>"0"</code> adds leading zeros</li>
+</ul>
+<p><strong>Pros</strong></p>
+<ul>
+<li>very fast because it is based in <code>C</code></li>
+<li>understandable for those who are already used to <code>C</code> formats</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>language is not intuitive to those not familiar with <code>C</code></li>
+<li>the modification is limited by those provided by <code>flag</code>, so cannot add other characters as leading characters</li>
+</ul>
+</div>
+<div id="using-the-str_pad-function-from-the-stringr-package" class="section level2">
+<h2>Using the <code>str_pad</code> function from the <code>stringr</code> package</h2>
+<p>If you don’t mind using another package, then a great option is the <code>stringr</code> package. It is part of the tidyverse, which means it comes with a lot of <a href="https://stringr.tidyverse.org/">supporting documentation</a> for string manipulations.</p>
+<p>The <code>str_pad</code> function from this pacakge is made for exactly this purpose, “padding” or adding characters to a string:</p>
+<pre class="r"><code>library(stringr)
+str_pad(string = 1:100, width = 4, side = &quot;left&quot;, pad = &quot;0&quot;)</code></pre>
+<pre><code>##   [1] &quot;0001&quot; &quot;0002&quot; &quot;0003&quot; &quot;0004&quot; &quot;0005&quot; &quot;0006&quot; &quot;0007&quot; &quot;0008&quot; &quot;0009&quot; &quot;0010&quot;
+##  [11] &quot;0011&quot; &quot;0012&quot; &quot;0013&quot; &quot;0014&quot; &quot;0015&quot; &quot;0016&quot; &quot;0017&quot; &quot;0018&quot; &quot;0019&quot; &quot;0020&quot;
+##  [21] &quot;0021&quot; &quot;0022&quot; &quot;0023&quot; &quot;0024&quot; &quot;0025&quot; &quot;0026&quot; &quot;0027&quot; &quot;0028&quot; &quot;0029&quot; &quot;0030&quot;
+##  [31] &quot;0031&quot; &quot;0032&quot; &quot;0033&quot; &quot;0034&quot; &quot;0035&quot; &quot;0036&quot; &quot;0037&quot; &quot;0038&quot; &quot;0039&quot; &quot;0040&quot;
+##  [41] &quot;0041&quot; &quot;0042&quot; &quot;0043&quot; &quot;0044&quot; &quot;0045&quot; &quot;0046&quot; &quot;0047&quot; &quot;0048&quot; &quot;0049&quot; &quot;0050&quot;
+##  [51] &quot;0051&quot; &quot;0052&quot; &quot;0053&quot; &quot;0054&quot; &quot;0055&quot; &quot;0056&quot; &quot;0057&quot; &quot;0058&quot; &quot;0059&quot; &quot;0060&quot;
+##  [61] &quot;0061&quot; &quot;0062&quot; &quot;0063&quot; &quot;0064&quot; &quot;0065&quot; &quot;0066&quot; &quot;0067&quot; &quot;0068&quot; &quot;0069&quot; &quot;0070&quot;
+##  [71] &quot;0071&quot; &quot;0072&quot; &quot;0073&quot; &quot;0074&quot; &quot;0075&quot; &quot;0076&quot; &quot;0077&quot; &quot;0078&quot; &quot;0079&quot; &quot;0080&quot;
+##  [81] &quot;0081&quot; &quot;0082&quot; &quot;0083&quot; &quot;0084&quot; &quot;0085&quot; &quot;0086&quot; &quot;0087&quot; &quot;0088&quot; &quot;0089&quot; &quot;0090&quot;
+##  [91] &quot;0091&quot; &quot;0092&quot; &quot;0093&quot; &quot;0094&quot; &quot;0095&quot; &quot;0096&quot; &quot;0097&quot; &quot;0098&quot; &quot;0099&quot; &quot;0100&quot;</code></pre>
+<p>The arguments are:</p>
+<ul>
+<li><code>string</code> the vector of character strings you would like to pad</li>
+<li><code>width</code> the final width of the character string you would like</li>
+<li><code>side</code> what side of the string you would like to add the padding (left = before the string, right = after)</li>
+<li><code>pad</code> a single character that you would like to use to pad. It will be repeated when more than one digit is added.</li>
+</ul>
+<p><strong>Pros</strong></p>
+<ul>
+<li>more intuitive language and arguments</li>
+<li>ability to pad both sides of the string</li>
+<li>more flexibility in what character is used to pad compared to <code>formatC</code></li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>requires another package to use</li>
+<li>is affected by the scientific penalty option</li>
+</ul>
+<p>The major downside to this package is that numbers will resort to the scientific notation (e.g. <code>1e10</code>) if their digits are more than the scientific penalty option defined in R:</p>
+<pre class="r"><code>ex1 &lt;- c(1000000000)
+str_pad(ex1, width = 13, side = &quot;left&quot;, pad = &quot;0&quot;)</code></pre>
+<pre><code>## [1] &quot;000000001e+09&quot;</code></pre>
+<p>In comparison, if you use <code>formatC</code>, it will keep all of the zeros:</p>
+<pre class="r"><code>formatC(ex1, width = 13, format = &quot;d&quot;, flag = &quot;0&quot;)</code></pre>
+<pre><code>## [1] &quot;0001000000000&quot;</code></pre>
+<p>I usually have my scientific penalty essentially turned off (<code>options(scipen=999)</code>) by default because I find it easier to problem-check my own data. But you could also change your options just for this bit of code if you’d like to keep your scientific penalty threshold:</p>
+<pre class="r"><code>with(options(scipen = 999),
+     str_pad(ex1, width = 13, side = &quot;left&quot;, pad = &quot;0&quot;)
+     )</code></pre>
+<pre><code>## [1] &quot;0001000000000&quot;</code></pre>
+</div>
+<div id="comparing-performance" class="section level2">
+<h2>Comparing Performance</h2>
+<p>To me, the trade-off between these two options is the speed of <code>formatC</code> vs. the more intuitive language of <code>str_pad</code> for us non-C users. But just how much faster is <code>formatC</code>?</p>
+<pre class="r"><code>library(microbenchmark)
+
+microbenchmark(
+  pad_c = formatC(x = 1:1e5, width = 8, format = &quot;d&quot;, flag = &quot;0&quot;),
+  stringr = with(options(scipen = 999), str_pad(string = 1:1e5, width = 8, side = &quot;left&quot;, pad = &quot;0&quot;)),
+  times = 25
+)</code></pre>
+<pre><code>## Unit: milliseconds
+##     expr      min       lq     mean   median       uq      max neval
+##    pad_c 15.81550 16.07913 18.94578 17.52004 20.88246 28.94242    25
+##  stringr 47.50788 48.14967 49.33685 48.53708 49.16729 59.24617    25</code></pre>
+<p>Looks like <code>formatC</code> is at least twice as fast as using <code>str_pad</code>, so depending on the size of the dataset or how many times you are replicating padding zeros, it may be worth using <code>formatC</code>, even if you do have to look up again which format corresponds to integers!</p>
+</div>
+</div>
+<div id="tldr" class="section level1">
+<h1>TL;DR</h1>
+<p>If you are familiar with <code>C</code> style language or don’t mind learning, use <code>formatC</code>.</p>
+<p>If you prefer using a <code>tidyverse</code> method, use <code>str_pad</code> from the <code>stringr</code> package.</p>
+</div>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=Adding%20Leading%20Zeros%20to%20Strings&url=https%3a%2f%2fditheringdata.netlify.com%2f2022%2f02%2f27%2fadding-leading-zeros-to-strings%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+
+        
+        
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="m.evans" href="https://ditheringdata.netlify.com/">m.evans</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2022 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://ditheringdata.netlify.com/js/jquery-1.11.3.min.js"></script>
+        <script src="https://ditheringdata.netlify.com/js/jquery.fitvids.js"></script>
+        
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        
+        
+        <script src="https://ditheringdata.netlify.com/js/scripts.js"></script>
+        
+
+    </body>
+</html>
+
